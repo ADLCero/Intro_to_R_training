@@ -1,3 +1,8 @@
+
+# R Script for introduction to basic R Programming
+
+################################################################################
+
 # 1. Assigning and using variables
 
 A <- 1
@@ -77,7 +82,7 @@ Total_use_print <- paste("The total water consumption in the town is", Total_use
 
 print(Total_use_print)
 
-#------------------------------------------------------------------------------#
+################################################################################
 
 # Data structures in R
 
@@ -148,6 +153,7 @@ Crops[1:2]
 Crops[3] <- "dragonfruit"
 Crops
 
+#------------------------------------------------------------------------------#
 
 # MATRIX 
 
@@ -204,6 +210,8 @@ colMeans(m5) # average of each column
 t(m5)        # transpose
 
 
+#------------------------------------------------------------------------------#
+
 # DATA FRAMES
 
 # Creating a data frame
@@ -257,8 +265,9 @@ names(df)[2] <- "weight_kg"
 
 names(df) <- c("crop_name", "weight", "number_of_days_stored", "room_no")
 
+#------------------------------------------------------------------------------#
 
-# Lists
+# LISTS
 
 # Creating a simple list
 list1 <- list(1, "hello", TRUE, c(2, 3, 4))
@@ -270,6 +279,105 @@ list2 <- list(crop = "rice",
               room_no = "1a")
 
 # Accessing list elements
+# 1. Using $ for named elements
+
+list2$weight_kg
+
+# 2. Using double brackets [[]]
+
+list2[[2]]                # gets the second element
+list2[["weight_kg"]]      # gets the "weight_kg" (which is also the second element)
+
+################################################################################
+
+# MORE ABOUT DATA FRAMES IN R
+
+# How to see all built-in data sets in R
+data()
+
+# Let us use ChickWeight = Weight versus age of chicks on different diets
+
+# STEP 1: Load the data set
+
+data("ChickWeight")  # Load the data set
+
+# STEP 2: See the documentation of the data set
+
+?ChickWeight
+
+# STEP 3: Explore the data
+
+head(ChickWeight)
+str(ChickWeight)
+summary(ChickWeight)
+
+# STEP 4: Plot weight over time
+
+plot(x = ChickWeight$Time,
+     y = ChickWeight$weight,
+     xlab = "Time (number of days since birth)",
+     ylab = "Weight (gm)")
+
+# STEP 5: Make plot more meaningful: color the data by diet
+# a. Create a color vector for diet
+diet_colors <- c("red", "blue", "green", "purple")
+
+# b. Map each diet (1-4) to a color
+color_vector <- diet_colors[as.numeric(ChickWeight$Diet)]
+
+# c. Plot
+plot(
+  ChickWeight$Time, ChickWeight$weight,
+  col = color_vector,
+  pch = 16,
+  xlab = "Time (days)",
+  ylab = "Weight (grams)",
+  main = "Chick Weight Over Time by Diet (Base R plot)"
+)
+
+# d. Add legend
+legend("topleft",
+       legend = paste("Diet", 1:4),
+       col = diet_colors,
+       pch = 16)
+
+# OPTIONAL: Add lines for each chick
+
+# Plot blank canvas
+plot(weight ~ Time, data = ChickWeight, type = "n",
+     xlab = "Time", ylab = "Weight", main = "Chick Growth by Diet")
+
+# Loop through each chick
+unique_chicks <- unique(ChickWeight$Chick)
+
+for (chick in unique_chicks) {
+  chick_data <- ChickWeight[ChickWeight$Chick == chick, ]
+  diet <- as.numeric(chick_data$Diet[1])
+  lines(chick_data$Time, chick_data$weight, col = diet_colors[diet])
+}
+
+# WHAT CAN WE DO WITH THE DATA
+# 1. Model growth over time (fit a linear model)
+
+lm1 <- lm(weight ~ Time * Diet, data = ChickWeight)
+summary(lm1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
