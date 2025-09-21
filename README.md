@@ -1,4 +1,4 @@
-**Training files for introduction to basic R programming**
+# **Training files for introduction to basic R programming**
 
 **00_Data:** contains the sample data sets
 
