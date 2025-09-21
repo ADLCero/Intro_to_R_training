@@ -22,4 +22,14 @@ C <- 3
 
 ```
 
+```{r}
+# Perform basic math operations by using the variables instead of the numbers
+# assigned to them:
+
+D <- A + B
+C <- 2*A*B^B  # We can also overwrite variables
+
+C + D
+```
+
 
