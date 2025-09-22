@@ -868,4 +868,255 @@ dim(clean_data)
 
 ```
 
+```{r}
+
+# Remove any row with one or more NAs
+clean_data_NA <- na.omit(clean_data)
+dim(clean_data_NA)
+
+```
+
+# 7. Data visualization with base R
+
+Useful references:
+https://r-graph-gallery.com/base-R.html
+https://www.sthda.com/english/wiki/r-base-graphs
+
+
+## a. Basic plot
+
+```{r}
+
+# Horsepower versus price
+
+plot(x = clean_data_NA$Engine.HP,
+     y = clean_data_NA$MSRP)
+
+```
+
+```{r}
+
+# Adding more elements to make the plot look better
+
+plot(x = clean_data_NA$Engine.HP,
+     y = clean_data_NA$MSRP,
+     main = "Horsepower vs Minimum Selling Retail Price", # title
+     xlab = "engine horsepower", # x-axis title
+     ylab = "minimum selling retail price") # y-axis title
+
+```
+
+## b. Boxplot
+
+Used to visualize the distribution of a numeric variable showing its median, quartiles, range, and potential outliers.
+
+```{r}
+
+boxplot(clean_data_NA$MSRP, 
+        ylab = "price")
+
+```
+
+## c. Histogram
+
+Used to visualize the distribution of a numeric variable by dividing it into bins (intervals) and counting how many values fall into each bin
+
+```{r}
+
+hist(clean_data_NA$MSRP,
+     main = "Histogram of price",  # title
+     xlab = "Value",               # x-axis label
+     ylab = "Frequency",           # y-axis label
+     col = "lightblue",            # color
+     border = "black",             # border color
+     breaks = 5)                   # number of breaks
+
+```
+
+
+# 8. Installing packages in R
+
+Packages provide additional functions, datasets, and tools that are not included in base R
+
+**Installing Tidyverse**
+
+`tidyverse` is a collection of R packages designed for data science. It includes tools for data manipulation, visualization, importing, and cleaning.
+
+```{r, eval = FALSE}
+
+install.packages("tidyverse")
+
+```
+
+```{r}
+
+# Load the library after installing the package so that we can access its functions
+
+library(tidyverse)
+
+```
+
+## a. dplyr
+
+Let us use the `mtcars` data set in R.The `mtcars` dataset is a built-in dataset in R that contains information about 32 different car models from the 1970s.
+
+```{r}
+
+# Check the dimensions of the data set
+dim(mtcars)
+
+```
+
+```{r}
+
+# Check the column names
+colnames(mtcars)
+
+```
+
+```{r}
+
+# View the first few rows
+head(mtcars)
+
+```
+```{r}
+
+# View the structure
+str(mtcars)
+
+```
+```{r}
+
+# Get the summary statistics
+summary(mtcars)
+
+```
+
+
+```{r}
+
+# Check for missing values
+
+sum(is.na(mtcars))          # Total NA values
+colSums(is.na(mtcars))      # NA per column
+
+```
+```{r}
+
+# Use glimpse() from dplyr for a quick overview
+glimpse(mtcars)
+
+```
+
+```{r}
+
+# EXAMPLE 1: Filter cars with mpg greater than 20
+
+mtcars %>% 
+  filter(mpg > 20) %>% 
+  head()
+
+# %>% = pipe operator = mechanism for chaining operations, allowing the output of one function to be seamlessly passed as the input to the next
+
+```
+
+```{r}
+
+# EXAMPLE 2: Summarize average mpg by number of cylinders
+
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(avg_mpg = mean(mpg),
+            avg_hp = mean(hp),
+            count = n())
+
+```
+
+## b. ggplot2
+
+```{r}
+
+# Basic syntax of ggplot()
+
+ggplot(data = mtcars,          # data set
+       aes(x = wt, y = mpg)) + # x and y
+  geom_point()                 # geometry
+
+
+```
+
+```{r}
+
+# Customization
+
+ggplot(data = mtcars,               # data set
+       aes(x = wt, y = mpg,         # x and y
+           color = factor(cyl))) +  # color based on variable
+  geom_point(size = 3)  +           # geometry
+  geom_smooth(method = "lm") +      # linear regression line
+  labs(                             # labels
+    title = "MPG vs Weight",
+    x = "Weight (1000 lbs)",
+    y = "Miles per gallon",
+    color = "Cylinders") +
+  
+  theme_minimal()                   # theme
+
+```
+
+```{r}
+
+# Histogram of miles per gallon (mpg)
+
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 10, 
+                 fill = "steelblue", 
+                 color = "white") +
+  theme_minimal()
+
+```
+
+```{r}
+
+# Boxplot of mpg by cylinder
+
+ggplot(mtcars, 
+       aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot(fill = "orange") +
+  labs(x = "Cylinders", 
+       y = "Miles Per Gallon", 
+       title = "MPG by Cylinder Count") +
+  theme_minimal()
+
+```
+
+```{r}
+
+# Barplot of car counts by number of gears
+
+ggplot(mtcars, 
+       aes(x = factor(gear))) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Count of Cars by Gear", 
+       x = "Number of Gears", 
+       y = "Count") +
+  theme_minimal()
+
+```
+
+```{r}
+
+# Facet plot: scatterplot faceted by transmission type
+
+ggplot(mtcars, 
+       aes(x = wt, y = mpg)) +
+  geom_point() +
+  facet_wrap(~ am, labeller = labeller(am = c("0" = "Automatic", "1" = "Manual"))) +
+  labs(title = "MPG vs Weight by Transmission Type") +
+  theme_minimal()
+
+```
+
+
 
