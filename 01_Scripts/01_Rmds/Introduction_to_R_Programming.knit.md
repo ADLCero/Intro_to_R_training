@@ -7,24 +7,22 @@ output:
   html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 # 1. Assigning and using variables
 
-```{r}
 
+``` r
 A <- 1
 B <- 2
 C <- 3
-
 ```
 
-```{r}
+
+``` r
 # Perform basic math operations by using the variables instead of the numbers
 # assigned to them:
 
@@ -32,6 +30,10 @@ D <- A + B
 C <- 2*A*B^B  # We can also overwrite variables
 
 C + D
+```
+
+```
+## [1] 11
 ```
 
 
