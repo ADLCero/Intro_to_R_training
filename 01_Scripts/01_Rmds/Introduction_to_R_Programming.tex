@@ -117,11 +117,17 @@ This is an R Markdown document. Markdown is a simple formatting syntax
 for authoring HTML, PDF, and MS Word documents. For more details on
 using R Markdown see \url{http://rmarkdown.rstudio.com}.
 
+Note: If you are using this document in \textbf{.Rmd} format, you can
+press the ``play'' button on the upper right corner of the chunk of code
+(i.e., gray section) to run the code and see the results.
+
 \section{1. Assigning and using
 variables}\label{assigning-and-using-variables}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\CommentTok{\# Variable \textless{}{-} Value}
+
 \NormalTok{A }\OtherTok{\textless{}{-}} \DecValTok{1}
 \NormalTok{B }\OtherTok{\textless{}{-}} \DecValTok{2}
 \NormalTok{C }\OtherTok{\textless{}{-}} \DecValTok{3}
@@ -130,11 +136,17 @@ variables}\label{assigning-and-using-variables}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Perform basic math operations by using the variables instead of the numbers}
-\CommentTok{\# assigned to them:}
+\CommentTok{\# We can perform basic math operations by using the variables instead of the numbers assigned to them:}
 
 \NormalTok{D }\OtherTok{\textless{}{-}}\NormalTok{ A }\SpecialCharTok{+}\NormalTok{ B}
-\NormalTok{C }\OtherTok{\textless{}{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{A}\SpecialCharTok{*}\NormalTok{B}\SpecialCharTok{\^{}}\NormalTok{B  }\CommentTok{\# We can also overwrite variables}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# We can also overwrite variables}
+
+\NormalTok{C }\OtherTok{\textless{}{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{A}\SpecialCharTok{*}\NormalTok{B}\SpecialCharTok{\^{}}\NormalTok{B}
 
 \NormalTok{C }\SpecialCharTok{+}\NormalTok{ D}
 \end{Highlighting}
@@ -143,5 +155,7 @@ variables}\label{assigning-and-using-variables}
 \begin{verbatim}
 ## [1] 11
 \end{verbatim}
+
+\subsection{2. Data types in R}\label{data-types-in-r}
 
 \end{document}

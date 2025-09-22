@@ -360,19 +360,401 @@ display: none;
 <p>This is an R Markdown document. Markdown is a simple formatting
 syntax for authoring HTML, PDF, and MS Word documents. For more details
 on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>Notes:</p>
+<ol style="list-style-type: decimal">
+<li><p>If you are using this document in <code>.Rmd</code> format, you
+can press the “play” button on the upper right corner of the chunk of
+code (i.e., gray section) to run the code and see the results.</p></li>
+<li><p>If you are using this document in its <code>.html</code> format,
+you can copy-paste the code in an R script and see how it
+works.</p></li>
+</ol>
 <div id="assigning-and-using-variables" class="section level1">
 <h1>1. Assigning and using variables</h1>
-<pre class="r"><code>A &lt;- 1
+<p>We can use the <code>=</code> sign to assign values to variables but
+the <code>&lt;-</code> operator is conventionally preferred.</p>
+<pre class="r"><code># &quot;Initializing&quot; a variable
+# Variable &lt;- Value
+
+A &lt;- 1
 B &lt;- 2
 C &lt;- 3</code></pre>
-<pre class="r"><code># Perform basic math operations by using the variables instead of the numbers
-# assigned to them:
+<p>We can perform basic math operations by using the variables instead
+of the numbers assigned to them:</p>
+<pre class="r"><code>D &lt;- A + B</code></pre>
+<p>We can also overwrite variables:</p>
+<pre class="r"><code># We can also overwrite variables
 
-D &lt;- A + B
-C &lt;- 2*A*B^B  # We can also overwrite variables
-
-C + D</code></pre>
+C &lt;- 2 * A * B ^ B
+C</code></pre>
+<pre><code>## [1] 8</code></pre>
+<p>Note how the value of C changes from 3 to 8, subsequently changing
+the results of succeeding operations:</p>
+<pre class="r"><code>C + D</code></pre>
 <pre><code>## [1] 11</code></pre>
+<p><strong>Using variables:</strong></p>
+<ul>
+<li>Links output from one line of code to a later line</li>
+<li>Minimizes errors</li>
+<li>Makes the code more generalizable</li>
+<li>Allows automation of data processing</li>
+<li>Makes the code easier to update and revise</li>
+</ul>
+</div>
+<div id="data-types-in-r" class="section level1">
+<h1>2. Data types in R</h1>
+<p><strong>Variables do not have to be numbers.</strong></p>
+<p>There are multiple data types in R and in other computer languages.
+The standard data types we will often encounter are:</p>
+<div id="a.-numeric" class="section level2">
+<h2>a. Numeric</h2>
+<pre class="r"><code># Subcategories: integer &amp; double
+
+E &lt;- 525600</code></pre>
+</div>
+<div id="b.-logic" class="section level2">
+<h2>b. Logic</h2>
+<pre class="r"><code># TRUE or FALSE
+
+Outcome &lt;- TRUE</code></pre>
+</div>
+<div id="c.-character" class="section level2">
+<h2>c. Character</h2>
+<pre class="r"><code># Also known as string; written with quotation marks around them
+
+BestProfession &lt;- &quot;Engineering&quot;</code></pre>
+<p>We can print the variables to see the values assigned to them.</p>
+<pre class="r"><code>print(E)</code></pre>
+<pre><code>## [1] 525600</code></pre>
+<pre class="r"><code>print(Outcome)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>print(BestProfession)</code></pre>
+<pre><code>## [1] &quot;Engineering&quot;</code></pre>
+<p>To know the type of the variable, we can use <code>class()</code></p>
+<pre class="r"><code>class(E)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>class(Outcome)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre class="r"><code>class(BestProfession)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+</div>
+<div id="d.-factor" class="section level2">
+<h2>d. Factor</h2>
+<p>A factor in R is a data structure used to handle categorical
+variables. It is especially useful when the variable represents a fixed
+number of categories (example: male vs female; low-medium-high).</p>
+<p>Factors are internally stores as integers with labels. They can also
+be “ordered” or “unordered”.</p>
+<pre class="r"><code># Creating a factor
+gender &lt;- factor(c(&quot;Male&quot;, &quot;Female&quot;, &quot;Female&quot;, &quot;Male&quot;, &quot;Non-binary&quot;))
+
+# Check levels
+levels(gender)</code></pre>
+<pre><code>## [1] &quot;Female&quot;     &quot;Male&quot;       &quot;Non-binary&quot;</code></pre>
+<p>We can also specify the levels and orders of factors.</p>
+<pre class="r"><code># Custom levels and order
+level_ordered &lt;- factor(c(&quot;Low&quot;, &quot;High&quot;, &quot;Medium&quot;),
+                        levels = c(&quot;Low&quot;, &quot;Medium&quot;,
+                                   &quot;High&quot;), 
+                        ordered = TRUE)
+level_ordered</code></pre>
+<pre><code>## [1] Low    High   Medium
+## Levels: Low &lt; Medium &lt; High</code></pre>
+<pre class="r"><code># Check if it&#39;s ordered
+is.ordered(level_ordered)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="converting-between-different-types-of-variables" class="section level2">
+<h2>Converting between different types of variables</h2>
+<pre class="r"><code># From character to factor
+x &lt;- as.factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;))
+x</code></pre>
+<pre><code>## [1] A B A
+## Levels: A B</code></pre>
+<pre class="r"><code>class(x)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<pre class="r"><code># From factor to character
+x &lt;- as.character(x)
+x</code></pre>
+<pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;A&quot;</code></pre>
+<pre class="r"><code>class(x)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code># From character to numeric 
+y &lt;- c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;)
+y &lt;- as.numeric(y)
+y</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
+<pre class="r"><code>class(y)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+</div>
+<div id="exercise-1-solving-problems-using-variables-in-r." class="section level2">
+<h2>EXERCISE 1: Solving problems using variables in R.</h2>
+<p><strong>Use variables in a script to solve for the number of liters
+of water needed annually by a town.</strong></p>
+<ul>
+<li>Each person uses on average 120 liters of water per day.</li>
+<li>There are 10,000 residents in the town.</li>
+<li>A golf course uses on average 1,400,000 liters of water per
+month.</li>
+<li>Presume an average month is 30 days. There are three (3) golf
+courses in the town.</li>
+</ul>
+<p><strong>How much water does the town use per year?</strong></p>
+<pre class="r"><code># There are many ways to approach this problem. Here&#39;s one example:
+
+# Step 1: Define the variables
+
+Population &lt;- 10000 # people in the town
+Population_LPD &lt;- 120 # water consumption per person (liters per day)
+
+Golf_course_LPM &lt;- 1400000 # water consumption of the golf course per month (liters)
+Golf_course_no &lt;- 3 # number of golf courses in the town
+
+Days_year &lt;- 365 # number of days in a year
+Days_month &lt;- 30 # number of days in a month
+
+# Step 2: Do the computation
+
+# Compute for the water consumption by:
+
+# a. All people
+People_use &lt;- Population * Population_LPD * Days_year
+
+# b. Golf course
+Golf_use &lt;- Golf_course_no * ((Golf_course_LPM/Days_month) * Days_year)
+
+# c. Total use
+Total_use &lt;- People_use + Golf_use
+
+print(Total_use)</code></pre>
+<pre><code>## [1] 489100000</code></pre>
+<p>Can we add text (characters) to the printed output so that it
+provides more information?</p>
+<p>Using the <code>paste()</code> function allows us to do that.</p>
+<pre class="r"><code>print(paste(&quot;The total water consumption in the town is&quot;, Total_use, &quot;liters per year.&quot;))</code></pre>
+<pre><code>## [1] &quot;The total water consumption in the town is 489100000 liters per year.&quot;</code></pre>
+</div>
+</div>
+<div id="data-structures-in-r" class="section level1">
+<h1>3. Data structures in R</h1>
+<p>We were able to assign single values to variables. But what if we
+have a number of related values?</p>
+<pre class="r"><code>Crop1 &lt;- &quot;rice&quot;
+Crop2 &lt;- &quot;corn&quot;
+Crop3 &lt;- &quot;sugarcane&quot;
+Crop4 &lt;- &quot;cassava&quot;</code></pre>
+<p>It can be a bit tedious to assign each value to a different variable.
+Instead, what we can do is to group them:</p>
+<pre class="r"><code>Crops &lt;- c(&quot;rice&quot;, &quot;corn&quot;, &quot;sugarcane&quot;, &quot;cassava&quot;)
+Crops</code></pre>
+<pre><code>## [1] &quot;rice&quot;      &quot;corn&quot;      &quot;sugarcane&quot; &quot;cassava&quot;</code></pre>
+<pre class="r"><code># We can also use the assigned variables to group them together:
+
+Crops2 &lt;- c(Crop1, Crop2, Crop3, Crop4)
+Crops2</code></pre>
+<pre><code>## [1] &quot;rice&quot;      &quot;corn&quot;      &quot;sugarcane&quot; &quot;cassava&quot;</code></pre>
+<div id="a.-vectors" class="section level2">
+<h2>a. Vectors</h2>
+<p>A vector is a data structure that holds elements of the same data
+type.</p>
+<p>Note the syntax for a vector: c(Item1, Item2, …) c = concatenate =
+link things together in a chain or series</p>
+<pre class="r"><code># Numeric vector
+v1 &lt;- c(1, 2, 3, 4, 5)
+
+# Character vector
+v2 &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;grapes&quot;, &quot;cherry&quot;, &quot;strawberry&quot;)
+
+# Logical vector
+v3 &lt;- c(TRUE, FALSE, TRUE, FALSE, FALSE)</code></pre>
+<p>Other ways to create vectors:</p>
+<pre class="r"><code># Sequence of numbers
+v_seq &lt;- seq(0, 50, 2) # Sequence of numbers from 0 to 50, by 2s
+
+# Repeating values
+v_rep &lt;- rep(5, times = 4)</code></pre>
+<p>We can check the type and length of vectors:</p>
+<pre class="r"><code>length(Crops)     # number of elements</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>typeof(Crops)     # data type</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>is.vector(Crops)  # TRUE if it is a vector</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<div id="a.1.-accessing-values-in-a-vector" class="section level3">
+<h3>a.1. Accessing values in a vector</h3>
+<p>We can use <code>VectorName[index#]</code> to isolate the desired
+item. (“Indexing”)</p>
+<pre class="r"><code># Using the Crops vector:
+
+Crops[1]    # Gets the first element</code></pre>
+<pre><code>## [1] &quot;rice&quot;</code></pre>
+<pre class="r"><code>Crops[4]    # Gets the fourth element</code></pre>
+<pre><code>## [1] &quot;cassava&quot;</code></pre>
+<pre class="r"><code># Accessing multiple values in a vector
+
+Crops[1:2]</code></pre>
+<pre><code>## [1] &quot;rice&quot; &quot;corn&quot;</code></pre>
+<pre class="r"><code># Overwriting an element in a vector using indexing
+
+Crops[3] &lt;- &quot;dragonfruit&quot;
+Crops</code></pre>
+<pre><code>## [1] &quot;rice&quot;        &quot;corn&quot;        &quot;dragonfruit&quot; &quot;cassava&quot;</code></pre>
+</div>
+<div id="a.2.-vector-operations" class="section level3">
+<h3>a.2. Vector operations</h3>
+<p>R is vectorized: it is designed to perform operations on entire
+vectors of data at once instead of doing one element at a time.</p>
+<pre class="r"><code>x &lt;- c(1, 2, 3)
+y &lt;- c(4, 5, 6)
+
+x + y   # 5 7 9</code></pre>
+<pre><code>## [1] 5 7 9</code></pre>
+<pre class="r"><code>x * 2   # 2 4 6</code></pre>
+<pre><code>## [1] 2 4 6</code></pre>
+<pre class="r"><code>x &gt; 2   # FALSE FALSE TRUE</code></pre>
+<pre><code>## [1] FALSE FALSE  TRUE</code></pre>
+<p><strong>Vectors</strong> contain groups of objects in one dimension
+(column or row).</p>
+<p><strong>Matrices</strong> contain groups of objects in two dimensions
+(a grid).</p>
+<p><strong>Arrays</strong> contain groups of objects in any number of
+dimensions (i.e., vectors and matrices are just specific types of an
+array).</p>
+</div>
+</div>
+<div id="b.-matrix" class="section level2">
+<h2>b. Matrix</h2>
+<p>A matrix is a 2D structure where all elements must be of the same
+data type.</p>
+<p>There are many ways to initialize a matrix.</p>
+<pre class="r"><code># Creating a matrix (2D array)
+# Option 1: using array() (since a matrix is an array)
+
+m1 &lt;- array(data = 1:10, dim = c(5, 2))
+m1</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    6
+## [2,]    2    7
+## [3,]    3    8
+## [4,]    4    9
+## [5,]    5   10</code></pre>
+<pre class="r"><code># Option 2: using matrix()
+
+m2 &lt;- matrix(data = 1:10, nrow = 5, byrow = FALSE)
+m2</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    6
+## [2,]    2    7
+## [3,]    3    8
+## [4,]    4    9
+## [5,]    5   10</code></pre>
+<p>We can use <code>class()</code> to see the object’s class (its
+behavior or type as seen by users) and/or <code>typeof()</code> to see
+the internal storage type that R used for the object.</p>
+<pre class="r"><code>class(m1)</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<pre class="r"><code>typeof(m1)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>class(m2)</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<pre class="r"><code>typeof(m2)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<p>We can also create a matrix by binding vectors.</p>
+<pre class="r"><code># Column-bind
+m3 &lt;- cbind(c(1,2), c(3,4))
+
+# Row-bind
+m4 &lt;- rbind(c(1,2), c(3,4))
+
+print(m3)</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4</code></pre>
+<pre class="r"><code>print(m4)</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    2
+## [2,]    3    4</code></pre>
+<pre class="r"><code># Try to spot the difference between doing a cbind versus rbind:</code></pre>
+<div id="b.1.-accessing-elements-in-a-matrix" class="section level3">
+<h3>b.1. Accessing elements in a matrix</h3>
+<pre class="r"><code># Create a sample matrix
+
+m5 &lt;- matrix(1:20, nrow = 4)
+m5</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    5    9   13   17
+## [2,]    2    6   10   14   18
+## [3,]    3    7   11   15   19
+## [4,]    4    8   12   16   20</code></pre>
+<pre class="r"><code># Access elements in the matrix
+
+m5[1, 2]   # Row 1, Column 2</code></pre>
+<pre><code>## [1] 5</code></pre>
+<pre class="r"><code>m5[ , 2]   # Entire column 2</code></pre>
+<pre><code>## [1] 5 6 7 8</code></pre>
+<pre class="r"><code>m5[4, ]    # Entire row 4</code></pre>
+<pre><code>## [1]  4  8 12 16 20</code></pre>
+</div>
+<div id="b.2.-matrix-operations" class="section level3">
+<h3>b.2. Matrix operations</h3>
+<pre class="r"><code># Create matrices
+
+m6 &lt;- matrix(1:4, nrow = 2)
+m7 &lt;- matrix(5:8, nrow = 2)
+
+m6</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4</code></pre>
+<pre class="r"><code>m7</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    5    7
+## [2,]    6    8</code></pre>
+<pre class="r"><code>m6 + m7   # Element-wise addition</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    6   10
+## [2,]    8   12</code></pre>
+<pre class="r"><code>m6 * m7   # Element-wise multiplication</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    5   21
+## [2,]   12   32</code></pre>
+</div>
+<div id="b.3.-useful-matrix-functions" class="section level3">
+<h3>b.3. Useful matrix functions</h3>
+<pre class="r"><code>dim(m5)      # dimensions (number of rows, number of columns)</code></pre>
+<pre><code>## [1] 4 5</code></pre>
+<pre class="r"><code>nrow(m5)     # number of rows</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>ncol(m5)     # number of columns</code></pre>
+<pre><code>## [1] 5</code></pre>
+<pre class="r"><code>rowSums(m5)  # sum of each row</code></pre>
+<pre><code>## [1] 45 50 55 60</code></pre>
+<pre class="r"><code>colSums(m5)  # sum of each column</code></pre>
+<pre><code>## [1] 10 26 42 58 74</code></pre>
+<pre class="r"><code>rowMeans(m5) # average of each row</code></pre>
+<pre><code>## [1]  9 10 11 12</code></pre>
+<pre class="r"><code>colMeans(m5) # average of each column</code></pre>
+<pre><code>## [1]  2.5  6.5 10.5 14.5 18.5</code></pre>
+<pre class="r"><code>t(m5)        # transpose</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    5    6    7    8
+## [3,]    9   10   11   12
+## [4,]   13   14   15   16
+## [5,]   17   18   19   20</code></pre>
+</div>
+</div>
+<div id="c.-data-frame" class="section level2">
+<h2>c. Data Frame</h2>
+<p>Vectors and matrices require that their elements are of the same data
+type.</p>
+<p>What if we want to combine different data types?</p>
+<p>A <strong>data frame</strong> is a 2-dimensional table-like structure
+- Each column is a vector (of the same length) - Different columns can
+have different data types (numeric, character, factor, etc.),</p>
+<p>It’s the most commonly used structure for datasets in R (like Excel
+sheets)</p>
+</div>
 </div>
 
 

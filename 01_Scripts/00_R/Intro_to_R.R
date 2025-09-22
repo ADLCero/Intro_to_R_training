@@ -30,15 +30,50 @@ Outcome <- TRUE
 # 3. Character
 BestProfession <- "Engineering"
 
+# 4. Factor
+gender <- factor(c("Male", "Female", "Female", "Male", "Non-binary"))
+
+# Check levels
+levels(gender)
+
+# Customize levels and order
+level_ordered <- factor(c("Low", "High", "Medium"),
+                        levels = c("Low", "Medium",
+                                   "High"), 
+                        ordered = TRUE)
+
+
 # Print the variables to know what values are assigned to them
 print(E)
 print(Outcome)
 print(BestProfession)
+print(gender)
 
 # To know the type of the variable
 class(E)
 class(Outcome)
 class(BestProfession)
+class(gender)
+
+
+# Converting between different types of variables
+
+# From character to factor
+x <- as.factor(c("A", "B", "A"))
+x
+class(x)
+
+# From factor to character
+x <- as.character(x)
+x
+class(x)
+
+# From character to numeric 
+y <- c("1", "2", "3")
+y <- as.numeric(y)
+y
+class(y)
+
 
 #------------------------------------------------------------------------------#
 
