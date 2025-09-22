@@ -542,7 +542,6 @@ df[1, ]             # entire first row
 
 subset(df, weight_kg > 100)
 
-
 ```
 
 ### c.2. Inspecting a data frame
@@ -574,4 +573,299 @@ summary(df)
 names(df)
 
 ```
+
+### c.3. Modifying data frames
+
+```{r}
+
+# Adding a new column
+df$storage_room <- c(1, 1, 2, 3, 4)
+df
+
+```
+```{r}
+
+# Renaming a column
+# a. Rename a single column by name
+names(df)[names(df) == "weight_kg"] <- "weight_tons"
+df
+
+```
+```{r}
+
+# b. Rename by column position
+names(df)[2] <- "weight_kg"
+df
+
+```
+```{r}
+
+# c. Rename multiple columns
+names(df) <- c("crop_name", "weight", "number_of_days_stored", "room_no")
+df
+
+```
+## d. Lists
+
+A list in R is a flexible data structure that can hold elements of different types and lengths, including:
+
+- vectors
+- matrices
+- data frames
+- and even other lists
+
+They are building blocks of more complex R objects (like models).
+
+```{r}
+
+# Creating a simple list
+list1 <- list(1, "hello", TRUE, c(2, 3, 4))
+list1
+
+```
+```{r}
+
+# Creating a named list
+list2 <- list(crop = "rice",
+              weight_kg = c(100, 250, 80),
+              status_in_storage = c(TRUE, FALSE, TRUE),
+              room_no = "1a")
+list2
+
+```
+### d.1. Accessing list elements
+
+```{r}
+
+# 1. Using $ for named elements
+
+list2$weight_kg
+
+```
+
+
+```{r}
+
+# 2. Using double brackets [[]]
+
+list2[[2]]                # gets the second element
+list2[["weight_kg"]]      # gets the "weight_kg" (which is also the second element)
+
+```
+
+
+# 4. More about data frames in R
+
+We will focus in working on data frames since it will be the usual data structure of most data sets that we will be using in our work.
+
+R comes with several built-in data frames that are perfect for learning, testing, and practicing data analysis.
+
+These are preloaded with base R or available in standard packages like `datasets`.
+
+```{r}
+
+# How to see all built-in data sets in R
+data()
+
+# A separate tab showing all built-in data sets will come out. View all available data.
+
+```
+
+```{r}
+
+# Let us use ChickWeight = Weight versus age of chicks on different diets
+
+# STEP 1: Load the data set
+
+data("ChickWeight")  # Load the data set
+
+```
+
+```{r}
+
+# STEP 2: See the documentation of the data set
+
+?ChickWeight
+
+# A documentation will appear in the Help tab.
+
+```
+
+```{r}
+
+# STEP 3: Explore the data
+
+head(ChickWeight)     # shows the first few rows
+
+```
+
+```{r}
+
+tail(ChickWeight)    # shows the last few rows
+
+```
+
+```{r}
+
+str(ChickWeight)    # shows the structure
+
+```
+
+```{r}
+
+summary(ChickWeight)   # shows the summary statistics
+
+```
+
+**We can also used the base R `plot()` function to see the matrix of scatterplots, also called pairs plot.**
+
+```{r}
+
+# STEP 4: Explore the relationships between the numeric columns in the data frame
+
+plot(ChickWeight)
+
+```
+
+This is a scatterplot matrix of all numeric columns in the data frame. Each cell shows a scatterplot between two numeric variables.
+
+Note that the plot in row 1, column 2 is just a mirror of row 2, column 1 (i.e., axes flipped).
+
+**What to look for in each plot:**
+
+**1. Linear patterns**
+
+- If X increases and Y also increases = positive correlation
+- If X increases and Y decreases → negative correlation
+
+**2. Curved patterns**
+
+- Indicates a non-linear relationship.
+
+**3. Clusters**
+
+- Points forming distinct groups might indicate the presence of categorical groups or outliers.
+
+**4. Outliers**
+
+- Points far from the main cloud = potential data issues or interesting cases
+
+
+# 5. Importing data sets to R using base R functions
+
+## a. CSV files
+
+Why is CSV file preferred over Excel?
+
+1. Comma-separated values (CSV) is just raw data in plain text
+2. Works across any programming language (R, Python, SQL, JavaScript, etc.)
+3. No hidden formatting, just data = reduces unexpected behavior when importing
+4. Not proprietary! We don’t need Excel or any licensed software to open or edit a CSV.
+
+We mainly use the `read.csv()` to bring in .csv files into R.
+
+The tricky part here is identifying the file path to the data.
+
+```{r}
+
+# We can use getwd() to help identify our working directory, where the .csv file (preferably) should also be located.
+
+getwd()
+
+```
+
+```{r}
+
+# Let us try importing the provided CSV file.
+# Provide the file path to the data:
+
+data <- read.csv("/Users/amyeldalecero/R/TRAINING/Intro_to_R_training/00_Data/data.csv", 
+                     header = TRUE)
+
+# Note that this code will not work for you because your file will have a different file path.
+
+# You will have to revise the line of code above to make it (and the rest of the code below) to work.
+
+```
+
+## b. TXT files
+
+We can use `read.table()` to import text files into R.
+
+## c. Excel files
+
+Base R cannot read Excel files directly. We will need external packages like `readxl` or `openxlsx`.
+
+What we can do is to save the Excel sheet as a .csv -- can be a problem when data is saved in multiple tabs!
+
+**Important reminders:**
+
+1. Use absolute paths
+`C:/Users/yourname/Documents/file.csv`
+
+2. Or relative paths (relative to your **working directory**): `data/file.csv`
+
+
+# 6. Exploring the imported data
+
+Once we have imported the file, the first step is to always explore it.
+
+```{r}
+
+# Explore 'data'
+
+dim(data)
+
+```
+
+```{r}
+
+str(data)
+
+```
+
+```{r}
+
+head(data)
+
+```
+
+```{r}
+
+tail(data)
+
+```
+```{r}
+
+summary(data)
+
+```
+
+```{r}
+
+plot(data)
+
+```
+
+```{r}
+
+# See the column names
+names(data)
+
+```
+```{r}
+
+# Remove duplicate rows
+clean_data <- data[!duplicated(data), ]
+
+```
+
+```{r}
+
+# Note the changes in the dimensions
+dim(data)
+dim(clean_data)
+
+```
+
 

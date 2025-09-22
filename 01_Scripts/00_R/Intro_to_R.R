@@ -343,61 +343,26 @@ data("ChickWeight")  # Load the data set
 # STEP 3: Explore the data
 
 head(ChickWeight)
+tail(ChickWeight)
 str(ChickWeight)
 summary(ChickWeight)
 
-# STEP 4: Plot weight over time
+# STEP 4: Explore the relationships between the 
+# numeric columns in the data frame
+
+plot(ChickWeight)
+
+
+# STEP 5: We can explore more specific relationships.
 
 plot(x = ChickWeight$Time,
-     y = ChickWeight$weight,
-     xlab = "Time (number of days since birth)",
-     ylab = "Weight (gm)")
+     y = ChickWeight$weight)
 
-# STEP 5: Make plot more meaningful: color the data by diet
-# a. Create a color vector for diet
-diet_colors <- c("red", "blue", "green", "purple")
-
-# b. Map each diet (1-4) to a color
-color_vector <- diet_colors[as.numeric(ChickWeight$Diet)]
-
-# c. Plot
-plot(
-  ChickWeight$Time, ChickWeight$weight,
-  col = color_vector,
-  pch = 16,
-  xlab = "Time (days)",
-  ylab = "Weight (grams)",
-  main = "Chick Weight Over Time by Diet (Base R plot)"
-)
-
-# d. Add legend
-legend("topleft",
-       legend = paste("Diet", 1:4),
-       col = diet_colors,
-       pch = 16)
-
-# OPTIONAL: Add lines for each chick
-
-# Plot blank canvas
-plot(weight ~ Time, data = ChickWeight, type = "n",
-     xlab = "Time", ylab = "Weight", main = "Chick Growth by Diet")
-
-# Loop through each chick
-unique_chicks <- unique(ChickWeight$Chick)
-
-for (chick in unique_chicks) {
-  chick_data <- ChickWeight[ChickWeight$Chick == chick, ]
-  diet <- as.numeric(chick_data$Diet[1])
-  lines(chick_data$Time, chick_data$weight, col = diet_colors[diet])
-}
-
-# WHAT CAN WE DO WITH THE DATA
-# 1. Model growth over time (fit a linear model)
-
-lm1 <- lm(weight ~ Time * Diet, data = ChickWeight)
-summary(lm1)
+################################################################################
 
 
+# Note: Rest of the code used in the workshop can be found in the
+# Introduction_to_R_Programming.Rmd
 
 
 
