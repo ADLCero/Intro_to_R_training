@@ -716,6 +716,30 @@ str(ChickWeight)    # shows the structure
 summary(ChickWeight)   # shows the summary statistics
 
 ```
+Note that `summary()` can give us the summary statistics of the data frame but we can also use separate functions to do this, if needed:
+
+```{r}
+
+# mean
+mean_weight <- mean(ChickWeight$weight)
+
+# median
+median_weight <- median(ChickWeight$weight)
+
+# mode
+mode_weight <- mode(ChickWeight$weight)
+
+# standard deviation
+sd_weight <- sd(ChickWeight$weight)
+
+print(mean_weight)
+print(median_weight)
+print(mode_weight)
+print(sd_weight)
+
+# We assign the values to variables so they are saved in our environment and we can use them later in other computations.
+
+```
 
 **We can also used the base R `plot()` function to see the matrix of scatterplots, also called pairs plot.**
 
