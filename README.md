@@ -2,7 +2,7 @@
 
 This repository contains the code/scripts used in the **"Training on Data Analysis for Agricultural Mechanization and Infrastructure Planning and Policy Development"** by the Department of Agriculture (DA) - Bureau of Agricultural and Fisheries Engineering (BAFE) from September 22-26, 2025 at Malay, Aklan.
 
-**CONTENTS:**
+**WHICH FILES TO DOWNLOAD:**
 
 1.  **Intro_to_R.R** = R script of the sample code used
 2.  **Introduction_to_R_Programming.Rmd** = R Markdown version of the R script, including more explanation and examples
