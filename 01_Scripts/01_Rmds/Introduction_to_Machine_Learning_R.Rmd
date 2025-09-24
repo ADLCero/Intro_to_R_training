@@ -1,0 +1,823 @@
+---
+title: "Machine Learning with Iris Data Set"
+author: "Amyel Dale Cero"
+date: "2025-09-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R language equivalent of "Iris Flower" data analysis and machine learning
+
+## 1. Install packages
+
+```{r}
+
+# Install packages
+
+install.packages("RColorBrewer")  # Set a custom color palette like seaborn's 'husl'
+install.packages("reshape2")     # For reshaping dataset
+
+
+# MODELING LIBRARIES (similar to scikit-learn estimators)
+
+install.packages("rsample")      # For separating training and testing sets
+install.packages("caret")         # For ML: train/test split, training models, CV, accuracy, etc.
+
+install.packages("nnet")          # For multinomial logistic regression
+install.packages("e1071")         # For SVM and Naive Bayes
+install.packages("kernlab")
+install.packages("naivebayes")    # For Naive Bayes
+install.packages("MASS")          # For LDA (Linear Discriminant Analysis)
+install.packages("rpart")         # For Decision Trees
+install.packages("rpart.plot")
+install.packages("class")         # For KNN
+install.packages("klaR")          # Alternative Naive Bayes
+install.packages("nnet")          # Neural networks / multinomial logistic regression (optional)
+
+```
+
+## 2. Load the libraries
+
+```{r}
+
+# Load libraries
+
+library(dplyr)         
+library(tidyr)         
+library(readr)         
+library(ggplot2)
+library(RColorBrewer)
+library(reshape2)
+library(rsample)
+library(caret)
+library(nnet)
+library(MASS)
+library(class)
+library(rpart)
+library(rpart.plot)
+library(naivebayes)
+library(e1071)
+library(kernlab)
+
+```
+
+## 3. Get the data
+
+```{r}
+
+# Get the data from GitHub
+# Note that Iris data set is also built-in in R
+
+# Define the URL
+url <- "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
+
+# Define column names
+col_names <- c("sepal-length", "sepal-width", "petal-length", "petal-width", "class")
+
+# Read the CSV from the URL with custom column names
+dataset <- readr::read_csv(url, col_names = col_names)
+
+# View the first few rows
+head(dataset)
+
+```
+
+```{r}
+
+# Check the structure
+# Let us use the version of the data that was downloaded from the web
+
+str(dataset)
+
+```
+
+```{r}
+
+# Check the summary of the dataset
+summary(dataset)
+
+```
+
+```{r}
+
+# Count the number of occurrences
+
+dataset %>%
+  count(class)
+
+```
+
+## 4. Clean the data
+
+```{r}
+
+# Rename columns to avoid hyphens that may not be compatible with some ggplot functions
+
+dataset_clean <- dataset %>%
+  rename(
+    sepal_length = `sepal-length`,
+    sepal_width = `sepal-width`,
+    petal_length = `petal-length`,
+    petal_width = `petal-width`
+  )
+
+```
+
+```{r}
+
+# Ensure class is a factor
+dataset_clean$class <- as.factor(dataset_clean$class)
+
+```
+
+
+## 5. Create  violin plots
+
+```{r}
+
+# Violin plot for Sepal Length
+
+ggplot(dataset_clean, aes(x = class, y = sepal_length,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "skyblue") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Sepal Length by Class")
+
+```
+
+
+```{r}
+
+# Violin plot for Sepal Width
+
+ggplot(dataset_clean, aes(x = class, y = sepal_width,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "lightgreen") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Sepal Width by Class")
+
+```
+
+```{r}
+
+# Violin plot for Petal Length
+
+ggplot(dataset_clean, aes(x = class, 
+                          y = petal_length,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "salmon") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Petal Length by Class")
+
+```
+
+```{r}
+
+# Violin plot for Petal Width
+
+ggplot(dataset_clean, aes(x = class, 
+                          y = petal_width,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "plum") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Petal Width by Class")
+
+```
+
+## 6. Create a correlation heatmap
+
+```{r}
+
+# Create a correlation heatmap
+
+# Compute correlation matrix
+cor_matrix <- cor(dataset_clean[, 1:4])
+
+# Melt for ggplot
+cor_melt <- melt(cor_matrix)
+
+# Plot correlation heatmap
+ggplot(cor_melt, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = round(value, 2)), color = "white") +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  labs(title = "Correlation Heatmap of Iris Features", x = "", y = "") +
+  theme_minimal()
+
+```
+
+## 7. Prepare data for modeling
+
+```{r}
+
+# Drop 'class' column to get predictors (X)
+x <- dataset_clean[, setdiff(names(dataset_clean), "class")]
+
+# Extract 'class' column as target (y)
+y <- dataset_clean[["class"]]
+
+# Print shapes (dimensions)
+cat(sprintf("X shape: %d x %d | y shape: %d\n", nrow(x), ncol(x), length(y)))
+```
+
+## 8. Set training and testing sets
+
+```{r}
+
+# Combine x and y into one dataset if needed
+data_all <- cbind(x, class = y)
+
+# Create split object
+set.seed(1)
+split_obj <- initial_split(data_all, prop = 0.6, strata = class)
+
+# Training and testing sets
+train_data <- training(split_obj)
+test_data  <- testing(split_obj)
+
+# Optionally extract x/y again
+x_train <- train_data[, setdiff(names(train_data), "class")]
+y_train <- train_data$class
+
+x_test  <- test_data[, setdiff(names(test_data), "class")]
+y_test  <- test_data$class
+
+```
+
+## 9. Compare models
+
+```{r}
+
+# Define training control with 10-fold stratified CV
+train_control <- trainControl(
+  method = "cv",      # cross-validation
+  number = 10,        # 10 folds
+  classProbs = FALSE, # no probabilities needed
+  summaryFunction = defaultSummary  # default metrics like Accuracy
+)
+
+# Model list with caret method names
+model_list <- list(
+  LR   = "multinom",     # Multinomial Logistic Regression
+  LDA  = "lda",          # Linear Discriminant Analysis
+  KNN  = "knn",          # K-Nearest Neighbors
+  CART = "rpart",        # Decision Tree
+  NB   = "naive_bayes",  # Naive Bayes (needs 'naivebayes' package)
+  SVC  = "svmLinear"     # Support Vector Classifier
+)
+
+```
+
+```{r}
+
+# Store results
+results <- list()
+
+# Loop through and train each model
+for (model_name in names(model_list)) {
+  cat("\nTraining:", model_name, "\n")
+  
+  fit <- train(
+    x = x_train,
+    y = y_train,
+    method = model_list[[model_name]],
+    trControl = train_control,
+    metric = "Accuracy"
+  )
+  
+  results[[model_name]] <- fit
+  
+  # Find the best tuning parameters
+  best_params <- fit$bestTune
+  
+  # Find the row index in results that matches bestTune (works even if bestTune is empty for no tuning)
+  if (nrow(best_params) == 0) {
+    # No tuning parameters, just take the first row
+    idx <- 1
+  } else {
+    # Match bestTune values in results
+    idx <- which(apply(fit$results[, names(best_params), drop=FALSE], 1, function(row) all(row == best_params)))
+  }
+  
+  # Extract accuracy and std dev for best params
+  acc <- fit$results$Accuracy[idx]
+  std <- fit$results$AccuracySD[idx]
+  
+  cat(sprintf("%s: Accuracy = %.4f (SD = %.4f)\n", model_name, acc, std))
+}
+
+```
+
+## 10. Try for a specific model
+
+```{r}
+
+# Train SVM model (linear kernel)
+model <- train(
+  x = x_train,
+  y = y_train,
+  method = "svmLinear",
+  trControl = trainControl(method = "none")  # no resampling, just train
+)
+
+# Predict on test data
+prediction <- predict(model, newdata = x_test)
+
+# View predictions
+print(prediction)
+
+```
+
+```{r}
+
+# Calculate accuracy
+accuracy <- sum(prediction == y_test) / length(y_test)
+cat(sprintf("Test Accuracy: %.4f\n", accuracy))
+
+# Classification report (confusion matrix and stats)
+conf_mat <- confusionMatrix(prediction, y_test)
+print(conf_mat)
+
+```
+
+## 11. Linear regression workflow
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Select features
+X <- iris[["Petal.Length"]]  # Independent variable
+y <- iris[["Petal.Width"]]   # Dependent variable
+
+```
+
+```{r}
+
+# 3. Split into training and testing sets
+set.seed(42)
+train_index <- sample(seq_len(nrow(iris)), size = 0.8 * nrow(iris))
+X_train <- X[train_index]
+X_test  <- X[-train_index]
+y_train <- y[train_index]
+y_test  <- y[-train_index]
+
+```
+
+
+```{r}
+
+# 4. Train linear regression model
+model <- lm(y_train ~ X_train)
+
+```
+
+```{r}
+
+# 5. Make predictions
+y_pred <- predict(model, newdata = data.frame(X_train = X_test))
+
+```
+
+```{r}
+
+# 6. Print model details
+cat("Linear Regression Model:\n")
+cat(sprintf("Coefficient (m): %.4f\n", coef(model)[2]))
+cat(sprintf("Intercept (c): %.4f\n", coef(model)[1]))
+
+```
+
+```{r}
+
+# 7. Calculate R-squared
+r_squared <- summary(model)$r.squared
+cat(sprintf("R-squared (R²): %.4f\n", r_squared))
+
+```
+
+```{r}
+
+# 8. Visualization
+
+plot_data <- data.frame(
+  Petal.Length = X_test,
+  Petal.Width = y_test,
+  Predicted = y_pred
+)
+
+ggplot(plot_data, aes(x = Petal.Length, y = Petal.Width)) +
+  geom_point(color = "blue", size = 2, alpha = 0.6) +
+  geom_line(aes(y = Predicted), color = "red", size = 1.2) +
+  labs(
+    title = "Linear Regression on Iris Dataset",
+    x = "Petal Length (cm)",
+    y = "Petal Width (cm)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(sec.axis = dup_axis(name = NULL)) +
+  guides(color = "none")
+
+```
+
+## 12. Support Vector Classifier (SVC) with a linear kernel
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Keep only the first two features for visualization
+iris_subset <- iris[, c("Sepal.Length", "Sepal.Width", "Species")]
+
+```
+
+```{r}
+
+# 3. Split into train and test sets (80/20)
+set.seed(42)
+train_index <- createDataPartition(iris_subset$Species, p = 0.8, list = FALSE)
+train_data <- iris_subset[train_index, ]
+test_data  <- iris_subset[-train_index, ]
+
+```
+
+```{r}
+
+# 4. Train the SVM model with a linear kernel
+model <- svm(Species ~ Sepal.Length + Sepal.Width, 
+             data = train_data, 
+             kernel = "linear", 
+             cost = 1.0, 
+             scale = TRUE)
+```
+
+```{r}
+
+# 5. Make predictions and evaluate
+pred <- predict(model, newdata = test_data)
+
+cat("Support Vector Classifier Model Performance:\n")
+accuracy <- mean(pred == test_data$Species)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+```
+
+```{r}
+
+# Classification report
+conf_mat <- confusionMatrix(pred, test_data$Species)
+print(conf_mat)
+
+```
+
+```{r}
+
+# 6. Visualize the decision boundaries
+# Create a grid to evaluate model
+x_min <- min(iris_subset$Sepal.Length) - 0.5
+x_max <- max(iris_subset$Sepal.Length) + 0.5
+y_min <- min(iris_subset$Sepal.Width) - 0.5
+y_max <- max(iris_subset$Sepal.Width) + 0.5
+
+```
+
+```{r}
+
+# Resolution of the grid
+h <- 0.02
+grid <- expand.grid(
+  Sepal.Length = seq(x_min, x_max, by = h),
+  Sepal.Width  = seq(y_min, y_max, by = h)
+)
+
+```
+
+```{r}
+
+# Predict the class for each point in the grid
+grid$Species <- predict(model, newdata = grid)
+
+```
+
+```{r}
+
+# 7. Plot
+ggplot() +
+  geom_tile(data = grid, aes(x = Sepal.Length, y = Sepal.Width, fill = Species), alpha = 0.3) +
+  geom_point(data = iris_subset, 
+             aes(x = Sepal.Length, y = Sepal.Width, color = Species),
+             size = 2, shape = 21, stroke = 1) +
+  scale_fill_manual(values = c("#D55E00", "#0072B2", "#009E73")) +
+  scale_color_manual(values = c("#D55E00", "#0072B2", "#009E73")) +
+  labs(title = "SVC Decision Boundary on Iris Dataset",
+       x = "Sepal Length (cm)",
+       y = "Sepal Width (cm)") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+## 13. Linear Discriminant Analysis (LDA)
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Set features (X) and target (y)
+X <- iris[, 1:4]            # All 4 numeric features
+y <- iris$Species           # Target variable
+
+```
+
+```{r}
+
+# 3. Split data into training and testing sets (70/30)
+set.seed(42)
+train_index <- createDataPartition(y, p = 0.7, list = FALSE)
+X_train <- X[train_index, ]
+y_train <- y[train_index]
+X_test  <- X[-train_index, ]
+y_test  <- y[-train_index]
+
+```
+
+```{r}
+
+# 4. Train LDA model (and transform training data)
+lda_model <- lda(Species ~ ., data = iris[train_index, ])
+X_train_lda <- predict(lda_model, X_train)$x
+
+```
+
+```{r}
+
+# 5. Predict on test set
+lda_pred <- predict(lda_model, X_test)
+y_pred <- lda_pred$class
+
+```
+
+```{r}
+
+# 6. Evaluate performance
+cat("Linear Discriminant Analysis (LDA) Model Performance:\n")
+accuracy <- mean(y_pred == y_test)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+conf_matrix <- confusionMatrix(y_pred, y_test)
+print(conf_matrix)
+
+```
+
+```{r}
+
+# 7. Visualize the LDA projection (entire dataset)
+lda_all <- lda(Species ~ ., data = iris)
+lda_values <- predict(lda_all)$x  # Projected values
+
+# Combine with original labels for plotting
+plot_data <- data.frame(lda_values, Species = iris$Species)
+
+```
+
+```{r}
+
+# 8. Plot
+ggplot(plot_data, aes(x = LD1, y = LD2, color = Species)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(
+    title = "LDA of Iris Dataset",
+    x = "Linear Discriminant 1",
+    y = "Linear Discriminant 2"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_viridis_d(option = "viridis")
+
+```
+## 14. K-Nearest Neighbors (KNN)
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# Define features and target
+X <- iris[, 1:4]            # All four features
+y <- iris$Species           # Target variable
+feature_names <- names(X)
+
+```
+
+```{r}
+
+# 3. Split the dataset into training and testing sets (70/30)
+set.seed(42)
+train_index <- createDataPartition(y, p = 0.7, list = FALSE)
+X_train <- X[train_index, ]
+X_test  <- X[-train_index, ]
+y_train <- y[train_index]
+y_test  <- y[-train_index]
+
+```
+
+```{r}
+
+# 4. Train and apply KNN model (k = 5)
+k <- 5
+y_pred <- knn(train = X_train, test = X_test, cl = y_train, k = k)
+
+```
+
+```{r}
+
+# 5. Evaluate model performance
+cat("K-Nearest Neighbors (KNN) Model Performance:\n")
+accuracy <- mean(y_pred == y_test)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+# Confusion matrix and classification metrics
+conf_matrix <- confusionMatrix(y_pred, y_test)
+print(conf_matrix)
+
+```
+
+```{r}
+
+# 6. Visualization using first two features
+# We'll use original full dataset and plot Sepal.Length vs. Sepal.Width
+
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point(size = 3, alpha = 0.8, shape = 21, stroke = 1) +
+  labs(
+    title = "Iris Dataset: Sepal Length vs. Sepal Width",
+    x = "Sepal Length (cm)",
+    y = "Sepal Width (cm)",
+    color = "Species"
+  ) +
+  theme_minimal() +
+  scale_color_viridis_d(option = "viridis") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+## 15. CART (Decision Tree)
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Set seed for reproducibility
+set.seed(42)
+
+```
+
+```{r}
+
+# 3. Split the data into training and testing sets (70/30)
+train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+train_data <- iris[train_index, ]
+test_data  <- iris[-train_index, ]
+
+```
+
+```{r}
+
+# 4. Train a CART model (Decision Tree with max depth = 3)
+cart_model <- rpart(Species ~ ., data = train_data, method = "class",
+                    control = rpart.control(maxdepth = 3))
+
+```
+
+```{r}
+
+# 5. Make predictions
+y_pred <- predict(cart_model, test_data, type = "class")
+
+```
+
+```{r}
+
+# 6. Evaluate the model
+cat("Classification and Regression Tree (CART) Model Performance:\n")
+accuracy <- mean(y_pred == test_data$Species)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+conf_matrix <- confusionMatrix(y_pred, test_data$Species)
+print(conf_matrix)
+
+```
+
+```{r}
+
+# 7. Visualize the decision tree
+rpart.plot(cart_model,
+           type = 2,             # Boxed nodes
+           extra = 104,          # Show probabilities + percentages
+           under = TRUE,
+           faclen = 0,           # Show full factor names
+           main = "Decision Tree for Iris Dataset")
+
+```
+
+## 16. Naive Bayes classifier
+
+```{r}
+
+# 1. Load the iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Optional: get feature and class names (like Python's `feature_names` and `target_names`)
+feature_names <- names(iris)[1:4]
+target_names <- levels(iris$Species)
+
+```
+
+```{r}
+
+# 3. Split the dataset into training and testing sets (70/30)
+set.seed(42)
+train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+train_data <- iris[train_index, ]
+test_data  <- iris[-train_index, ]
+
+```
+
+```{r}
+
+# 4. Train a Gaussian Naive Bayes model
+nb_model <- naiveBayes(Species ~ ., data = train_data)
+
+```
+
+```{r}
+
+# 5. Make predictions
+y_pred <- predict(nb_model, newdata = test_data)
+
+```
+
+```{r}
+
+# 6. Evaluate the model
+cat("Naive Bayes (NB) Model Performance:\n")
+accuracy <- mean(y_pred == test_data$Species)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+conf_matrix <- confusionMatrix(y_pred, test_data$Species)
+print(conf_matrix)
+
+```
+
+```{r}
+
+# 7. Visualize the data using the first two features (Sepal.Length vs Sepal.Width)
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point(size = 3, alpha = 0.8) +
+  scale_color_viridis_d() +
+  labs(
+    title = "Iris Dataset: Sepal Length vs. Sepal Width",
+    x = feature_names[1],
+    y = feature_names[2],
+    color = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    legend.title = element_text(face = "bold")
+  )
+
+```
+

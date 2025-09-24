@@ -381,5 +381,3 @@ plot(x = ChickWeight$Time,
 
 
 
-
-

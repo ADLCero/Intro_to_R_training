@@ -33,6 +33,9 @@ A <- 1
 B <- 2
 C <- 3
 
+print(A)
+print(B)
+print(C)
 ```
 
 We can perform basic math operations by using the variables instead of the numbers assigned to them:
@@ -40,6 +43,7 @@ We can perform basic math operations by using the variables instead of the numbe
 ```{r}
 
 D <- A + B
+D
 
 ```
 
@@ -389,13 +393,13 @@ m1 <- array(data = 1:10, dim = c(5, 2))
 m1
 
 ```
+
 ```{r}
 
 # Option 2: using matrix()
 
 m2 <- matrix(data = 1:10, nrow = 5, byrow = FALSE)
 m2
-
 
 ```
 We can use `class()` to see the object's class (its behavior or type as seen by users) and/or `typeof()` to see the internal storage type that R used for the object.
@@ -459,6 +463,7 @@ m6
 m7
 
 ```
+
 ```{r}
 
 m6 + m7   # Element-wise addition
@@ -1142,5 +1147,674 @@ ggplot(mtcars,
 
 ```
 
+# ADDITIONAL EXAMPLES
 
+## 1. Heat maps
+
+1. Creating a heat map in base R
+
+```{r}
+
+# Convert the mtcars data set to a matrix
+mtcars_matrix <- as.matrix(mtcars)
+mtcars_matrix
+
+```
+
+```{r}
+
+# Create a heatmap
+
+heatmap(mtcars_matrix,
+        main = "Heatmap of mtcars",
+        col = heat.colors(256),
+        scale = "column")
+
+```
+
+2. Creating a heatmap with ggplot2
+
+```{r, eval = FALSE}
+
+# Install additional package
+install.packages("reshape2")
+
+```
+
+```{r}
+
+# Load the library
+library(reshape2)
+
+```
+```{r}
+
+# Reshape the mtcars data for ggplot
+
+# Add car names as a column
+mtcars$car <- rownames(mtcars)
+mtcars_melt <- melt(mtcars, id.vars = "car")
+
+# Check the data frame
+head(mtcars_melt)
+
+```
+
+```{r}
+
+# Plot
+
+ggplot(mtcars_melt, aes(x = variable, y = car, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(title = "Heatmap of mtcars dataset", x = "Variable", y = "Car Model") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+# R language equivalent of "Iris Flower" data analysis and machine learning
+
+## 1. Install packages
+
+```{r}
+
+# Install packages
+
+install.packages("RColorBrewer")  # Set a custom color palette like seaborn's 'husl'
+install.packages("reshape2")     # For reshaping dataset
+
+
+# MODELING LIBRARIES (similar to scikit-learn estimators)
+
+install.packages("rsample")      # For separating training and testing sets
+install.packages("caret")         # For ML: train/test split, training models, CV, accuracy, etc.
+
+install.packages("nnet")          # For multinomial logistic regression
+install.packages("e1071")         # For SVM and Naive Bayes
+install.packages("kernlab")
+install.packages("naivebayes")    # For Naive Bayes
+install.packages("MASS")          # For LDA (Linear Discriminant Analysis)
+install.packages("rpart")         # For Decision Trees
+install.packages("class")         # For KNN
+install.packages("klaR")          # Alternative Naive Bayes
+install.packages("nnet")          # Neural networks / multinomial logistic regression (optional)
+
+
+```
+
+## 2. Load the libraries
+
+```{r}
+
+# Load libraries
+
+library(dplyr)         
+library(tidyr)         
+library(readr)         
+library(ggplot2)
+library(RColorBrewer)
+library(reshape2)
+library(rsample)
+library(caret)
+library(nnet)
+library(MASS)
+library(class)
+library(rpart)
+library(naivebayes)
+library(e1071)
+library(kernlab)
+
+```
+
+## 3. Get the data
+
+```{r}
+
+# Get the data from GitHub
+# Note that Iris data set is also built-in in R
+
+# Define the URL
+url <- "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
+
+# Define column names
+col_names <- c("sepal-length", "sepal-width", "petal-length", "petal-width", "class")
+
+# Read the CSV from the URL with custom column names
+dataset <- readr::read_csv(url, col_names = col_names)
+
+# View the first few rows
+head(dataset)
+
+```
+
+```{r}
+
+# Check the structure
+# Let us use the version of the data that was downloaded from the web
+
+str(dataset)
+
+```
+
+```{r}
+
+# Check the summary of the dataset
+summary(dataset)
+
+```
+```{r}
+
+# Count the number of occurrences
+
+dataset %>%
+  count(class)
+
+```
+
+## 4. Clean the data
+
+```{r}
+
+# Rename columns to avoid hyphens that may not be compatible with some ggplot functions
+
+dataset_clean <- dataset %>%
+  rename(
+    sepal_length = `sepal-length`,
+    sepal_width = `sepal-width`,
+    petal_length = `petal-length`,
+    petal_width = `petal-width`
+  )
+
+```
+
+```{r}
+
+# Ensure class is a factor
+dataset_clean$class <- as.factor(dataset_clean$class)
+
+```
+
+
+## 5. Create  violin plots
+
+```{r}
+
+# Violin plot for Sepal Length
+
+ggplot(dataset_clean, aes(x = class, y = sepal_length,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "skyblue") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Sepal Length by Class")
+
+```
+
+
+```{r}
+
+# Violin plot for Sepal Width
+
+ggplot(dataset_clean, aes(x = class, y = sepal_width,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "lightgreen") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Sepal Width by Class")
+
+```
+
+```{r}
+
+# Violin plot for Petal Length
+
+ggplot(dataset_clean, aes(x = class, 
+                          y = petal_length,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "salmon") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Petal Length by Class")
+
+```
+
+```{r}
+
+# Violin plot for Petal Width
+
+ggplot(dataset_clean, aes(x = class, 
+                          y = petal_width,
+                          fill = class)) +
+  geom_violin(trim = FALSE, fill = "plum") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  ggtitle("Petal Width by Class")
+
+```
+
+## 6. Create a correlation heatmap
+
+```{r}
+
+# Create a correlation heatmap
+
+# Compute correlation matrix
+cor_matrix <- cor(dataset_clean[, 1:4])
+
+# Melt for ggplot
+cor_melt <- melt(cor_matrix)
+
+# Plot correlation heatmap
+ggplot(cor_melt, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = round(value, 2)), color = "white") +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  labs(title = "Correlation Heatmap of Iris Features", x = "", y = "") +
+  theme_minimal()
+
+```
+
+## 7. Prepare data for modeling
+
+```{r}
+
+# Drop 'class' column to get predictors (X)
+x <- dataset_clean[, setdiff(names(dataset_clean), "class")]
+
+# Extract 'class' column as target (y)
+y <- dataset_clean[["class"]]
+
+# Print shapes (dimensions)
+cat(sprintf("X shape: %d x %d | y shape: %d\n", nrow(x), ncol(x), length(y)))
+```
+
+## 8. Set training and testing sets
+
+```{r}
+
+# Combine x and y into one dataset if needed
+data_all <- cbind(x, class = y)
+
+# Create split object
+set.seed(1)
+split_obj <- initial_split(data_all, prop = 0.6, strata = class)
+
+# Training and testing sets
+train_data <- training(split_obj)
+test_data  <- testing(split_obj)
+
+# Optionally extract x/y again
+x_train <- train_data[, setdiff(names(train_data), "class")]
+y_train <- train_data$class
+
+x_test  <- test_data[, setdiff(names(test_data), "class")]
+y_test  <- test_data$class
+
+```
+
+## 9. Compare models
+
+```{r}
+
+# Define training control with 10-fold stratified CV
+train_control <- trainControl(
+  method = "cv",      # cross-validation
+  number = 10,        # 10 folds
+  classProbs = FALSE, # no probabilities needed
+  summaryFunction = defaultSummary  # default metrics like Accuracy
+)
+
+# Model list with caret method names
+model_list <- list(
+  LR   = "multinom",     # Multinomial Logistic Regression
+  LDA  = "lda",          # Linear Discriminant Analysis
+  KNN  = "knn",          # K-Nearest Neighbors
+  CART = "rpart",        # Decision Tree
+  NB   = "naive_bayes",  # Naive Bayes (needs 'naivebayes' package)
+  SVC  = "svmLinear"     # Support Vector Classifier
+)
+
+```
+
+```{r}
+
+# Store results
+results <- list()
+
+# Loop through and train each model
+for (model_name in names(model_list)) {
+  cat("\nTraining:", model_name, "\n")
+  
+  fit <- train(
+    x = x_train,
+    y = y_train,
+    method = model_list[[model_name]],
+    trControl = train_control,
+    metric = "Accuracy"
+  )
+  
+  results[[model_name]] <- fit
+  
+  # Find the best tuning parameters
+  best_params <- fit$bestTune
+  
+  # Find the row index in results that matches bestTune (works even if bestTune is empty for no tuning)
+  if (nrow(best_params) == 0) {
+    # No tuning parameters, just take the first row
+    idx <- 1
+  } else {
+    # Match bestTune values in results
+    idx <- which(apply(fit$results[, names(best_params), drop=FALSE], 1, function(row) all(row == best_params)))
+  }
+  
+  # Extract accuracy and std dev for best params
+  acc <- fit$results$Accuracy[idx]
+  std <- fit$results$AccuracySD[idx]
+  
+  cat(sprintf("%s: Accuracy = %.4f (SD = %.4f)\n", model_name, acc, std))
+}
+
+```
+
+## 10. Try for a specific model
+
+```{r}
+
+# Train SVM model (linear kernel)
+model <- train(
+  x = x_train,
+  y = y_train,
+  method = "svmLinear",
+  trControl = trainControl(method = "none")  # no resampling, just train
+)
+
+# Predict on test data
+prediction <- predict(model, newdata = x_test)
+
+# View predictions
+print(prediction)
+
+```
+
+```{r}
+
+# Calculate accuracy
+accuracy <- sum(prediction == y_test) / length(y_test)
+cat(sprintf("Test Accuracy: %.4f\n", accuracy))
+
+# Classification report (confusion matrix and stats)
+conf_mat <- confusionMatrix(prediction, y_test)
+print(conf_mat)
+
+```
+
+## 11. Linear regression workflow
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Select features
+X <- iris[["Petal.Length"]]  # Independent variable
+y <- iris[["Petal.Width"]]   # Dependent variable
+
+```
+
+```{r}
+
+# 3. Split into training and testing sets
+set.seed(42)
+train_index <- sample(seq_len(nrow(iris)), size = 0.8 * nrow(iris))
+X_train <- X[train_index]
+X_test  <- X[-train_index]
+y_train <- y[train_index]
+y_test  <- y[-train_index]
+
+```
+
+
+```{r}
+
+# 4. Train linear regression model
+model <- lm(y_train ~ X_train)
+
+```
+
+```{r}
+
+# 5. Make predictions
+y_pred <- predict(model, newdata = data.frame(X_train = X_test))
+
+```
+
+```{r}
+
+# 6. Print model details
+cat("Linear Regression Model:\n")
+cat(sprintf("Coefficient (m): %.4f\n", coef(model)[2]))
+cat(sprintf("Intercept (c): %.4f\n", coef(model)[1]))
+
+```
+
+```{r}
+
+# 7. Calculate R-squared
+r_squared <- summary(model)$r.squared
+cat(sprintf("R-squared (R²): %.4f\n", r_squared))
+
+```
+
+```{r}
+
+# 8. Visualization
+
+plot_data <- data.frame(
+  Petal.Length = X_test,
+  Petal.Width = y_test,
+  Predicted = y_pred
+)
+
+ggplot(plot_data, aes(x = Petal.Length, y = Petal.Width)) +
+  geom_point(color = "blue", size = 2, alpha = 0.6) +
+  geom_line(aes(y = Predicted), color = "red", size = 1.2) +
+  labs(
+    title = "Linear Regression on Iris Dataset",
+    x = "Petal Length (cm)",
+    y = "Petal Width (cm)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(sec.axis = dup_axis(name = NULL)) +
+  guides(color = "none")
+
+```
+
+## 12. Support Vector Classifier (SVC) with a linear kernel
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Keep only the first two features for visualization
+iris_subset <- iris[, c("Sepal.Length", "Sepal.Width", "Species")]
+
+```
+
+```{r}
+
+# 3. Split into train and test sets (80/20)
+set.seed(42)
+train_index <- createDataPartition(iris_subset$Species, p = 0.8, list = FALSE)
+train_data <- iris_subset[train_index, ]
+test_data  <- iris_subset[-train_index, ]
+
+```
+
+```{r}
+
+# 4. Train the SVM model with a linear kernel
+model <- svm(Species ~ Sepal.Length + Sepal.Width, 
+             data = train_data, 
+             kernel = "linear", 
+             cost = 1.0, 
+             scale = TRUE)
+```
+
+```{r}
+
+# 5. Make predictions and evaluate
+pred <- predict(model, newdata = test_data)
+
+cat("Support Vector Classifier Model Performance:\n")
+accuracy <- mean(pred == test_data$Species)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+```
+
+```{r}
+
+# Classification report
+conf_mat <- confusionMatrix(pred, test_data$Species)
+print(conf_mat)
+
+```
+
+```{r}
+
+# 6. Visualize the decision boundaries
+# Create a grid to evaluate model
+x_min <- min(iris_subset$Sepal.Length) - 0.5
+x_max <- max(iris_subset$Sepal.Length) + 0.5
+y_min <- min(iris_subset$Sepal.Width) - 0.5
+y_max <- max(iris_subset$Sepal.Width) + 0.5
+
+```
+
+```{r}
+
+# Resolution of the grid
+h <- 0.02
+grid <- expand.grid(
+  Sepal.Length = seq(x_min, x_max, by = h),
+  Sepal.Width  = seq(y_min, y_max, by = h)
+)
+
+```
+
+```{r}
+
+# Predict the class for each point in the grid
+grid$Species <- predict(model, newdata = grid)
+
+```
+
+```{r}
+
+# 7. Plot
+ggplot() +
+  geom_tile(data = grid, aes(x = Sepal.Length, y = Sepal.Width, fill = Species), alpha = 0.3) +
+  geom_point(data = iris_subset, 
+             aes(x = Sepal.Length, y = Sepal.Width, color = Species),
+             size = 2, shape = 21, stroke = 1) +
+  scale_fill_manual(values = c("#D55E00", "#0072B2", "#009E73")) +
+  scale_color_manual(values = c("#D55E00", "#0072B2", "#009E73")) +
+  labs(title = "SVC Decision Boundary on Iris Dataset",
+       x = "Sepal Length (cm)",
+       y = "Sepal Width (cm)") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+## 13. Linear Discriminant Analysis (LDA)
+
+```{r}
+
+# 1. Load the Iris dataset
+data(iris)
+
+```
+
+```{r}
+
+# 2. Set features (X) and target (y)
+X <- iris[, 1:4]            # All 4 numeric features
+y <- iris$Species           # Target variable
+
+```
+
+```{r}
+
+# 3. Split data into training and testing sets (70/30)
+set.seed(42)
+train_index <- createDataPartition(y, p = 0.7, list = FALSE)
+X_train <- X[train_index, ]
+y_train <- y[train_index]
+X_test  <- X[-train_index, ]
+y_test  <- y[-train_index]
+
+```
+
+```{r}
+
+# 4. Train LDA model (and transform training data)
+lda_model <- lda(Species ~ ., data = iris[train_index, ])
+X_train_lda <- predict(lda_model, X_train)$x
+
+```
+
+```{r}
+
+# 5. Predict on test set
+lda_pred <- predict(lda_model, X_test)
+y_pred <- lda_pred$class
+
+```
+
+```{r}
+
+# 6. Evaluate performance
+cat("Linear Discriminant Analysis (LDA) Model Performance:\n")
+accuracy <- mean(y_pred == y_test)
+cat(sprintf("Accuracy: %.2f\n\n", accuracy))
+
+conf_matrix <- confusionMatrix(y_pred, y_test)
+print(conf_matrix)
+
+```
+
+```{r}
+
+# 7. Visualize the LDA projection (entire dataset)
+lda_all <- lda(Species ~ ., data = iris)
+lda_values <- predict(lda_all)$x  # Projected values
+
+# Combine with original labels for plotting
+plot_data <- data.frame(lda_values, Species = iris$Species)
+
+```
+
+```{r}
+
+# 8. Plot
+ggplot(plot_data, aes(x = LD1, y = LD2, color = Species)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(
+    title = "LDA of Iris Dataset",
+    x = "Linear Discriminant 1",
+    y = "Linear Discriminant 2"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_viridis_d(option = "viridis")
+
+```
 
