@@ -1,0 +1,149 @@
+---
+title: "Introduction to Tidyverse in R"
+author: "Amyel Dale Cero"
+date: "2025-10-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Tidyverse is a collection of R packages designed for data manipulation, visualization, and analysis.**
+
+**Key packages:**
+
+| Package  | Purpose                       |
+|----------|-------------------------------|
+| dplyr    | Data manipulation             |
+| ggplot2  | Data visualization            |
+| tidyr    | Reshaping data                |
+| readr    | Reading data                  |
+| purrr    | Functional programming        |
+| tibble   | Enhanced data frames          |
+| stringr  | String operations             |
+| forcats  | Factor manipulation           |
+
+Tidy data means each variable is a column, each observation is a row, and each type of observational unit forms a table.
+
+Main reference: https://tidyverse.org/packages/
+
+# 1. Installation
+
+```{r, eval = FALSE}
+
+# Note: Again, it is not recommended to install packages inside an R Markdown.
+# We can do this in the console or in a separate .R script inside this R Project.
+
+# Type this code in the console or "uncomment" (i.e., remove hashtag) the line
+install.packages("tidyverse")
+
+```
+
+```{r}
+
+# Load the tidyverse package
+library(tidyverse)
+
+```
+# 2. `reader`
+
+readr provides a fast and friendly way to read rectangular data (like csv, tsv, and fwf). It is designed to flexibly parse many types of data found in the wild, while still cleanly failing when data unexpectedly changes.
+
+readr supports the following file formats with these read_*() functions:
+
+- `read_csv()`: comma-separated values (CSV)
+- `read_tsv()`: tab-separated values (TSV)
+- `read_csv2()`: semicolon-separated values with , as the decimal mark
+- `read_delim()`: delimited files (CSV and TSV are important special cases)
+- `read_fwf()`: fixed-width files
+- `read_table()`: whitespace-separated files
+- `read_log()`: web log files
+
+
+Example 1: Read in a .csv data from the its website
+
+```{r}
+
+data <- read_csv("https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv")
+
+```
+Example 2: Read in a sample file bundled with the readr package
+
+```{r}
+
+chickens <- read_csv(readr_example("chickens.csv"))
+
+```
+Note that readr prints the column types – the guessed column types, in this case. This is useful because it allows you to check that the columns have been read in as you expect. 
+
+```{r}
+
+# Use spec() to retrieve the column specification
+spec(chickens)
+
+```
+Now you can copy, paste, and tweak this, to create a more explicit readr call that expresses the desired column types. 
+
+```{r}
+
+chickens <- read_csv(
+  readr_example("chickens.csv"),
+  col_types = cols(
+    chicken   = col_character(),
+    sex       = col_factor(levels = c("rooster", "hen")), # set to be a factor with levels rooster and hen
+    eggs_laid = col_integer(),         # set as integer
+    motto     = col_character()
+  )
+)
+
+chickens
+
+```
+
+To see the expanded introduction/documentation:
+
+```{r}
+
+vignette("readr")
+
+```
+
+# 3. `dplyr`
+
+`dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges:
+
+- `mutate()` adds new variables that are functions of existing variables
+- `select()` picks variables based on their names.
+- `filter()` picks cases based on their values.
+- `summarise()` reduces multiple values down to a single summary.
+- `arrange()` changes the ordering of the rows.
+
+These all combine naturally with group_by() which allows you to perform any operation “by group”. 
+
+Note that we can use `%>%` – the pipe operator - to chain functions.
+
+```{r}
+
+vignette("dplyr")
+
+```
+
+The best place to start learning dplyr is through the data transformation chapter in the "R for Data Science" book: https://r4ds.hadley.nz/data-transform
+
+To explore basic dplyr vervs, we will use the `nycflights13::flights` dataset.
+This dataset contains all 336,776 flights that departed from New York City in 2013.
+
+```{r}
+
+# Install the package then load it
+# install.packages("nycflights13")
+
+library(nycflights13)
+
+```
+
+
+
+
+

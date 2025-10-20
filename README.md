@@ -11,7 +11,8 @@ This repository contains the code/scripts used in the following trainings:
 1.  **00_Data:** contains the sample data set
 2.  **01_Scripts:** contains the `.R` and `.Rmd` files that were used in the workshop
 3.  **02_Output:** contains the sample outputs (plots, tables) produced in the workshop
-4.  **02_HTML_files:** contains the HTML version of the R Markdown files used in Training 1 that can be easily viewed in a browser. Corresponding HTML files of `.Rmd` used in Training 2 are in the 01_Scripts folder.
+4.  **03_HTML_files:** contains the HTML version of the R Markdown files used in Training 1 that can be easily viewed in a browser. Corresponding HTML files of `.Rmd` used in Training 2 are in the 01_Scripts folder.
+5.  **04_Cheatsheets:** contains the cheatsheets (publicly available in the internet) that are useful in recalling important functions included in the packages that were used.
 
 *Note: Files inside 01_Scripts can be downloaded and opened in R Studio to review the concepts that were discussed in the workshop.*
 
