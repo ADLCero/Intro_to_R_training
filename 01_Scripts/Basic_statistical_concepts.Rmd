@@ -296,15 +296,4 @@ Selection depends on researcher judgment or convenience, not randomization
 4. Snowball sampling = existing participants recruit future participants
 
 
-```{r, eval = FALSE}
-
-# This code simply tells R to save my version of this work in my folder for HTML files
-# No need to run this!
-
-rmarkdown::render(
-  here::here("01_Scripts", "Basic_statistical_concepts.Rmd"),
-  output_file = here::here("02_HTML_files", "Basic_statistical_concepts.html")
-)
-
-```
 

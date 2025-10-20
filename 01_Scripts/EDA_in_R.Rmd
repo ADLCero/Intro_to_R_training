@@ -3,7 +3,6 @@ title: "Exploratory Data Analysis in R"
 author: "Amyel Dale Cero"
 date: "2025-10-20"
 output: html_document
-
 ---
 
 ```{r setup, include=FALSE}
@@ -222,26 +221,6 @@ In data analysis, “impute” means to fill in missing values in a dataset with
 
 # Impute missing values with mean
 iris_na$Sepal.Length[is.na(iris_na$Sepal.Length)] <- mean(iris_na$Sepal.Length, na.rm = TRUE)
-
-```
-
-
-```{r, eval = FALSE}
-
-# This code simply tells R to save my version of this work in my folder for HTML files
-# No need to run this!
-
-library(here)
-
-# Ensure output folder exists
-if(!dir.exists("02_HTML_files")) dir.create("02_HTML_files")
-
-# Render HTML into that folder
-rmarkdown::render(
-  here("01_Scripts", "EDA_in_R.Rmd"),
-  output_file = here("02_HTML_files", "EDA_in_R.html")
-)
-
 
 ```
 
