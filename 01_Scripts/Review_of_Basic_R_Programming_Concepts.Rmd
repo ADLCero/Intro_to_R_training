@@ -1,0 +1,759 @@
+---
+title: "Review of Basic R Programming Concepts"
+author: "Amyel Dale Cero"
+date: "2025-10-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Assigning and using variables
+
+We can use the `=` sign to assign values to variables but the `<-` operator is conventionally preferred.
+
+```{r}
+
+# "Initializing" a variable
+# Variable <- Value
+
+A <- 1
+B <- 2
+C <- 3
+
+print(A)
+print(B)
+print(C)
+```
+
+We can perform basic math operations by using the variables instead of the numbers assigned to them:
+
+```{r}
+
+D <- A + B
+D
+
+```
+
+We can also overwrite variables:
+
+```{r}
+
+# We can also overwrite variables
+
+C <- 2 * A * B ^ B
+C
+
+```
+
+Note how the value of C changes from 3 to 8, subsequently changing the results of succeeding operations:
+
+```{r}
+
+C + D
+
+```
+
+**Using variables:**
+
+- Links output from one line of code to a later line
+- Minimizes errors
+- Makes the code more generalizable
+- Allows automation of data processing
+- Makes the code easier to update and revise
+
+
+# 2. Data types in R
+
+**Variables do not have to be numbers.**
+
+There are multiple data types in R and in other computer languages. The standard data types we will often encounter are:
+
+## a. Numeric
+
+```{r}
+
+# Subcategories: integer & double
+
+E <- 525600
+
+```
+
+## b. Logic
+
+```{r}
+
+# TRUE or FALSE
+
+Outcome <- TRUE
+
+```
+
+## c. Character
+
+```{r}
+
+# Also known as string; written with quotation marks around them
+
+BestProfession <- "Engineering"
+
+```
+
+We can print the variables to see the values assigned to them.
+
+```{r}
+
+print(E)
+print(Outcome)
+print(BestProfession)
+
+```
+
+To know the type of the variable, we can use `class()`
+
+```{r}
+
+class(E)
+class(Outcome)
+class(BestProfession)
+
+```
+
+## d. Factor
+
+A factor in R is a data structure used to handle categorical variables. It is especially useful when the variable represents a fixed number of categories (example: male vs female; low-medium-high).
+
+Factors are internally stores as integers with labels. They can also be "ordered" or "unordered".
+
+```{r}
+
+# Creating a factor
+gender <- factor(c("Male", "Female", "Female", "Male", "Non-binary"))
+
+# Check levels
+levels(gender)
+
+```
+
+We can also specify the levels and orders of factors.
+
+```{r}
+
+# Custom levels and order
+level_ordered <- factor(c("Low", "High", "Medium"),
+                        levels = c("Low", "Medium",
+                                   "High"), 
+                        ordered = TRUE)
+level_ordered
+
+```
+
+
+```{r}
+
+# Check if it's ordered
+is.ordered(level_ordered)
+
+```
+
+## Converting between different types of variables
+
+```{r}
+
+# From character to factor
+x <- as.factor(c("A", "B", "A"))
+x
+class(x)
+
+```
+
+```{r}
+
+# From factor to character
+x <- as.character(x)
+x
+class(x)
+
+```
+
+```{r}
+
+# From character to numeric 
+y <- c("1", "2", "3")
+y <- as.numeric(y)
+y
+class(y)
+
+```
+
+# 3. Data structures in R
+
+We were able to assign single values to variables. But what if we have a number of related values?
+
+```{r}
+
+Crop1 <- "rice"
+Crop2 <- "corn"
+Crop3 <- "sugarcane"
+Crop4 <- "cassava"
+
+```
+
+It can be a bit tedious to assign each value to a different variable. Instead, what we can do is to group them:
+
+```{r}
+
+Crops <- c("rice", "corn", "sugarcane", "cassava")
+Crops
+
+```
+
+```{r}
+
+# We can also use the assigned variables to group them together:
+
+Crops2 <- c(Crop1, Crop2, Crop3, Crop4)
+Crops2
+
+```
+
+## a. Vectors
+
+A vector is a data structure that holds elements of the same data type.
+
+Note the syntax for a vector: c(Item1, Item2, ...)
+c = concatenate = link things together in a chain or series
+
+```{r}
+
+# Numeric vector
+v1 <- c(1, 2, 3, 4, 5)
+
+# Character vector
+v2 <- c("apple", "banana", "grapes", "cherry", "strawberry")
+
+# Logical vector
+v3 <- c(TRUE, FALSE, TRUE, FALSE, FALSE)
+
+```
+
+Other ways to create vectors:
+
+```{r}
+
+# Sequence of numbers
+v_seq <- seq(0, 50, 2) # Sequence of numbers from 0 to 50, by 2s
+
+# Repeating values
+v_rep <- rep(5, times = 4)
+
+```
+
+We can check the type and length of vectors:
+
+```{r}
+
+length(Crops)     # number of elements
+typeof(Crops)     # data type
+is.vector(Crops)  # TRUE if it is a vector
+
+```
+
+### a.1. Accessing values in a vector
+
+We can use `VectorName[index#]` to isolate the desired item. ("Indexing")
+
+```{r}
+
+# Using the Crops vector:
+
+Crops[1]    # Gets the first element
+Crops[4]    # Gets the fourth element
+
+```
+
+```{r}
+
+# Accessing multiple values in a vector
+
+Crops[1:2]
+
+```
+
+```{r}
+
+# Overwriting an element in a vector using indexing
+
+Crops[3] <- "dragonfruit"
+Crops
+
+```
+
+### a.2. Vector operations
+
+R is vectorized: it is designed to perform operations on entire vectors of data at once instead of doing one element at a time.
+
+```{r}
+
+x <- c(1, 2, 3)
+y <- c(4, 5, 6)
+
+x + y   # 5 7 9
+x * 2   # 2 4 6
+x > 2   # FALSE FALSE TRUE
+
+```
+
+
+**Vectors** contain groups of objects in one dimension (column or row).
+
+**Matrices** contain groups of objects in two dimensions (a grid). 
+
+**Arrays** contain groups of objects in any number of dimensions (i.e., vectors and matrices are just specific types of an array).  
+
+
+## b. Matrix
+
+A matrix is a 2D structure where all elements must be of the same data type.
+
+There are many ways to initialize a matrix.
+
+```{r}
+
+# Creating a matrix (2D array)
+# Option 1: using array() (since a matrix is an array)
+
+m1 <- array(data = 1:10, dim = c(5, 2))
+m1
+
+```
+
+```{r}
+
+# Option 2: using matrix()
+
+m2 <- matrix(data = 1:10, nrow = 5, byrow = FALSE)
+m2
+
+```
+We can use `class()` to see the object's class (its behavior or type as seen by users) and/or `typeof()` to see the internal storage type that R used for the object.
+
+```{r}
+
+class(m1)
+typeof(m1)
+
+class(m2)
+typeof(m2)
+
+```
+We can also create a matrix by binding vectors.
+
+```{r}
+
+# Column-bind
+m3 <- cbind(c(1,2), c(3,4))
+
+# Row-bind
+m4 <- rbind(c(1,2), c(3,4))
+
+print(m3)
+print(m4)
+
+# Try to spot the difference between doing a cbind versus rbind:
+
+```
+### b.1. Accessing elements in a matrix
+
+```{r}
+
+# Create a sample matrix
+
+m5 <- matrix(1:20, nrow = 4)
+m5
+
+```
+
+```{r}
+
+# Access elements in the matrix
+
+m5[1, 2]   # Row 1, Column 2
+m5[ , 2]   # Entire column 2
+m5[4, ]    # Entire row 4
+
+```
+
+### b.2. Matrix operations
+
+```{r}
+
+# Create matrices
+
+m6 <- matrix(1:4, nrow = 2)
+m7 <- matrix(5:8, nrow = 2)
+
+m6
+m7
+
+```
+
+```{r}
+
+m6 + m7   # Element-wise addition
+m6 * m7   # Element-wise multiplication
+
+```
+### b.3. Useful matrix functions
+
+```{r}
+
+dim(m5)      # dimensions (number of rows, number of columns)
+nrow(m5)     # number of rows
+ncol(m5)     # number of columns
+rowSums(m5)  # sum of each row
+colSums(m5)  # sum of each column
+rowMeans(m5) # average of each row
+colMeans(m5) # average of each column
+t(m5)        # transpose
+
+```
+
+## c. Data Frame
+
+Vectors and matrices require that their elements are of the same data type.
+
+What if we want to combine different data types?
+
+A **data frame** is a 2-dimensional table-like structure
+- Each column is a vector (of the same length)
+- Different columns can have different data types (numeric, character, factor, etc.),
+
+It is the most commonly used structure for data sets in R (like Excel sheets).
+
+```{r}
+
+df <- data.frame(
+  crop = c("rice", "corn", "sugarcane", "dragonfruit", "cassava"),
+  weight_kg = c(100, 250, 80, 550, 150),
+  days_in_storage = c(10, 15, 8, 9, 5)
+)
+
+df
+
+```
+```{r}
+
+# To view the df in a separate tab:
+View(df)
+
+```
+
+### c.1. Accessing data frame elements
+
+```{r}
+
+df$crop     # use dollar sign then the name of the column
+
+```
+
+```{r}
+
+df[1, 2]            # by row and column index
+
+```
+
+```{r}
+
+df[ , "weight_kg"]  # all rows of column weight_kg
+
+```
+
+```{r}
+
+df[1, ]             # entire first row
+
+```
+
+```{r}
+
+# Using subset()
+
+subset(df, weight_kg > 100)
+
+```
+
+### c.2. Inspecting a data frame
+
+```{r}
+
+# dimensions (number of rows, number of columns)
+dim(df)          
+
+```
+
+```{r}
+
+# structure
+str(df)   
+
+```
+
+```{r}
+
+# summary statistics
+summary(df)
+
+```
+
+```{r}
+
+# column names
+names(df)
+
+```
+
+### c.3. Modifying data frames
+
+```{r}
+
+# Adding a new column
+df$storage_room <- c(1, 1, 2, 3, 4)
+df
+
+```
+```{r}
+
+# Renaming a column
+# a. Rename a single column by name
+names(df)[names(df) == "weight_kg"] <- "weight_tons"
+df
+
+```
+```{r}
+
+# b. Rename by column position
+names(df)[2] <- "weight_kg"
+df
+
+```
+```{r}
+
+# c. Rename multiple columns
+names(df) <- c("crop_name", "weight", "number_of_days_stored", "room_no")
+df
+
+```
+## d. Lists
+
+A list in R is a flexible data structure that can hold elements of different types and lengths, including:
+
+- vectors
+- matrices
+- data frames
+- and even other lists
+
+They are building blocks of more complex R objects (like models).
+
+```{r}
+
+# Creating a simple list
+list1 <- list(1, "hello", TRUE, c(2, 3, 4))
+list1
+
+```
+```{r}
+
+# Creating a named list
+list2 <- list(crop = "rice",
+              weight_kg = c(100, 250, 80),
+              status_in_storage = c(TRUE, FALSE, TRUE),
+              room_no = "1a")
+list2
+
+```
+### d.1. Accessing list elements
+
+```{r}
+
+# 1. Using $ for named elements
+
+list2$weight_kg
+
+```
+
+
+```{r}
+
+# 2. Using double brackets [[]]
+
+list2[[2]]                # gets the second element
+list2[["weight_kg"]]      # gets the "weight_kg" (which is also the second element)
+
+```
+
+# 4. More about data frames in R
+
+We will focus in working on data frames since it will be the usual data structure of most data sets that we will be using in our work.
+
+R comes with several built-in data frames that are perfect for learning, testing, and practicing data analysis.
+
+These are preloaded with base R or available in standard packages like `datasets`.
+
+```{r}
+
+# How to see all built-in data sets in R
+data()
+
+# A separate tab showing all built-in data sets will come out. View all available data.
+
+```
+
+```{r}
+
+# Let us use ChickWeight = Weight versus age of chicks on different diets
+
+# STEP 1: Load the data set
+
+data("ChickWeight")  # Load the data set
+
+```
+
+```{r}
+
+# STEP 2: See the documentation of the data set
+
+?ChickWeight
+
+# A documentation will appear in the Help tab.
+
+```
+
+```{r}
+
+# STEP 3: Explore the data
+
+head(ChickWeight)     # shows the first few rows
+
+```
+
+```{r}
+
+tail(ChickWeight)    # shows the last few rows
+
+```
+
+```{r}
+
+str(ChickWeight)    # shows the structure
+
+```
+
+```{r}
+
+summary(ChickWeight)   # shows the summary statistics
+
+```
+Note that `summary()` can give us the summary statistics of the data frame but we can also use separate functions to do this, if needed:
+
+```{r}
+
+# mean
+mean_weight <- mean(ChickWeight$weight)
+
+# median
+median_weight <- median(ChickWeight$weight)
+
+# mode
+mode_weight <- mode(ChickWeight$weight)
+
+# standard deviation
+sd_weight <- sd(ChickWeight$weight)
+
+print(mean_weight)
+print(median_weight)
+print(mode_weight)
+print(sd_weight)
+
+# We assign the values to variables so they are saved in our environment and we can use them later in other computations.
+
+```
+
+**We can also used the base R `plot()` function to see the matrix of scatterplots, also called pairs plot.**
+
+```{r}
+
+# STEP 4: Explore the relationships between the numeric columns in the data frame
+
+plot(ChickWeight)
+
+```
+
+This is a scatterplot matrix of all numeric columns in the data frame. Each cell shows a scatterplot between two numeric variables.
+
+Note that the plot in row 1, column 2 is just a mirror of row 2, column 1 (i.e., axes flipped).
+
+**What to look for in each plot:**
+
+**1. Linear patterns**
+
+- If X increases and Y also increases = positive correlation
+- If X increases and Y decreases → negative correlation
+
+**2. Curved patterns**
+
+- Indicates a non-linear relationship.
+
+**3. Clusters**
+
+- Points forming distinct groups might indicate the presence of categorical groups or outliers.
+
+**4. Outliers**
+
+- Points far from the main cloud = potential data issues or interesting cases
+
+
+# 5. Importing data sets to R using base R functions
+
+
+The tricky part in importing data sets to R is identifying the file path to the data.
+
+To address this issue, there is a good package in R that we can use: `here`
+
+## 5.1. `here` package
+
+When we work on R projects, file paths often become messy especially when using `setwd()`
+or absolute paths like "C:/Users/Amyel/Documents/project/data/data.csv".
+
+This may break in another computer.
+
+The `here` package solves this by automatically finding your project's root directory,
+so you can refer to files relative to your project folder.
+
+```{r}
+
+# Install here() package
+
+install.packages("here")
+
+```
+
+```{r}
+# Load the package
+
+library(here)
+
+```
+
+## a. CSV files
+
+Why is CSV file preferred over Excel?
+
+1. Comma-separated values (CSV) is just raw data in plain text
+2. Works across any programming language (R, Python, SQL, JavaScript, etc.)
+3. No hidden formatting, just data = reduces unexpected behavior when importing
+4. Not proprietary! We don’t need Excel or any licensed software to open or edit a CSV.
+
+We mainly use the `read.csv()` to bring in .csv files into R.
+
