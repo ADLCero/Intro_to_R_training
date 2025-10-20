@@ -744,9 +744,22 @@ install.packages("here")
 
 library(here)
 
+# Test how it works
+here()
+
 ```
 
-## a. CSV files
+The resulting output shows you where you are in your R Projects directory.
+
+For the next part, download the data set that was used in the previous training
+(from the Google Drive or from here: 
+https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data.csv)
+
+and save it in your 'Data' folder.
+
+## 5.2. Importing files using `here()`
+
+### a. CSV files
 
 Why is CSV file preferred over Excel?
 
@@ -756,4 +769,92 @@ Why is CSV file preferred over Excel?
 4. Not proprietary! We don’t need Excel or any licensed software to open or edit a CSV.
 
 We mainly use the `read.csv()` to bring in .csv files into R.
+
+```{r}
+
+# Read in the .csv file and assign it to a data frame
+
+df <- read.csv(here("00_Data", "data.csv"))
+
+# "00_Data" is the name of my folder for "Data"
+# "data.csv" is the name of the file
+
+```
+
+
+### b. TXT files
+
+Download the .txt version of the same data set from here: 
+https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_text.txt
+
+and save it in your Data folder.
+
+We can use `read.table()` to import text files into R.
+
+```{r}
+
+# Read in the .txt file and assign it to a data frame
+
+df_text <- read.table(here("00_Data", "data_text.txt"), 
+                      sep = "\t", # tab-separated
+                      header = TRUE)
+
+```
+
+### c. Excel files
+
+Download the .txt version of the same data set from here: 
+https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_excel.xlsx
+
+and save it in your Data folder.
+
+Base R cannot read Excel files directly. We will need external packages like `readxl` or `openxlsx`.
+
+```{r}
+
+# Install the readxl package
+install.packages("readxl")
+
+```
+
+```{r}
+
+# Load the package
+library(readxl)
+
+# Read in the Excel version of the data and assign it to a data frame
+df_excel <- read_xlsx(here("00_Data", "data_excel.xlsx"))
+
+```
+
+
+### d. Google Sheets or URLS
+
+If the Excel file is in Google Drive or online:
+https://drive.google.com/file/d/1gVsep3cW7uxDvc__oZFpIsMu9RzO7fjd/view?usp=drive_link
+
+```{r}
+
+# Install googlesheets4
+install.packages("googlesheets4")
+
+```
+
+```{r}
+
+# Load the package
+library(googlesheets4)
+
+# Read in the data
+df_google <- read_sheet("https://docs.google.com/spreadsheets/d/1xmk-kdmETegll_8cbaNFOXB5xsX8EyRZRiS7EWh3YaI/edit?gid=750052316#gid=750052316")
+
+```
+
+In case the code above does not work, you may need to re-authenticate your Google access:
+1. remove any old tokens using:
+gs4_deauth()
+
+2. open browser and ask you to log in:
+gs4_auth()      
+
 
