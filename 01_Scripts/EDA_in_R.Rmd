@@ -3,6 +3,7 @@ title: "Exploratory Data Analysis in R"
 author: "Amyel Dale Cero"
 date: "2025-10-20"
 output: html_document
+
 ---
 
 ```{r setup, include=FALSE}
@@ -51,6 +52,35 @@ str(iris)
 2. Factor variable (Species) is used for grouping or classification.
 
 ## 5. Explore patterns and relationships using graphs
+
+We can do an initial plot (scatterplot matrix) to see the relationship between variables:
+
+```{r}
+
+plot(iris)
+
+```
+
+**What to look for in each plot:**
+
+**1. Linear patterns**
+
+- If X increases and Y also increases = positive correlation
+- If X increases and Y decreases → negative correlation
+
+**2. Curved patterns**
+
+- Indicates a non-linear relationship.
+
+**3. Clusters**
+
+- Points forming distinct groups might indicate the presence of categorical groups or outliers.
+
+**4. Outliers**
+
+- Points far from the main cloud = potential data issues or interesting cases
+
+
 ### 5.1. Histogram
 
 Histograms display the frequency distribution of a numeric variable, showing how often data values fall within specific intervals (bins).
@@ -165,7 +195,7 @@ colSums(is.na(iris_na))
 # Install naniar package
 # This package is specifically designed for handling and visualizing missing data
 
-install.packages("naniar")
+install.packages("naniar", repos = "https://cloud.r-project.org")
 
 ```
 
@@ -196,15 +226,22 @@ iris_na$Sepal.Length[is.na(iris_na$Sepal.Length)] <- mean(iris_na$Sepal.Length, 
 ```
 
 
-```{r}
+```{r, eval = FALSE}
 
 # This code simply tells R to save my version of this work in my folder for HTML files
 # No need to run this!
 
+library(here)
+
+# Ensure output folder exists
+if(!dir.exists("02_HTML_files")) dir.create("02_HTML_files")
+
+# Render HTML into that folder
 rmarkdown::render(
-  here::here("01_Scripts", "EDA_in_R.Rmd"),
-  output_file = here::here("02_HTML_files", "EDA_in_R.html")
+  here("01_Scripts", "EDA_in_R.Rmd"),
+  output_file = here("02_HTML_files", "EDA_in_R.html")
 )
+
 
 ```
 

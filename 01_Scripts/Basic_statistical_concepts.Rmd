@@ -2,7 +2,9 @@
 title: "Basic Statistical Concepts and Measures with Applications using R"
 author: "Amyel Dale Cero"
 date: "2025-10-20"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -294,7 +296,7 @@ Selection depends on researcher judgment or convenience, not randomization
 4. Snowball sampling = existing participants recruit future participants
 
 
-```{r}
+```{r, eval = FALSE}
 
 # This code simply tells R to save my version of this work in my folder for HTML files
 # No need to run this!

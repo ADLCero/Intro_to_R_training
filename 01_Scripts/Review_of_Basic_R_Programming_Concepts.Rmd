@@ -816,6 +816,10 @@ Base R cannot read Excel files directly. We will need external packages like `re
 install.packages("readxl")
 
 ```
+Note: It's not really a good practice to install packages inside the R Markdown, we should install them instead in a separate .R file or in the console.
+
+This is because every time we knot, R executes all chunks from top to bottom. It will re-install packages every time which can slow down the knitting, cause errors, and trigger CRAN mirror issues.
+
 
 ```{r}
 
