@@ -75,7 +75,7 @@ Example 2: Read in a sample file bundled with the readr package
 chickens <- read_csv(readr_example("chickens.csv"))
 
 ```
-Note that readr prints the column types – the guessed column types, in this case. This is useful because it allows you to check that the columns have been read in as you expect. 
+Note that readr prints the column types – the guessed column types, in this case. This is useful because it allows us to check that the columns have been read in as we expect. 
 
 ```{r}
 
@@ -83,7 +83,7 @@ Note that readr prints the column types – the guessed column types, in this ca
 spec(chickens)
 
 ```
-Now you can copy, paste, and tweak this, to create a more explicit readr call that expresses the desired column types. 
+Now we can copy, paste, and tweak this, to create a more explicit readr call that expresses the desired column types. 
 
 ```{r}
 
@@ -111,7 +111,7 @@ vignette("readr")
 
 # 3. `dplyr`
 
-`dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges:
+`dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help us solve the most common data manipulation challenges:
 
 - `mutate()` adds new variables that are functions of existing variables
 - `select()` picks variables based on their names.
@@ -119,9 +119,14 @@ vignette("readr")
 - `summarise()` reduces multiple values down to a single summary.
 - `arrange()` changes the ordering of the rows.
 
-These all combine naturally with group_by() which allows you to perform any operation “by group”. 
+These all combine naturally with group_by() which allows us to perform any operation “by group”. 
 
 Note that we can use `%>%` – the pipe operator - to chain functions.
+
+Recall:
+Keyboard shortcut:
+- Windows = Ctrl + Shift + M
+- Mac = Cmd + Shift + M
 
 ```{r}
 
@@ -129,10 +134,13 @@ vignette("dplyr")
 
 ```
 
-The best place to start learning dplyr is through the data transformation chapter in the "R for Data Science" book: https://r4ds.hadley.nz/data-transform
+The best place to start learning dplyr is through the data transformation chapter in the "R for Data Science" book: **https://r4ds.hadley.nz/data-transform**
+
+**Note: The next sections are lifted/modified based on this reference.**
 
 To explore basic dplyr vervs, we will use the `nycflights13::flights` dataset.
 This dataset contains all 336,776 flights that departed from New York City in 2013.
+The data comes from the US Bureau of Transportation Statistics and is documented in `?flights`
 
 ```{r}
 
@@ -143,7 +151,634 @@ library(nycflights13)
 
 ```
 
+```{r}
+
+# Explore the data set
+
+View(flights)
+flights
+
+```
+
+```{r}
+
+# Check the documentation
+?flights
+
+```
+
+`flights` is a tibble, a special type of data frame used by the tidyverse
+
+The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
+
+```{r}
+
+# dplyr function to view the data
+glimpse(flights)
+
+```
+
+The variable names are followed by abbreviations that tell us the type of each variable:
+`<int>` is short for integer
+`<dbl>` is short for double (aka real numbers)
+`<chr>` for character (aka strings), and <dttm> for date-time
+
+These are important because the operations we can perform on a column depend heavily on its “type.”
+
+## 3.1. dyplyr basics
+
+1. The first argument is always a data frame.
+
+2. The subsequent arguments typically describe which columns to operate on using the variable names (without quotes).
+
+3. The output is always a new data frame.
+
+```{r}
+
+flights |>                    # another form of %>% pipe operator
+  filter(dest == "IAH") |> 
+  group_by(year, month, day) |> 
+  summarize(
+    arr_delay = mean(arr_delay, na.rm = TRUE)
+  )
+
+```
+
+**dplyr’s verbs are organized into four groups based on what they operate on: rows, columns, groups, or tables.**
+
+## 3.2. Row operations
+
+### a. filter()
+`filter()` allows us to keep rows based on the values of the columns
+
+```{r}
+
+# Filter for flights that departed more than 120 minutes (2 hours) late:
+
+flights %>% 
+  filter(dep_delay > 120)
+
+```
+
+```{r}
+
+# Filter for flights that departed on January 1
+flights %>% 
+  filter(month == 1 & day == 1)
+
+```
+
+```{r}
+
+# Filter for flights that departed in January or February
+flights %>% 
+  filter(month == 1 | month == 2)
+
+```
+
+```{r}
+
+# Combine OR (|) and equal to (==)
+
+flights %>% 
+  filter(month %in% c(1, 2))
+
+```
+
+When we run `filter()` dplyr executes the filtering operation, creating a new data frame, and then prints it. 
+
+It doesn’t modify the existing flights dataset because dplyr functions never modify their inputs. To save the result, we need to use the assignment operator, `<-`
+
+```{r}
+
+jan1 <- flights %>% 
+  filter(month == 1 & day == 1)
+
+jan1
+```
+
+### b. arrange()
+
+arrange() changes the order of the rows based on the value of the columns. 
+It takes a data frame and a set of column names (or more complicated expressions) to order by. 
+
+```{r}
+
+# Sort the departure time by year, month, day, and departure time
+flights %>% 
+  arrange(year, month, day, dep_time)
+
+```
+We get the earliest years first, then within a year, the earliest months, etc.
+
+```{r}
+
+# Arrange the flights from most to least delayed
+flights %>% 
+  arrange(desc(dep_delay))  # use desc()
+
+```
+
+Note that the number of rows has not changed – we’re only arranging the data, we’re not filtering it.
+
+### c. distinct()
+
+distinct() finds all the unique rows in a dataset, so technically, it primarily operates on the rows. 
+
+Most of the time, however, we’ll want the distinct combination of some variables, so we can also optionally supply column name.
+
+```{r}
+
+# Remove duplicate rows, if any
+flights %>% 
+  distinct()
+
+```
+
+```{r}
+
+# Find all unique origin and destination pairs
+
+flights %>% 
+  distinct(origin, dest)
+
+```
 
 
+```{r}
+
+# Keep all other columns when filtering for unique rows
+flights %>% 
+  distinct(origin, dest, .keep_all = TRUE)
+
+```
+
+```{r}
+
+# Find the number of occurences
+# Swap distinct() with count()
+
+flights %>% 
+  count(origin, dest, sort = TRUE)
+
+```
+
+### EXERCISE
+
+1. In a single pipeline for each condition, find all flights that meet the condition:
+
+a. Had an arrival delay of two or more hours
+b. Flew to Houston (IAH or HOU)
+c. Were operated by United, American, or Delta
+d. Departed in summer (July, August, and September)
+e. Arrived more than two hours late but didn’t leave late
+f. Were delayed by at least an hour, but made up over 30 minutes in flight
+
+## 3.3. Column operations
+
+### a. mutate()
+
+The job of `mutate()` is to add new columns that are calculated from the existing columns.
+
+```{r}
+
+# Add a column which computes the `gain` (how much time a delayed flight made up in the air)
+# and `speed` in miles per hour
+
+flights %>% 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60
+  )
+```
+
+By default, mutate() adds new columns on the right-hand side of our dataset, which makes it difficult to see what’s happening here. We can use the .before argument to instead add the variables to the left-hand side.
+
+```{r}
+
+flights %>% 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .before = 1
+  )
+
+```
+
+The `.` indicates that `.before` is an argument to the function, not the name of a third new variable we are creating. 
+
+We can also use `.after` to add after a variable, and in both `.before` and `.after` we can use the variable name instead of a position. 
+
+```{r}
+
+flights %>% 
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .after = day
+  )
+
+```
+
+Alternatively, we can control which variables are kept with the .keep argument. A particularly useful argument is "used" which specifies that we only keep the columns that were involved or created in the mutate() step.
+
+```{r}
+
+flights %>% 
+  mutate(
+    gain = dep_delay - arr_delay,
+    hours = air_time / 60,
+    gain_per_hour = gain / hours,
+    .keep = "used"
+  )
+
+```
+
+### b. select()
+
+select() allows us to rapidly zoom in on a useful subset using operations based on the names of the variables
+
+```{r}
+
+# Select columns by name
+
+flights %>% 
+  select(year, month, day)
+
+```
+
+```{r}
+
+# Select all columns between year and day
+
+flights %>% 
+  select(year:day)
+
+```
+
+```{r}
+
+# Select all columns except those from year to day (inclusive)
+flights %>% 
+  select(!year:day)
+
+```
+
+```{r}
+
+# Select all columns that are characters
+
+flights |> 
+  select(where(is.character))
+
+```
+
+There are a number of helper functions we can use within select():
+
+- `starts_with("abc")`: matches names that begin with “abc”.
+- `ends_with("xyz")`: matches names that end with “xyz”.
+- `contains("ijk")`: matches names that contain “ijk”.
+- `num_range("x", 1:3)`: matches x1, x2 and x3.
+
+See ?select for more details. 
+
+```{r}
+
+?select
+
+```
+
+We can rename variables as we select() them by using =. The new name appears on the left-hand side of the =, and the old variable appears on the right-hand side
+
+```{r}
+
+# Rename column tailnum to tail_num
+
+flights %>% 
+  select(tail_num = tailnum)
+
+```
+
+### c. rename()
+
+If we want to keep all the existing variables and just want to rename a few, we can use rename() instead of select()
+
+```{r}
+
+flights |> 
+  rename(tail_num = tailnum)
+
+```
+
+### d. relocate()
+
+Use `relocate()` to move variables around. By default, `relocate()` moves variables to the front.
+
+```{r}
+
+# Relocate time_hour and air_time to the front
+flights %>%  
+  relocate(time_hour, air_time)
+
+```
+
+We can also specify where to put them using the .before and .after arguments
+
+```{r}
+
+flights %>% 
+  relocate(year:dep_time, .after = time_hour)
+
+flights %>% 
+  relocate(starts_with("arr"), .before = dep_time)
+```
+
+## 3.4. Using the pipe
+
+We've seen how the pipe operator works in many of the previous examples but its real power arises when we start to combine multiple verbs
+
+```{r}
+# Find the fastest flights to Houston's IAH airport
+
+flights %>% 
+  filter(dest == "IAH") |> 
+  mutate(speed = distance / air_time * 60) |> 
+  select(year:day, dep_time, carrier, flight, speed) |> 
+  arrange(desc(speed))
+
+```
+
+For simple cases, |> and %>% behave identically. 
+
+|> is the base pipe. Why use it? 
+
+1. Because it is part of base R, it is always available for us to use, even when we’re not using the tidyverse (%>% is from the magrittr package of tidyverse)
+
+2. |> is quite a bit simpler than %>%
+
+
+## 3.5. Groups
+
+dplyr gets even more powerful when you add in the ability to work with groups
+
+### a.1. group_by()
+
+Use `group_by()` to divide the dataset into groups meaningful for your analysis
+
+```{r}
+
+flights |> 
+  group_by(month)
+
+```
+
+`group_by()` doesn’t change the data but, if we look closely at the output, we’ll notice that the output indicates that it is “grouped by” month (Groups: month [12]). 
+
+This means subsequent operations will now work “by month”. 
+
+### a.2. grouping by multiple variables
+
+```{r}
+
+daily <- flights |>  
+  group_by(year, month, day)
+daily
+
+```
+
+```{r}
+
+daily_flights <- daily |> 
+  summarize(n = n())
+
+```
+
+
+```{r}
+daily_flights
+```
+
+We can suppress the message by:
+
+daily_flights <- daily |> 
+  summarize(
+    n = n(), 
+    .groups = "drop_last"
+  )
+  
+### b. summarize()
+
+The most important grouped operation is a summary, which, if being used to calculate a single summary statistic, reduces the data frame to have a single row for each group. 
+
+In dplyr, this operation is performed by summarize().
+
+```{r}
+
+flights |> 
+  group_by(month) |> 
+  summarize(
+    avg_delay = mean(dep_delay)
+  )
+
+```
+
+Results are NAs, R's symbol for missing value. This happened because some of the observed flights had missing data in the delay column. 
+
+```{r}
+
+# To ignore all missing values:
+
+flights |> 
+  group_by(month) |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE)
+  )
+
+```
+
+```{r}
+
+# Add the number of rows in each group
+
+flights |> 
+  group_by(month) |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    n = n()
+  )
+```
+
+### c. slice_()
+
+There are five handy functions that allow us to extract specific rows within each group:
+
+- `df |> slice_head(n = 1)` takes the first row from each group.
+- `df |> slice_tail(n = 1)` takes the last row in each group.
+- `df |> slice_min(x, n = 1)` takes the row with the smallest value of column x.
+- `df |> slice_max(x, n = 1)` takes the row with the largest value of column x.
+- `df |> slice_sample(n = 1)` takes one random row.
+
+```{r}
+
+# Find the flights that are most delayed upon arrival at each destination
+
+flights |> 
+  group_by(dest) |> 
+  slice_max(arr_delay, n = 1) |>
+  relocate(dest)
+
+```
+
+Note that there are 105 destinations but we get 108 rows here. What’s up? 
+`slice_min()` and `slice_max()` keep tied values so `n = 1` means give us all rows with the highest value. 
+
+If we want exactly one row per group you can set `with_ties = FALSE`.
+
+This is similar to computing the max delay with `summarize()`, but we get the whole corresponding row (or rows if there’s a tie) instead of the single summary statistic.
+
+### d. ungroup()
+
+For removing grouping from a data frame without using `summarize()`
+
+```{r}
+
+daily |> 
+  ungroup()
+
+```
+
+```{r}
+
+# Summarizing an ungrouped data frame
+
+daily |> 
+  ungroup() |>
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n()
+  )
+```
+
+Visit https://r4ds.hadley.nz/data-transform.html for more details and examples.
+
+# 4. tidyr
+
+The goal of tidyr is to help you create tidy data. Tidy data is data where:
+
+1. Each variable is a column; each column is a variable.
+2. Each observation is a row; each row is an observation.
+3. Each value is a cell; each cell is a single value.
+
+Tidy data describes a standard way of storing data that is used wherever possible throughout the tidyverse. If we ensure that your data is tidy, we’ll spend less time fighting with the tools and more time working on our analysis.
+
+## 4.1. pivot_longer()
+
+```{r}
+
+# Use mtcars dataset
+mtcars$id <- rownames(mtcars)  # add row names as a column
+mtcars
+
+```
+
+```{r}
+
+# Convert wide to long: mpg, hp, wt
+
+mtcars_long <- mtcars %>%
+  pivot_longer(cols = c(mpg, hp, wt),     # columns to pivot
+               names_to = "Measurement",  # new column for variable names
+               values_to = "Value")       # new column for values
+
+head(mtcars_long)
+
+
+```
+
+## 4.2. pivot_wider()
+
+```{r}
+
+# Convert long mtcars back to wide format
+mtcars_wide <- mtcars_long %>%
+  pivot_wider(names_from = Measurement, # column containing variable names
+              values_from = Value)      # column containing values
+
+head(mtcars_wide)
+
+```
+
+## 4.3. separate()
+
+```{r}
+
+# Create example dataset
+df <- tibble(Name = c("John_Doe", "Jane_Smith", "Alice_Jones"))
+df
+
+```
+
+```{r}
+
+# Separate full name into first and last names
+df_sep <- df %>%
+  separate(Name, into = c("First", "Last"), # new columns
+           sep = "_")                       # character to split
+
+df_sep
+```
+
+## 4.4. unite()
+
+```{r}
+
+# Unite first and last names back into one column
+df_unite <- df_sep %>%
+  unite("FullName",       # name of the new column
+        First, Last,      # columns to combine
+        sep = " ")        # separator to use
+
+df_unite
+
+```
+
+## 4.3. drop_na() and replace_na()
+
+```{r}
+
+# Use the airquality dataset
+head(airquality)
+
+```
+
+```{r}
+
+# Drop rows with any NA
+airquality_clean <- airquality %>%
+  drop_na()       # removes rows with missing values
+
+```
+
+```{r}
+
+# Replace NA in Ozone with 0
+airquality_filled <- airquality %>%
+  replace_na(list(Ozone = 0))        # replaces missing values with a specified value
+
+head(airquality_clean)
+head(airquality_filled)
+
+```
+
+# 5. stringr
+
+Strings are not glamorous, high-profile components of R, but they do play a big role in many data cleaning and preparation tasks. 
+
+The stringr package provides a cohesive set of functions designed to make working with strings as easy as possible.
+
+Learn more about strings: https://r4ds.hadley.nz/strings
+
+## 5.1. str_detect()
+Used for detecting patterns
 
 
