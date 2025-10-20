@@ -3,7 +3,6 @@ title: "Basic Statistical Concepts and Measures with Applications using R"
 author: "Amyel Dale Cero"
 date: "2025-10-20"
 output: html_document
-output_file: "02_HTML_files/Basic_statistical_concepts.html"
 ---
 
 ```{r setup, include=FALSE}
@@ -293,4 +292,17 @@ Selection depends on researcher judgment or convenience, not randomization
 2. Purposive sampling = based on specific characteristics
 3. Quota sampling = ensures certain groups are represented in set proportions
 4. Snowball sampling = existing participants recruit future participants
+
+
+```{r}
+
+# This code simply tells R to save my version of this work in my folder for HTML files
+# No need to run this!
+
+rmarkdown::render(
+  here::here("01_Scripts", "Basic_statistical_concepts.Rmd"),
+  output_file = here::here("02_HTML_files", "Basic_statistical_concepts.html")
+)
+
+```
 
