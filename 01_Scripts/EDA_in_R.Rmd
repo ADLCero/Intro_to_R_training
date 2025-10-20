@@ -224,3 +224,15 @@ iris_na$Sepal.Length[is.na(iris_na$Sepal.Length)] <- mean(iris_na$Sepal.Length, 
 
 ```
 
+
+# HANDS ON EXERCISE:
+
+Use the same steps above in exploring other built-in data sets in R.
+
+```{r}
+
+# See all available built in data sets:
+data()
+
+```
+

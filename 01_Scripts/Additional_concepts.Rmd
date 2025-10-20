@@ -1,0 +1,333 @@
+---
+title: "Basic R Programming (Additional Concepts)"
+author: "Amyel Dale Cero"
+date: "2025-10-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. If-else statements
+
+## 1.1. Logic operators
+### 1.1.1. Examples
+
+```{r}
+
+# Greater than
+2005 > 2001
+
+
+```
+
+```{r}
+
+# Equal
+2005 = 2005
+
+```
+
+This will produce an error because the correct logical operator for is ==
+
+```{r}
+
+# Correct equal sign
+2005 == 2005
+
+```
+
+```{r}
+
+2005 != 2008
+
+# Why is this TRUE?
+
+```
+
+### 1.1.2. Examples of OR (|) and AND (&)
+
+Analyze why the following codes produce TRUE or FALSE:
+
+```{r}
+
+(2005 > 2008) | (2003 < 2010)
+
+```
+
+```{r}
+
+(2005 > 2008) & (2003 < 2010)
+
+```
+
+```{r}
+
+!(2005 > 2008) & (2003 < 2010)
+
+```
+
+```{r}
+
+!(2005 > 2008) & (2003 < 2010) & (1801 > 1819)
+
+```
+
+## 1.2. Basic if statements
+
+```{r}
+
+Test_1 <- 93
+
+if(Test_1 > 90){
+  Grade <- "A"
+}
+
+print(Grade)
+```
+
+What if we change the value of Test_1 to 90?
+
+## 1.3. Nested statements
+
+```{r}
+
+# Initialize variable A
+A <- 10
+
+```
+
+```{r}
+
+# Create a nested if-else statement
+
+if(A > 20){
+  B <- 3
+} else if (A > 10){
+  B <- 6
+} else {
+  B <- 9
+}
+
+# Note that there is a very specific syntax for this.
+# The closing brace of conditional evaluation must be on the same line as else
+  
+```
+
+```{r}
+
+print(B)
+
+```
+
+Using the example above from the basic if statement:
+
+```{r}
+
+Test1 <- 93
+
+if(Test1 > 90){
+  Grade <- 'A'
+} else if ( Test1 > 80) {
+  Grade <- 'B'
+} else if (Test1 > 70) {
+  Grade <- 'C'
+} else {
+  Grade <- 'D'
+}
+
+```
+
+```{r}
+
+print(Grade)
+
+```
+
+Using the example on what grade school students must wear depending on air temperature:
+
+```{r}
+
+T <- 50 # must initialize T variable
+
+if (T < 10) {
+  print("No recess")
+}else if( T< 25 ) {
+  print("Bring snowpants, hat, and gloves")
+}else if( T< 40) {
+  print("Bring hat and gloves")
+}else {
+  print("Nothing special needed.")}
+
+```
+
+Test out the code by changing the T.
+
+## 1.4. Switch function
+
+Example 1: Match variables and then return the associated variable
+
+```{r}
+
+# Switching color to a corresponding fruit
+
+switch("green",      # first argument = input to be switched
+       "green" = "cucumber", # second and onwards after comma = conditions
+       "red" = "cherry tomato",
+       "yellow" = "summer squash"
+         )
+```
+
+Example 2: Indicate position and then retrieve the value from that position.
+
+```{r}
+
+switch(4,
+       7, 14, 21, 28)
+
+```
+
+# 2. Loops
+
+## 2.1. For loops
+
+Example 1: Write a for loop that prints numbers 0 to 100 by 5
+
+```{r}
+
+for (i in 0:20){
+  print (i * 5)
+}
+
+```
+Example 2: Write a for loop that adds and prints numbers 0 to 100 by 5
+
+```{r}
+
+# Initialize variable that will hold current value at each step
+Sum <- 0
+
+for (i in 0:20){
+  
+  Sum <- Sum + (i * 5)
+  print(Sum)
+  
+}
+
+```
+Example 3: Using character variables
+
+```{r}
+
+# Initialize a vector containing different breeds of dogs
+dog_vector <- c("pug", "retriever", "terrier", "mastiff")
+
+# Add a statement before each breed of the dog
+for (dogs in dog_vector){
+  print(paste("The breed of the month is", dogs))
+}
+
+```
+
+## 2.2. While loops
+
+Example 1: Construct a WHILE loop that stops when the counter reaches 50. Start at a value of 1. Print out each iteration.
+
+```{r}
+
+# Initialize variables
+i <- 1 # counter
+
+while (i < 51){
+  
+  i = i + 1
+  print(i-1)
+  
+}
+
+```
+
+## 2.3. Using break
+
+Example 1: Make a loop that goes through a series of random numbera and stops when the number is > 150
+
+```{r}
+
+Length <- 1000
+
+# Generate a vector of random numbers
+A <- round(rnorm(Length) * 100)
+
+# Make the loop
+for (i in 1:Length){
+  
+  print(i)   # Print the number of the current iteration
+  
+  if (A[i] > 150) {
+    print("I'm done")
+    break
+  }
+}
+
+```
+
+# 3. Functions
+
+Example 2: You find yourself frequently needing to convert between Fahrenheit and Celsius degree. Write a function that allows you to input Fahrenheit degrees and get out Celsius degrees. 
+
+Keep in mind that Celsius degrees are 32 degrees less and 5/9 of Fahrenheit degrees.
+
+```{r}
+
+# Name of the function = FarenToCel
+# Input: temperature in F
+
+FarenToCel <- function(Temp_in_F){
+  
+  Temp_in_C <- (Temp_in_F - 32) * 5/9    # What should be done to the input
+  
+}
+
+# Initialize/source the function by running this chunk of code
+
+```
+
+Notice what changes in the Environment pane.
+
+```{r}
+
+# Use the function
+
+FarenToCel(100)
+
+```
+
+Where is the result? Since there is no print() inside the function, the result has to be assigned to a variable outside the function.
+
+```{r}
+
+Temp_C <- FarenToCel(100)
+Temp_C
+
+```
+
+Example 3: Write a function that calculates someone’s age in year 2025 when given their birth year. Then, write a line of code that calls the function. 
+
+```{r}
+
+AgeCalc <- function(Input_Yr){
+  
+  Age <- 2025 - Input_Yr
+  print(Age)
+  
+}
+```
+
+```{r}
+
+AgeCalc(1990)
+
+```
+
+Notice that this one readily prints the answer because we included a print function inside the function.
