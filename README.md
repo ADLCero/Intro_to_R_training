@@ -3,7 +3,7 @@
 This repository contains the code/scripts used in the following trainings:
 
 1.   **"Training on Data Analysis for Agricultural Mechanization and Infrastructure Planning and Policy Development"** by the Department of Agriculture (DA) - Bureau of Agricultural and Fisheries Engineering (BAFE) from September 22-26, 2025 at Malay, Aklan
-2.  "Training on Basic Statistics, Exploratory Data Analysis, and Introduction to R Using the Tidyverse" by the Department of Agriculture (DA) - Bureau of Agricultural and Fisheries Engineering (BAFE) from October 21-24, 2025 at Davao City.
+2.  **"Training on Basic Statistics, Exploratory Data Analysis, and Introduction to R Using the Tidyverse"** by the Department of Agriculture (DA) - Bureau of Agricultural and Fisheries Engineering (BAFE) from October 21-24, 2025 at Davao City.
 
 **REPOSITORY STRUCTURE:**
 
