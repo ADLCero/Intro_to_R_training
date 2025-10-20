@@ -1,0 +1,26 @@
+---
+title: "Introduction to R"
+author: "Amyel Dale Cero"
+date: "2025-10-20"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TEST CODE
+
+This is to test how R Markdown works.
+
+```{r test}
+
+data("PlantGrowth")
+summary(PlantGrowth)
+
+```
+
+
