@@ -1,0 +1,197 @@
+---
+title: "Exploratory Data Analysis in R"
+author: "Amyel Dale Cero"
+date: "2025-10-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Exploratory Data Analysis (EDA) is the process of examining datasets to summarize their main characteristics using visual and quantitative techniques. It involves visualizing data using different types of graphs to uncover patterns, detect outliers, and summarize distributions.
+
+We will be using built-in datasets in R in performing EDA.
+
+# General steps in performing EDA
+
+Data set: `iris`
+
+## 1. Load and inspect the data
+
+```{r}
+
+data("iris")
+
+```
+
+## 2. Preview the first few rows
+
+```{r}
+
+head(iris)
+
+```
+
+## 3. See the structure of the data set
+
+```{r}
+
+str(iris)
+
+```
+## 4. See the summary statistics
+
+```{r}
+
+str(iris)
+
+```
+1. Numeric variables (Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) can be used for statistical analysis and plotting.
+2. Factor variable (Species) is used for grouping or classification.
+
+## 5. Explore patterns and relationships using graphs
+### 5.1. Histogram
+
+Histograms display the frequency distribution of a numeric variable, showing how often data values fall within specific intervals (bins).
+
+```{r}
+
+hist(iris$Sepal.Length,
+     main = "Histogram of Sepal Length",
+     xlab = "Sepal Length",
+     col = "skyblue", border = "white")
+
+```
+
+### 5.2. Boxplot
+
+Boxplots summarize the distribution of a numeric variable and highlight potential outliers.
+
+```{r}
+
+boxplot(Sepal.Length ~ Species, 
+        data = iris,
+        main = "Boxplot of Sepal Length by Species",
+        col = c("lightblue", "lightgreen", "lightpink"))
+
+```
+
+### 5.3. Scatterplot
+
+Scatter plots show the relationship between two numeric variables.
+
+```{r}
+
+plot(iris$Sepal.Length, 
+     iris$Petal.Length,
+     main = "Scatter Plot of Sepal vs Petal Length",
+     xlab = "Sepal Length", ylab = "Petal Length",
+     col = "darkblue", pch = 19)
+
+```
+
+### 5.4. Density Plot
+
+Density plots show the probability density of a numeric variable — a smoothed version of the histogram.
+
+```{r}
+
+plot(density(iris$Sepal.Length),
+     main = "Density Plot of Sepal Length",
+     col = "darkred", lwd = 2)
+
+```
+
+### 5.5. Heatmap
+
+Heatmaps use color to represent the strength of values or relationships (e.g., correlations).
+
+```{r}
+
+# Correlations among numeric iris variables
+
+num_data <- iris[, 1:4]       # Get the numeric data only (first four columns)
+corr_matrix <- cor(num_data)  # Compute for the correlation matrix of all pairs of numeric variables
+
+# Create the heat map
+
+heatmap(corr_matrix, main = "Heatmap of Iris Correlations")
+
+```
+
+### 5.6. Observations and Insights
+
+1. Histograms and density plots show that most sepal lengths are clustered around 5–6 cm.
+
+2. Boxplots reveal differences in sepal length distributions among species (e.g., setosa has smaller sepals than virginica).
+
+3. Scatter plots help identify correlations; for example, petal length and sepal length are positively correlated.
+
+4. Correlation heatmaps provide a quick overview of relationships among numeric variables:
+- Strong positive correlation between petal length and petal width
+- Moderate correlation between sepal length and petal length
+
+
+## 6. Handle missing data
+
+Handling missing data is a critical step in data analysis. Ignoring missing values can bias results, reduce statistical power, or cause errors in modeling. Below is a step-by-step routine for detecting and dealing with missing data in R.
+
+```{r}
+
+# Simulate missing data for demonstration
+iris_na <- iris
+set.seed(123)    # used to make random operations reproducible
+
+# Assign NAs
+iris_na$Sepal.Length[sample(1:nrow(iris), 5)] <- NA
+iris_na$Sepal.Width[sample(1:nrow(iris), 5)] <- NA
+
+```
+
+### 6.1. Check missing values
+
+```{r}
+
+# Get the number of missing value per column
+colSums(is.na(iris_na))
+
+```
+
+### 6.2. Visualize missing data
+
+```{r}
+
+# Install naniar package
+# This package is specifically designed for handling and visualizing missing data
+
+install.packages("naniar")
+
+```
+
+```{r}
+
+# Load the package
+library(naniar)
+
+```
+
+```{r}
+
+# Visualize the number of NAs per variable
+
+missing_plot <- gg_miss_var(iris_na)
+print(missing_plot)
+
+```
+### 6.3. Impute missing values
+
+In data analysis, “impute” means to fill in missing values in a dataset with estimated or plausible values, instead of leaving them as missing.
+
+```{r}
+
+# Impute missing values with mean
+iris_na$Sepal.Length[is.na(iris_na$Sepal.Length)] <- mean(iris_na$Sepal.Length, na.rm = TRUE)
+
+```
+
