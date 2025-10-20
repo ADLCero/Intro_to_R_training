@@ -195,3 +195,16 @@ iris_na$Sepal.Length[is.na(iris_na$Sepal.Length)] <- mean(iris_na$Sepal.Length, 
 
 ```
 
+
+```{r}
+
+# This code simply tells R to save my version of this work in my folder for HTML files
+# No need to run this!
+
+rmarkdown::render(
+  here::here("01_Scripts", "EDA_in_R.Rmd"),
+  output_file = here::here("02_HTML_files", "EDA_in_R.html")
+)
+
+```
+
