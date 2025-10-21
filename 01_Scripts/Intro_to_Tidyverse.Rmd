@@ -15,20 +15,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 | Package  | Purpose                       |
 |----------|-------------------------------|
-| dplyr    | Data manipulation             |
-| ggplot2  | Data visualization            |
-| tidyr    | Reshaping data                |
 | readr    | Reading data                  |
-| purrr    | Functional programming        |
 | tibble   | Enhanced data frames          |
+| dplyr    | Data manipulation             |
+| tidyr    | Reshaping data                |
 | stringr  | String operations             |
 | forcats  | Factor manipulation           |
+| purrr    | Functional programming        |
+| lubridate| Date-time manipulation        |
+| ggplot2  | Data visualization            |
+
+
 
 Tidy data means each variable is a column, each observation is a row, and each type of observational unit forms a table.
 
 Main reference: https://tidyverse.org/packages/
 
-# 1. Installation
+# Installation
 
 ```{r, eval = FALSE}
 
@@ -36,7 +39,7 @@ Main reference: https://tidyverse.org/packages/
 # We can do this in the console or in a separate .R script inside this R Project.
 
 # Type this code in the console or "uncomment" (i.e., remove hashtag) the line
-install.packages("tidyverse")
+# install.packages("tidyverse")
 
 ```
 
@@ -46,7 +49,7 @@ install.packages("tidyverse")
 library(tidyverse)
 
 ```
-# 2. `reader`
+# 1. readr
 
 readr provides a fast and friendly way to read rectangular data (like csv, tsv, and fwf). It is designed to flexibly parse many types of data found in the wild, while still cleanly failing when data unexpectedly changes.
 
@@ -109,7 +112,87 @@ vignette("readr")
 
 ```
 
-# 3. `dplyr`
+# 2. tibble
+
+https://tibble.tidyverse.org/:
+
+A tibble, or `tbl_df`, is a modern reimagining of the data.frame, keeping what time has proven to be effective, and throwing out what is not. 
+
+Tibbles are data.frames that are lazy and surly: they do less (i.e. they don’t change variable names or types, and don’t do partial matching) and complain more (e.g. when a variable does not exist). 
+
+This forces you to confront problems earlier, typically leading to cleaner, more expressive code. T
+
+ibbles also have an enhanced print() method which makes them easier to use with large datasets containing complex objects.
+
+
+```{r}
+
+vignette("tibble")
+
+```
+
+1. Creating a tibble
+
+`tibble()` creates a tidy table, which automatically handles column types and prints nicely
+
+```{r}
+
+# Create a simple tibble
+my_tibble <- tibble(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35),
+  Score = c(90, 85, 88)
+)
+
+my_tibble
+
+
+```
+
+2. Converting a data.frame to tibble
+
+```{r}
+
+# Use built-in mtcars dataset
+mtcars_tbl <- as_tibble(mtcars)
+
+mtcars_tbl
+
+```
+
+as_tibble() converts data.frame to tibble for better readability and tidyverse compatibility.
+
+Row names are not printed as a column automatically (unlike data.frame).
+
+3. Adding row names as a column.
+
+```{r}
+
+mtcars_tbl <- mtcars_tbl %>%
+  rownames_to_column(var = "Car")
+
+head(mtcars_tbl)
+
+```
+
+4. Accessing columns and subsetting
+
+```{r}
+
+# Access single column
+mtcars_tbl$mpg
+
+```
+
+```{r}
+
+# Use tibble subsetting (returns tibble, not vector)
+mtcars_tbl[1:5, c("Car", "mpg")]
+
+```
+Note that using $ returns a vector while subsetting with [ keeps tibble structure.
+
+# 3. dplyr
 
 `dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help us solve the most common data manipulation challenges:
 
@@ -781,4 +864,406 @@ Learn more about strings: https://r4ds.hadley.nz/strings
 ## 5.1. str_detect()
 Used for detecting patterns
 
+```{r}
+
+# Use rownames of mtcars as example
+cars <- tibble(Car = rownames(mtcars))
+cars
+
+```
+
+```{r}
+
+# Detect cars containing "Mazda"
+cars %>%
+  mutate(Mazda = str_detect(Car,      # string
+                            "Mazda")) # what to detect
+
+# Returns TRUE if the pattern exists
+
+```
+
+## 5.2 str_replace() and str_replace_all()
+
+```{r}
+
+# Replace " " with "_" in car names
+cars %>%
+  mutate(Car_Underscore = str_replace_all(Car, " ", "_"))
+
+# str_replace() replaces first match
+# str_replace_all() replaces all matches
+
+```
+
+## 5.3. str_extract()
+Extract parts of strings
+
+```{r}
+
+# Extract first word (make) from car name
+cars %>%
+  mutate(Make = str_extract(Car,           # str_extract extracts matching patterns
+                            "^[^ ]+"))     # regex (regular expression) for first word (everything until first place)
+
+```
+
+## 5.4. str_length(), str_trim()
+String length and trimming
+
+```{r}
+
+# Calculate length of car names
+cars %>%
+  mutate(
+    Length = str_length(Car), # length of car name
+    Trimmed = str_trim(Car)   # remove leading/trailing white space
+  )
+
+```
+## 5.5. str_c()
+Concatenating strings
+
+```{r}
+
+# Combine make with "Car" suffix
+cars %>%
+  mutate(CarLabel = str_c(Car, "-Car"))
+
+```
+## 5.6. str_to_upper(), str_to_lower()
+Converting case
+
+```{r}
+
+cars %>%
+  mutate(
+    Upper = str_to_upper(Car),
+    Lower = str_to_lower(Car)
+  )
+
+```
+
+
+# 6. forcats
+
+forcats provides a suite of useful tools that solve common problems with factors. R uses factors to handle categorical variables, variables that have a fixed and known set of possible values.
+
+```{r}
+
+# Convert cyl in mtcars to a factor
+mtcars_tbl <- as_tibble(mtcars) %>%
+  mutate(cyl_factor = factor(cyl)) # convert to categorical variable
+
+# Check levels
+levels(mtcars_tbl$cyl_factor)   # show the categories
+
+```
+
+## 6.1. fct_reorder()
+Reordering factors
+
+```{r}
+
+# Reorder cyl_factor by mean mpg
+mtcars_tbl <- mtcars_tbl %>%
+  mutate(cyl_factor = fct_reorder(cyl_factor, mpg, mean))
+
+# fct_reorder(f, x, fun = mean) orders factor levels based on a numeric variable.
+
+# Check if reordered:
+levels(mtcars_tbl$cyl_factor)
+
+```
+
+
+## 6.2. fct_lump()
+Lump small categories
+
+```{r}
+
+# Create example factor
+car_brands <- c("Ford", "Toyota", "Honda", "Mazda", "BMW", "Audi", "Ford", "Honda")
+brand_factor <- factor(car_brands)
+
+# Lump all but top 2 most common brands
+fct_lump(brand_factor, n = 2) # fct_lump() combines small or rare levels into "Other"
+
+```
+
+## 6.3. fct_relevel()
+Relevel factors
+
+```{r}
+
+# Make 6-cylinder first level
+mtcars_tbl <- mtcars_tbl %>%
+  mutate(cyl_factor = fct_relevel(cyl_factor, "6")) # fct_relevel() moves specified levels to the front
+
+levels(mtcars_tbl$cyl_factor)
+
+```
+
+
+## 6.4. fct_recode()
+Recoding factors
+
+```{r}
+
+# Rename levels
+mtcars_tbl <- mtcars_tbl %>%
+  mutate(cyl_factor = fct_recode(cyl_factor,   # fct_recode(f, new_name = old_name) renames factor levels
+                                 "Six cylinders" = "6",
+                                 "Four cylinders" = "4",
+                                 "Eight cylinders" = "8"))
+
+levels(mtcars_tbl$cyl_factor)
+
+```
+
+
+# 7. lubridate
+
+lubridate provides a set of functions for working with date-times, extending and improving on R's existing support for them.
+
+More about dates and times in R: https://r4ds.hadley.nz/datetimes.html
+
+1. Creating date objects
+
+```{r}
+
+# Create dates from character strings
+dates1 <- ymd(c("2025-10-20", "2025-11-01", "2025-12-31"))  # ymd() parses strings in Year-Month-Day format
+dates1
+
+```
+
+```{r}
+
+ymd(20101215)
+mdy("4/1/17")
+
+```
+
+2. Extracting components of dates
+
+```{r}
+
+# Example dates
+dates <- ymd("2025-10-20")
+
+year(dates)   # 2025
+month(dates)  # 10
+day(dates)    # 20
+wday(dates, label = TRUE)  # Day of week (e.g., Mon)
+
+```
+3. Creatomg a date column in tibbles/data frames
+
+```{r}
+
+# airquality data set has Month and Day columns; create a Date column
+airquality <- airquality %>%
+  mutate(Date = make_date(year = 1973, 
+                          month = Month, 
+                          day = Day))
+
+head(airquality)
+
+```
+4. Adding or subtracting time
+
+```{r}
+
+# Add days, months, or years
+today_date <- today()
+today_date + days(7)     # 7 days later
+today_date - months(1)   # 1 month earlier
+today_date + years(2)    # 2 years later
+
+```
+
+5. Rounding dates
+
+```{r}
+
+# Round dates to nearest day, week, month
+ymd("2025-10-20") %>% floor_date(unit = "month")  # First day of month
+ymd("2025-10-20") %>% ceiling_date(unit = "month")  # Last day of month
+
+
+```
+
+6. Differences between dates
+
+```{r}
+
+# Difference in days
+date1 <- ymd("2025-10-20")
+date2 <- ymd("2025-12-31")
+interval(date1, date2) / ddays(1)  # Number of days
+
+
+```
+
+7. Helper functions for handling time zones
+
+```{r}
+
+# Set the time
+time <- ymd_hms("2010-12-13 15:30:30")
+time
+
+```
+
+```{r}
+
+with_tz(time, "America/Chicago")
+
+# with_tz returns a date-time as it would appear in a different time zone. The actual moment of time measured does not change, just the time zone it is measured in.
+
+```
+
+```{r}
+
+# Changes time
+force_tz(time, "America/Chicago")
+
+# force_tz returns the date-time that has the same clock time as input time, but in the new time zone.
+# assigns a new time zone without changing the clock
+
+```
+
+
+# 8. ggplot2
+
+ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+
+https://r4ds.hadley.nz/data-visualize:
+
+ggplot2 implements the **grammar of graphics**, a coherent system for describing and building graphs. With ggplot2, you can do more and faster by learning one system and applying it in many places.
+
+The following examples are lifted/modified from https://r4ds.hadley.nz/data-visualize
+
+In addition to tidyverse, we will also use the **palmerpenguins** package, which includes the penguins dataset containing body measurements for penguins on three islands in the Palmer Archipelago, 
+
+```{r}
+
+# Install the package and load
+# install.packages("palmerpenguins")
+
+library(palmerpenguins)
+
+```
+
+and the `ggthemes` package, which offers a colorblind safe color palette
+
+```{r}
+
+# Install the ggthemes package and load
+# install.packages("ggthemes")
+
+library(ggthemes)
+
+```
+
+
+```{r}
+
+# Explore the penguins data set
+penguins
+
+```
+
+The penguins is a tibble tha contains 8 columns:
+
+```{r}
+
+glimpse(penguins)
+
+```
+
+To learn more about penguins:
+
+```{r}
+
+?penguins
+
+```
+
+The ultimate goal in this chapter is to recreate the  visualization in https://r4ds.hadley.nz/data-visualize displaying the relationship between:
+
+- flipper lengths and body masses + considering the species of the penguins
+
+```{r}
+
+# The first argument is the dataset to use in the graph
+
+ggplot(data = penguins)
+
+```
+It's empty because we have not told R how to visualize it.
+
+To tell ggplot() how the information from our data will be visually represented, we'll use the **mapping** argument to define the visual properties (**aesthetics**) of the plot.
+
+```{r}
+
+# The mapping argument is always defined in the aes()
+# The x and y arguments of aes() specify which variables to map
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g)
+)
+
+```
+The empty canvas now has more structure: flipper lengths will be displayed on the x-axis while body mass will be displayed on the y-axis.
+
+But there's nothing else yet aside from those because we have not told ggplot how to represent the observations.
+
+We can do that by defining the **geom**: the geometrical object that a plot uses to represent data. There are several types of functions that start with `geom_` in ggplot2:
+
+- `geom_bar()` = bar charts
+- `geom_line()` = line charts
+- `geom_boxplot() = boxplots
+- `geom_point()` = scatterplots
+
+... and many more.
+
+```{r}
+
+
+```
+
+
+# 9. purrr
+
+
+purrr enhances R’s functional programming (FP) toolkit by providing a complete and consistent set of tools for working with functions and vectors. Once you master the basic concepts, purrr allows you to replace many for loops with code that is easier to write and more expressive. 
+
+-- This is a little difficult to understand and is used for more advanced applications involving combinations of various R programming concepts (e.g. lists that we did not really explore and master to a great extent).
+
+**Recommended purrr tutorials:**
+
+https://www.geeksforgeeks.org/r-language/purrr-package-in-r-programming/
+
+https://medium.com/number-around-us/mastering-purrr-from-basic-maps-to-functional-magic-in-r-e74ef3d0d349
+
+https://github.com/cwickham/purrr-tutorial
+
+
+# GOOD PRACTICES:
+
+1. Loading all packages at the start of the script/R Markdown so that other users of our code can easily see what packages need to be installed.
+
+2. Installing packages through the console or a separate R script.
+
+We do not really need to worry about installing packages if we enabled renv when we initialized the R Project. 
+
+3. Using variable/data frame/tibble names that are easy to understand and can give an idea on what the data it contains is about.
+
+4. Practice! There's a lot of tutorials available in the internet. Always go back to the basics to have a solid foundation of R syntax and programming concepts.
+
+5. Be organized. Period. :)
 

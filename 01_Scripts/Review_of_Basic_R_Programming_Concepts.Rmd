@@ -862,3 +862,27 @@ gs4_deauth()
 gs4_auth()      
 
 
+# 6. Writing out a CSV file
+
+```{r}
+
+# Create a sample dataset
+data <- data.frame(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 28),
+  Score = c(88, 95, 90)
+)
+
+```
+
+```{r}
+# Write the data to a CSV file in your Output folder
+
+write.csv(data, here("02_Output",  # Note that this is the name of MY output folder
+                                   # yours can be different
+                     
+                     "output.csv"), row.names = FALSE)
+
+```
+
+
