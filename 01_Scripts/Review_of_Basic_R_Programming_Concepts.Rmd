@@ -3,6 +3,9 @@ title: "Review of Basic R Programming Concepts"
 author: "Amyel Dale Cero"
 date: "2025-10-20"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1. Assigning and using variables
 
-We can use the `=` sign to assign values to variables but the `<-` operator is conventionally preferred.
+We can use the `=` sign to assign values to variables but the `<-`
+operator is conventionally preferred.
 
 ```{r}
 
@@ -27,7 +31,8 @@ print(B)
 print(C)
 ```
 
-We can perform basic math operations by using the variables instead of the numbers assigned to them:
+We can perform basic math operations by using the variables instead of
+the numbers assigned to them:
 
 ```{r}
 
@@ -47,7 +52,8 @@ C
 
 ```
 
-Note how the value of C changes from 3 to 8, subsequently changing the results of succeeding operations:
+Note how the value of C changes from 3 to 8, subsequently changing the
+results of succeeding operations:
 
 ```{r}
 
@@ -57,18 +63,18 @@ C + D
 
 **Using variables:**
 
-- Links output from one line of code to a later line
-- Minimizes errors
-- Makes the code more generalizable
-- Allows automation of data processing
-- Makes the code easier to update and revise
-
+-   Links output from one line of code to a later line
+-   Minimizes errors
+-   Makes the code more generalizable
+-   Allows automation of data processing
+-   Makes the code easier to update and revise
 
 # 2. Data types in R
 
 **Variables do not have to be numbers.**
 
-There are multiple data types in R and in other computer languages. The standard data types we will often encounter are:
+There are multiple data types in R and in other computer languages. The
+standard data types we will often encounter are:
 
 ## a. Numeric
 
@@ -125,9 +131,12 @@ class(BestProfession)
 
 ## d. Factor
 
-A factor in R is a data structure used to handle categorical variables. It is especially useful when the variable represents a fixed number of categories (example: male vs female; low-medium-high).
+A factor in R is a data structure used to handle categorical variables.
+It is especially useful when the variable represents a fixed number of
+categories (example: male vs female; low-medium-high).
 
-Factors are internally stores as integers with labels. They can also be "ordered" or "unordered".
+Factors are internally stores as integers with labels. They can also be
+"ordered" or "unordered".
 
 ```{r}
 
@@ -151,7 +160,6 @@ level_ordered <- factor(c("Low", "High", "Medium"),
 level_ordered
 
 ```
-
 
 ```{r}
 
@@ -192,7 +200,8 @@ class(y)
 
 # 3. Data structures in R
 
-We were able to assign single values to variables. But what if we have a number of related values?
+We were able to assign single values to variables. But what if we have a
+number of related values?
 
 ```{r}
 
@@ -203,7 +212,8 @@ Crop4 <- "cassava"
 
 ```
 
-It can be a bit tedious to assign each value to a different variable. Instead, what we can do is to group them:
+It can be a bit tedious to assign each value to a different variable.
+Instead, what we can do is to group them:
 
 ```{r}
 
@@ -225,8 +235,8 @@ Crops2
 
 A vector is a data structure that holds elements of the same data type.
 
-Note the syntax for a vector: c(Item1, Item2, ...)
-c = concatenate = link things together in a chain or series
+Note the syntax for a vector: c(Item1, Item2, ...) c = concatenate =
+link things together in a chain or series
 
 ```{r}
 
@@ -265,7 +275,8 @@ is.vector(Crops)  # TRUE if it is a vector
 
 ### a.1. Accessing values in a vector
 
-We can use `VectorName[index#]` to isolate the desired item. ("Indexing")
+We can use `VectorName[index#]` to isolate the desired item.
+("Indexing")
 
 ```{r}
 
@@ -295,7 +306,8 @@ Crops
 
 ### a.2. Vector operations
 
-R is vectorized: it is designed to perform operations on entire vectors of data at once instead of doing one element at a time.
+R is vectorized: it is designed to perform operations on entire vectors
+of data at once instead of doing one element at a time.
 
 ```{r}
 
@@ -308,17 +320,17 @@ x > 2   # FALSE FALSE TRUE
 
 ```
 
-
 **Vectors** contain groups of objects in one dimension (column or row).
 
-**Matrices** contain groups of objects in two dimensions (a grid). 
+**Matrices** contain groups of objects in two dimensions (a grid).
 
-**Arrays** contain groups of objects in any number of dimensions (i.e., vectors and matrices are just specific types of an array).  
-
+**Arrays** contain groups of objects in any number of dimensions (i.e.,
+vectors and matrices are just specific types of an array).
 
 ## b. Matrix
 
-A matrix is a 2D structure where all elements must be of the same data type.
+A matrix is a 2D structure where all elements must be of the same data
+type.
 
 There are many ways to initialize a matrix.
 
@@ -340,7 +352,10 @@ m2 <- matrix(data = 1:10, nrow = 5, byrow = FALSE)
 m2
 
 ```
-We can use `class()` to see the object's class (its behavior or type as seen by users) and/or `typeof()` to see the internal storage type that R used for the object.
+
+We can use `class()` to see the object's class (its behavior or type as
+seen by users) and/or `typeof()` to see the internal storage type that R
+used for the object.
 
 ```{r}
 
@@ -351,6 +366,7 @@ class(m2)
 typeof(m2)
 
 ```
+
 We can also create a matrix by binding vectors.
 
 ```{r}
@@ -367,6 +383,7 @@ print(m4)
 # Try to spot the difference between doing a cbind versus rbind:
 
 ```
+
 ### b.1. Accessing elements in a matrix
 
 ```{r}
@@ -408,6 +425,7 @@ m6 + m7   # Element-wise addition
 m6 * m7   # Element-wise multiplication
 
 ```
+
 ### b.3. Useful matrix functions
 
 ```{r}
@@ -425,15 +443,17 @@ t(m5)        # transpose
 
 ## c. Data Frame
 
-Vectors and matrices require that their elements are of the same data type.
+Vectors and matrices require that their elements are of the same data
+type.
 
 What if we want to combine different data types?
 
-A **data frame** is a 2-dimensional table-like structure
-- Each column is a vector (of the same length)
-- Different columns can have different data types (numeric, character, factor, etc.),
+A **data frame** is a 2-dimensional table-like structure - Each column
+is a vector (of the same length) - Different columns can have different
+data types (numeric, character, factor, etc.),
 
-It is the most commonly used structure for data sets in R (like Excel sheets).
+It is the most commonly used structure for data sets in R (like Excel
+sheets).
 
 ```{r}
 
@@ -446,6 +466,7 @@ df <- data.frame(
 df
 
 ```
+
 ```{r}
 
 # To view the df in a separate tab:
@@ -535,6 +556,7 @@ names(df)[names(df) == "weight_kg"] <- "weight_tons"
 df
 
 ```
+
 ```{r}
 
 # b. Rename by column position
@@ -542,6 +564,7 @@ names(df)[2] <- "weight_kg"
 df
 
 ```
+
 ```{r}
 
 # c. Rename multiple columns
@@ -549,14 +572,16 @@ names(df) <- c("crop_name", "weight", "number_of_days_stored", "room_no")
 df
 
 ```
+
 ## d. Lists
 
-A list in R is a flexible data structure that can hold elements of different types and lengths, including:
+A list in R is a flexible data structure that can hold elements of
+different types and lengths, including:
 
-- vectors
-- matrices
-- data frames
-- and even other lists
+-   vectors
+-   matrices
+-   data frames
+-   and even other lists
 
 They are building blocks of more complex R objects (like models).
 
@@ -578,6 +603,7 @@ list2 <- list(crop = "rice",
 list2
 
 ```
+
 ### d.1. Accessing list elements
 
 ```{r}
@@ -587,7 +613,6 @@ list2
 list2$weight_kg
 
 ```
-
 
 ```{r}
 
@@ -600,11 +625,14 @@ list2[["weight_kg"]]      # gets the "weight_kg" (which is also the second eleme
 
 # 4. More about data frames in R
 
-We will focus in working on data frames since it will be the usual data structure of most data sets that we will be using in our work.
+We will focus in working on data frames since it will be the usual data
+structure of most data sets that we will be using in our work.
 
-R comes with several built-in data frames that are perfect for learning, testing, and practicing data analysis.
+R comes with several built-in data frames that are perfect for learning,
+testing, and practicing data analysis.
 
-These are preloaded with base R or available in standard packages like `datasets`.
+These are preloaded with base R or available in standard packages like
+`datasets`.
 
 ```{r}
 
@@ -660,7 +688,9 @@ str(ChickWeight)    # shows the structure
 summary(ChickWeight)   # shows the summary statistics
 
 ```
-Note that `summary()` can give us the summary statistics of the data frame but we can also use separate functions to do this, if needed:
+
+Note that `summary()` can give us the summary statistics of the data
+frame but we can also use separate functions to do this, if needed:
 
 ```{r}
 
@@ -685,7 +715,8 @@ print(sd_weight)
 
 ```
 
-**We can also used the base R `plot()` function to see the matrix of scatterplots, also called pairs plot.**
+**We can also used the base R `plot()` function to see the matrix of
+scatterplots, also called pairs plot.**
 
 ```{r}
 
@@ -695,52 +726,58 @@ plot(ChickWeight)
 
 ```
 
-This is a scatterplot matrix of all numeric columns in the data frame. Each cell shows a scatterplot between two numeric variables.
+This is a scatterplot matrix of all numeric columns in the data frame.
+Each cell shows a scatterplot between two numeric variables.
 
-Note that the plot in row 1, column 2 is just a mirror of row 2, column 1 (i.e., axes flipped).
+Note that the plot in row 1, column 2 is just a mirror of row 2, column
+1 (i.e., axes flipped).
 
 **What to look for in each plot:**
 
 **1. Linear patterns**
 
-- If X increases and Y also increases = positive correlation
-- If X increases and Y decreases → negative correlation
+-   If X increases and Y also increases = positive correlation
+-   If X increases and Y decreases → negative correlation
 
 **2. Curved patterns**
 
-- Indicates a non-linear relationship.
+-   Indicates a non-linear relationship.
 
 **3. Clusters**
 
-- Points forming distinct groups might indicate the presence of categorical groups or outliers.
+-   Points forming distinct groups might indicate the presence of
+    categorical groups or outliers.
 
 **4. Outliers**
 
-- Points far from the main cloud = potential data issues or interesting cases
-
+-   Points far from the main cloud = potential data issues or
+    interesting cases
 
 # 5. Importing data sets to R using base R functions
 
+The tricky part in importing data sets to R is identifying the file path
+to the data.
 
-The tricky part in importing data sets to R is identifying the file path to the data.
-
-To address this issue, there is a good package in R that we can use: `here`
+To address this issue, there is a good package in R that we can use:
+`here`
 
 ## 5.1. `here` package
 
-When we work on R projects, file paths often become messy especially when using `setwd()`
-or absolute paths like "C:/Users/Amyel/Documents/project/data/data.csv".
+When we work on R projects, file paths often become messy especially
+when using `setwd()` or absolute paths like
+"C:/Users/Amyel/Documents/project/data/data.csv".
 
 This may break in another computer.
 
-The `here` package solves this by automatically finding your project's root directory,
-so you can refer to files relative to your project folder.
+The `here` package solves this by automatically finding your project's
+root directory, so you can refer to files relative to your project
+folder.
 
 ```{r}
 
 # Install here() package
 
-install.packages("here")
+# install.packages("here")
 
 ```
 
@@ -754,11 +791,12 @@ here()
 
 ```
 
-The resulting output shows you where you are in your R Projects directory.
+The resulting output shows you where you are in your R Projects
+directory.
 
-For the next part, download the data set that was used in the previous training
-(from the Google Drive or from here: 
-https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data.csv)
+For the next part, download the data set that was used in the previous
+training (from the Google Drive or from here:
+<https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data.csv>)
 
 and save it in your 'Data' folder.
 
@@ -768,10 +806,13 @@ and save it in your 'Data' folder.
 
 Why is CSV file preferred over Excel?
 
-1. Comma-separated values (CSV) is just raw data in plain text
-2. Works across any programming language (R, Python, SQL, JavaScript, etc.)
-3. No hidden formatting, just data = reduces unexpected behavior when importing
-4. Not proprietary! We don’t need Excel or any licensed software to open or edit a CSV.
+1.  Comma-separated values (CSV) is just raw data in plain text
+2.  Works across any programming language (R, Python, SQL, JavaScript,
+    etc.)
+3.  No hidden formatting, just data = reduces unexpected behavior when
+    importing
+4.  Not proprietary! We don’t need Excel or any licensed software to
+    open or edit a CSV.
 
 We mainly use the `read.csv()` to bring in .csv files into R.
 
@@ -786,11 +827,10 @@ df <- read.csv(here("00_Data", "data.csv"))
 
 ```
 
-
 ### b. TXT files
 
-Download the .txt version of the same data set from here: 
-https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_text.txt
+Download the .txt version of the same data set from here:
+<https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_text.txt>
 
 and save it in your Data folder.
 
@@ -808,23 +848,28 @@ df_text <- read.table(here("00_Data", "data_text.txt"),
 
 ### c. Excel files
 
-Download the .txt version of the same data set from here: 
-https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_excel.xlsx
+Download the .txt version of the same data set from here:
+<https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_excel.xlsx>
 
 and save it in your Data folder.
 
-Base R cannot read Excel files directly. We will need external packages like `readxl` or `openxlsx`.
+Base R cannot read Excel files directly. We will need external packages
+like `readxl` or `openxlsx`.
 
 ```{r}
 
 # Install the readxl package
-install.packages("readxl")
+# install.packages("readxl")
 
 ```
-Note: It's not really a good practice to install packages inside the R Markdown, we should install them instead in a separate .R file or in the console.
 
-This is because every time we knot, R executes all chunks from top to bottom. It will re-install packages every time which can slow down the knitting, cause errors, and trigger CRAN mirror issues.
+Note: It's not really a good practice to install packages inside the R
+Markdown, we should install them instead in a separate .R file or in the
+console.
 
+This is because every time we knot, R executes all chunks from top to
+bottom. It will re-install packages every time which can slow down the
+knitting, cause errors, and trigger CRAN mirror issues.
 
 ```{r}
 
@@ -836,16 +881,15 @@ df_excel <- read_xlsx(here("00_Data", "data_excel.xlsx"))
 
 ```
 
-
 ### d. Google Sheets or URLS
 
 If the Excel file is in Google Drive or online:
-https://drive.google.com/file/d/1gVsep3cW7uxDvc__oZFpIsMu9RzO7fjd/view?usp=drive_link
+<https://drive.google.com/file/d/1gVsep3cW7uxDvc__oZFpIsMu9RzO7fjd/view?usp=drive_link>
 
 ```{r}
 
 # Install googlesheets4
-install.packages("googlesheets4")
+# install.packages("googlesheets4")
 
 ```
 
@@ -859,13 +903,10 @@ df_google <- read_sheet("https://docs.google.com/spreadsheets/d/1xmk-kdmETegll_8
 
 ```
 
-In case the code above does not work, you may need to re-authenticate your Google access:
-1. remove any old tokens using:
-gs4_deauth()
+In case the code above does not work, you may need to re-authenticate
+your Google access: 1. remove any old tokens using: gs4_deauth()
 
-2. open browser and ask you to log in:
-gs4_auth()      
-
+2.  open browser and ask you to log in: gs4_auth()
 
 # 6. Writing out a CSV file
 
@@ -889,5 +930,3 @@ write.csv(data, here("02_Output",  # Note that this is the name of MY output fol
                      "output.csv"), row.names = FALSE)
 
 ```
-
-
