@@ -1233,9 +1233,157 @@ We can do that by defining the **geom**: the geometrical object that a plot uses
 
 ```{r}
 
+# Use geom_point to add a layer of points to the plot
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g)
+) +
+  geom_point()
 
 ```
 
+What does the relationship between flipper length and body mass look like?
+
+The relationship appears to be positive: as flipper length increases, so does body mass.
+
+It also appears to be fairly linear (points are clustered around a line instead of a curve), which looks moderately strong since there is not too much scatter around the line.
+
+It seems then that penguins with longer flippers are generally larger in terms of their body mass.
+
+What else can we do to this plot?
+
+Can we display other relationships, as influenced by other variables?
+
+```{r}
+
+# Does the relationship between flipper length and body mass differ by species?
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g, 
+                color = species)  # color by species
+) +
+  geom_point()
+
+```
+
+When a categorical variable is mapped to an aesthetic, ggplot2 will automatically assign a unique value of aesthetic (ex. unique color) to each unique level of the variable -- a process also known as scaling.
+
+```{r}
+
+# Add a smooth curve displaying the relationship between body mass and flipper length
+
+# Since this is a new geometric object, this will be a new geom layer
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g, 
+                color = species)
+) +
+  geom_point() +
+  
+  geom_smooth(method = "lm")   # the new geom layer
+```
+This now almost looks like the target figure except that we have three separate lines for each penguin species instead of one.
+
+Note that each geom function in ggplot2 can also take a mapping argument, which allows for aesthetic mappings at the local level, rather than inheriting from the global level (i.e., main mapping argument).
+
+```{r}
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species)) +  # transfer the color by species here so that only the points will be grouped and not all the other elements of the plot
+  
+  geom_smooth(method = "lm")
+```
+
+Almost there! Note that we can also use shape aesthetics to categorize data.
+
+```{r}
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species, 
+                           shape = species)) +  # adding shape to further differentiate species
+  
+  geom_smooth(method = "lm")
+
+
+```
+
+Finally, we can improve the labels of our plot:
+
+```{r}
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g)
+) +
+  geom_point(aes(color = species, 
+                 shape = species)) +
+  
+  geom_smooth(method = "lm") +
+  
+  labs(            # specify the titles and labels
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)",  # x-axis label
+    y = "Body mass (g)",        # y-axis label
+    color = "Species",   # define the label for the legend
+    shape = "Species"
+  ) +
+  scale_color_colorblind()  # improving the palette to be colorblind safe
+
+```
+Lastly, we can export this plot for use in other purposes. To do this, first, the ggplot must be saved to an object:
+
+```{r}
+
+plot <- ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, 
+                y = body_mass_g)
+) +
+  geom_point(aes(color = species, 
+                 shape = species)) +
+  
+  geom_smooth(method = "lm") +
+  
+  labs(            # specify the titles and labels
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)",  # x-axis label
+    y = "Body mass (g)",        # y-axis label
+    color = "Species",   # define the label for the legend
+    shape = "Species"
+  ) +
+  scale_color_colorblind()  # improving the palette to be colorblind safe
+
+plot
+
+```
+```{r}
+
+# Save (export) the plot as a PNG file
+
+ggsave(here("02_Output", "penguin_plot.png"),   # save in the Output folder
+       plot = plot, # name of the object where the ggplot is saved
+       width = 5,   # inches
+       height = 4,
+       dpi = 300    # resolution 
+       )  
+```
 
 # 9. purrr
 
