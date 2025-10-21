@@ -77,7 +77,9 @@ There are multiple data types in R and in other computer languages. The standard
 # Subcategories: integer & double
 
 E <- 525600
+E
 
+class(E)
 ```
 
 ## b. Logic
@@ -97,6 +99,7 @@ Outcome <- TRUE
 # Also known as string; written with quotation marks around them
 
 BestProfession <- "Engineering"
+BestProfession
 
 ```
 
