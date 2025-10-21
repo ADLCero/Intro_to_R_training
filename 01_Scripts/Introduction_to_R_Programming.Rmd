@@ -1203,6 +1203,7 @@ ggplot(mtcars,
   theme_minimal()
 
 ```
+
 ### b.6. Heat map
 
 ```{r, eval = FALSE}

@@ -1139,6 +1139,8 @@ force_tz(time, "America/Chicago")
 
 ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
 
+## 8.1. Grammar of graphics
+
 https://r4ds.hadley.nz/data-visualize:
 
 ggplot2 implements the **grammar of graphics**, a coherent system for describing and building graphs. With ggplot2, you can do more and faster by learning one system and applying it in many places.
@@ -1383,6 +1385,271 @@ ggsave(here("02_Output", "penguin_plot.png"),   # save in the Output folder
        height = 4,
        dpi = 300    # resolution 
        )  
+```
+
+
+## 8.2. More examples
+
+### a. geom_point() - scatterplot
+
+Relationship between two numeric variables
+
+```{r}
+
+ggplot(mtcars, aes(x = mpg, 
+                   y = hp, 
+                   color = factor(cyl))) +
+  
+geom_point(size = 3, alpha = 0.8) + # add alpha for transparency to reduce overplotting
+  
+labs(title = "Scatter Plot: Horsepower vs MPG", color = "Cylinders")
+
+
+```
+
+### b. geom_smooth() - trend line
+
+Adds fitted trend or regression lines.
+
+```{r}
+
+ggplot(mtcars, aes(x = mpg, 
+                   y = hp)) +
+  
+geom_point() +
+  
+geom_smooth(method = "lm", color = "red") + # method = "lm" for linear; "loess" for smoother fits
+  
+labs(title = "Adding a Regression Line")
+
+
+```
+
+### c. geom_bar() - bar chart (counts)
+
+Count frequency of categorical variables
+
+```{r}
+
+ggplot(mtcars, aes(x = factor(cyl))) +
+geom_bar(fill = "steelblue") +
+labs(title = "Count of Cars by Cylinder")
+
+
+```
+
+### d. geom_col() - bar chart (pre-summarized data)
+
+```{r}
+
+avg_mpg <- mtcars %>%
+group_by(cyl) %>%
+summarise(mean_mpg = mean(mpg))
+
+ggplot(avg_mpg, aes(x = factor(cyl), 
+                    y = mean_mpg)) +
+  
+geom_col(fill = "tomato") +
+labs(title = "Average MPG by Cylinder")
+
+```
+
+### e. geom_histogram() - histogram
+
+Distribution of a single numeric variable
+
+```{r}
+
+ggplot(mtcars, aes(x = mpg)) +
+  
+geom_histogram(bins = 10, 
+               fill = "darkseagreen", 
+               color = "white") +
+  
+labs(title = "Histogram of MPG")
+
+```
+
+### f. geom_density() - density plot
+
+Smoother distribution visualization
+
+```{r}
+
+ggplot(mtcars, aes(x = mpg, fill = factor(cyl))) +
+  
+geom_density(alpha = 0.5) +
+  
+labs(title = "Density Plot of MPG by Cylinder")
+
+```
+
+### g. geom_boxplot() - boxplot
+
+Visualize median, quartiles, and outliers across groups
+
+```{r}
+
+ggplot(iris, aes(x = Species, 
+                 y = Sepal.Length, fill = Species)) +
+  
+geom_boxplot(alpha = 0.7) +
+  
+labs(title = "Boxplot of Sepal Length by Species")
+
+```
+
+### h. geom_violin() - violin plot
+
+```{r}
+
+ggplot(iris, aes(x = Species, 
+                 y = Sepal.Length, 
+                 fill = Species)) +
+  
+geom_violin(trim = FALSE, 
+            alpha = 0.7) +
+  
+labs(title = "Violin Plot of Sepal Length by Species")
+
+```
+
+### i. geom_jitter() - jittered points
+
+```{r}
+
+ggplot(iris, aes(x = Species, 
+                 y = Sepal.Length, color = Species)) +
+  
+geom_jitter(width = 0.2, alpha = 0.6) +
+  
+labs(title = "Jittered Points to Avoid Overlap")
+
+```
+
+### j. geom_line() - line plot
+
+Trends over time or ordered sequences
+
+```{r}
+
+ggplot(economics, aes(x = date, y = unemploy)) +
+  
+geom_line(color = "steelblue") +
+  
+labs(title = "Unemployment Over Time")
+
+```
+
+### k. geom_area() - area chart
+
+Emphasizes cumulative changes over time
+
+```{r}
+
+ggplot(economics, aes(x = date, 
+                      y = psavert)) +
+  
+geom_area(fill = "skyblue", alpha = 0.6) +
+  
+labs(title = "Personal Savings Rate Over Time")
+
+
+```
+
+### l. geom_path() - paths or trajectories
+
+For ordered, sequential connections (e.g., time progression)
+
+```{r}
+
+ggplot(economics, aes(x = unemploy, 
+                      y = psavert)) +
+  
+geom_path(color = "darkorange") +
+  
+labs(title = "Path Plot: Savings vs Unemployment")
+
+```
+
+### m. geom_tile() - heat map
+
+Show matrix-like data or correlations
+
+```{r}
+
+# Use only numeric columns
+numeric_mtcars <- mtcars[, sapply(mtcars, is.numeric)]
+
+# Compute correlation matrix and convert to long format
+corr <- round(cor(numeric_mtcars), 2)
+corr_df <- as.data.frame(as.table(corr))
+
+```
+
+
+```{r}
+
+# Plot heatmap
+
+ggplot(corr_df, aes(x = Var1, y = Var2, fill = Freq)) +
+  
+  geom_tile(color = "white") +
+  geom_text(aes(label = Freq), 
+            color = "black", size = 3) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1),
+                       name = "Correlation") +
+  
+  labs(title = "Correlation Heatmap",
+       x = NULL, y = NULL) +
+  
+  theme_minimal() +
+  
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        panel.grid = element_blank())
+
+```
+
+### n. geom_text() - text labels
+
+Annotate points with labels
+
+```{r}
+
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  
+geom_text(size = 3, color = "darkred") +
+  
+labs(title = "Car Labels on Scatter Plot")
+
+```
+
+### o. geom_errorbar() - error bars
+
+Show variability or uncertainty around estimates
+
+```{r}
+
+summary_data <- mtcars %>%
+group_by(cyl) %>%
+summarise(mean_mpg = mean(mpg),
+sd_mpg = sd(mpg))
+
+ggplot(summary_data, 
+       aes(x = factor(cyl), 
+           y = mean_mpg)) +
+  
+geom_col(fill = "tan") +
+  
+geom_errorbar(aes(ymin = mean_mpg - sd_mpg, ymax = mean_mpg + sd_mpg),
+width = 0.2, color = "black") +
+  
+labs(title = "Mean MPG with Error Bars")
+
+
 ```
 
 # 9. purrr
