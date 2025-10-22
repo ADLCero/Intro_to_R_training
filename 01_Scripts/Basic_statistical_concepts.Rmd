@@ -42,7 +42,7 @@ interpreting data to make informed decisions. It has two major branches:
 Type of data and scales of measurement:
 
 | Scale | Description | Example |
-|------------------|--------------------------------|-----------------------|
+|----|----|----|
 | **Nominal** | Categories without order | Gender, Blood type |
 | **Ordinal** | Ordered categories | Satisfaction level (High, Medium, Low) |
 | **Interval** | Equal intervals, no true zero | Temperature (°C) |
@@ -215,7 +215,7 @@ Each member of the population has a known (non-zero) chance of being
 selected.
 
 | Method | Description | Example in R |
-|------------------|---------------------------|---------------------------|
+|----|----|----|
 | **Simple Random Sampling** | Every individual has an equal chance of selection. | `sample(x, size = n)` |
 | **Systematic Sampling** | Select every *kth* element after a random start. | See example below |
 | **Stratified Sampling** | Divide population into strata (groups), sample within each. | Using `dplyr::group_by()` and `sample_n()` |
@@ -303,3 +303,5 @@ randomization
     proportions
 4.  Snowball sampling = existing participants recruit future
     participants
+
+![How to choose the right statistical test](images/Right_stat.jpg)
