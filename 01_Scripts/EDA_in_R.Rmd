@@ -240,5 +240,5 @@ Use the same steps above in exploring other built-in data sets in R.
 # See all available built in data sets:
 data()
 
-data("WWWusage")
 ```
+
