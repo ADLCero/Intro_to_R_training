@@ -50,10 +50,8 @@ Main reference: <https://tidyverse.org/packages/>
 
 # Installation
 
+Note: Again, it is not recommended to install packages inside an R Markdown. We can do this in the console or in a separate .R script inside this R Project.
 ```{r, eval = FALSE}
-
-# Note: Again, it is not recommended to install packages inside an R Markdown.
-# We can do this in the console or in a separate .R script inside this R Project.
 
 # Type this code in the console or "uncomment" (i.e., remove hashtag) the line
 # install.packages("tidyverse")

@@ -64,12 +64,15 @@ Describes the "center" of the data
 
 # Create a vector containing a series of numbers
 x <- c(5, 8, 10, 7, 5, 10)
+x
 
 ```
 
 ```{r}
 
 # Get the mean and median of x using mean() and median()
+mean(x)
+median(x)
 
 ```
 
@@ -80,6 +83,8 @@ Describe how spread out the data are
 ```{r}
 
 # Get the range of x which is the difference between the max() and min()
+range <- max(x) - min(x)
+print(range)
 
 ```
 
@@ -87,6 +92,7 @@ Describe how spread out the data are
 
 # Get the standard deviation, which is the spread of values around the mean,
 # using sd()
+round(sd(x), 2)
 
 ```
 
@@ -94,6 +100,7 @@ Describe how spread out the data are
 
 # Get the variance, which is the average squared deviation,
 # using var()
+var(x)
 
 ```
 
@@ -101,6 +108,7 @@ Describe how spread out the data are
 
 # Get the Interquartile Range (IQR), which indicates the spread of the middle 50% of the data, 
 # using IQR()
+IQR(x)
 
 ```
 
@@ -111,14 +119,14 @@ Indicate how the data distribution looks
 1.  Skewness = symmetry of distribution
 2.  Kurtosis = peakedness or flatness
 
-To demonstrate these, we will use the e1071 package, which is a populat
+To demonstrate these, we will use the e1071 package, which is a popular
 R library that provides a collection of functions for statistical and
 machine learning methods
 
 ```{r}
 
 # Install and load the package
-install.packages("e1071", repos = "https://cloud.r-project.org")
+# install.packages("e1071", repos = "https://cloud.r-project.org")
 library(e1071)
 
 ```
@@ -136,7 +144,8 @@ skewness(x)
 ```{r}
 
 # Check kurtosis
-kurtosis(x)
+
+round(kurtosis(x), 2)
 
 # Kurtosis measures the "tailedness" or the peakedness of the distribution, 
 # showing the degree to which the data is concentrated in the tails compared 
@@ -144,8 +153,15 @@ kurtosis(x)
 
 ```
 
-Rule: Skewness \> 0 = right-skewed Skewness \< 0 = left-skewed Kurtosis
-\> 3 = leptokurtic (peaked) Kurtosis \< 3 = platykurtic (flat)
+Rule:
+
+Skewness \> 0 = right-skewed
+
+Skewness \< 0 = left-skewed
+
+Kurtosis \> 3 = leptokurtic (peaked)
+
+Kurtosis \< 3 = platykurtic (flat)
 
 # 3. Data Summarization and Visualization
 
@@ -171,7 +187,8 @@ summary(PlantGrowth)
 hist(PlantGrowth$weight,           # column of plant growth to plot; choose weight
      main = "Histogram of Plant Weights",
      xlab = "Weight",
-     col = "skyblue", border = "white")
+     col = "skyblue", 
+     border = "white")
 
 ```
 
@@ -182,7 +199,8 @@ hist(PlantGrowth$weight,           # column of plant growth to plot; choose weig
 boxplot(weight ~ group,         # make a boxplot of weight values for each group
         data = PlantGrowth,     # indicate the dataset
         main = "Boxplot of Plant Weights by Treatment",
-        xlab = "Treatment Group", ylab = "Weight",
+        xlab = "Treatment Group", 
+        ylab = "Weight",
         col = c("lightgreen", "lightblue", "orange"))
 
 ```
@@ -256,7 +274,8 @@ population <- data.frame(ID = 1:100,  # Create a column named ID with numbers 1-
 
 # Divide the population into subsets based on Group
 # For each group, take 5 random rows then bind them in a single data frame
-sample_strat <- do.call(rbind, lapply(split(population, population$Group),
+sample_strat <- do.call(rbind, 
+                        lapply(split(population, population$Group),
                                       function(x) x[sample(1:nrow(x), 5), ]))
 sample_strat
 

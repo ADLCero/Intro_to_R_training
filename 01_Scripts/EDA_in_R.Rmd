@@ -40,15 +40,17 @@ head(iris)
 str(iris)
 
 ```
+
 ## 4. See the summary statistics
 
 ```{r}
 
-str(iris)
+summary(iris)
 
 ```
-1. Numeric variables (Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) can be used for statistical analysis and plotting.
-2. Factor variable (Species) is used for grouping or classification.
+
+1.  Numeric variables (Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) can be used for statistical analysis and plotting.
+2.  Factor variable (Species) is used for grouping or classification.
 
 ## 5. Explore patterns and relationships using graphs
 
@@ -64,21 +66,20 @@ plot(iris)
 
 **1. Linear patterns**
 
-- If X increases and Y also increases = positive correlation
-- If X increases and Y decreases → negative correlation
+-   If X increases and Y also increases = positive correlation
+-   If X increases and Y decreases → negative correlation
 
 **2. Curved patterns**
 
-- Indicates a non-linear relationship.
+-   Indicates a non-linear relationship.
 
 **3. Clusters**
 
-- Points forming distinct groups might indicate the presence of categorical groups or outliers.
+-   Points forming distinct groups might indicate the presence of categorical groups or outliers.
 
 **4. Outliers**
 
-- Points far from the main cloud = potential data issues or interesting cases
-
+-   Points far from the main cloud = potential data issues or interesting cases
 
 ### 5.1. Histogram
 
@@ -115,8 +116,10 @@ Scatter plots show the relationship between two numeric variables.
 plot(iris$Sepal.Length, 
      iris$Petal.Length,
      main = "Scatter Plot of Sepal vs Petal Length",
-     xlab = "Sepal Length", ylab = "Petal Length",
-     col = "darkblue", pch = 19)
+     xlab = "Sepal Length (cm)", 
+     ylab = "Petal Length (cm)",
+     col = "darkblue", 
+     pch = 19)
 
 ```
 
@@ -128,7 +131,8 @@ Density plots show the probability density of a numeric variable — a smoothed 
 
 plot(density(iris$Sepal.Length),
      main = "Density Plot of Sepal Length",
-     col = "darkred", lwd = 2)
+     col = "orange", 
+     lwd = 5)
 
 ```
 
@@ -145,22 +149,23 @@ corr_matrix <- cor(num_data)  # Compute for the correlation matrix of all pairs 
 
 # Create the heat map
 
-heatmap(corr_matrix, main = "Heatmap of Iris Correlations")
+heatmap(corr_matrix, 
+        main = "Heatmap of Iris Correlations")
 
 ```
 
 ### 5.6. Observations and Insights
 
-1. Histograms and density plots show that most sepal lengths are clustered around 5–6 cm.
+1.  Histograms and density plots show that most sepal lengths are clustered around 5–6 cm.
 
-2. Boxplots reveal differences in sepal length distributions among species (e.g., setosa has smaller sepals than virginica).
+2.  Boxplots reveal differences in sepal length distributions among species (e.g., setosa has smaller sepals than virginica).
 
-3. Scatter plots help identify correlations; for example, petal length and sepal length are positively correlated.
+3.  Scatter plots help identify correlations; for example, petal length and sepal length are positively correlated.
 
-4. Correlation heatmaps provide a quick overview of relationships among numeric variables:
-- Strong positive correlation between petal length and petal width
-- Moderate correlation between sepal length and petal length
+4.  Correlation heatmaps provide a quick overview of relationships among numeric variables:
 
+-   Strong positive correlation between petal length and petal width
+-   Moderate correlation between sepal length and petal length
 
 ## 6. Handle missing data
 
@@ -194,7 +199,7 @@ colSums(is.na(iris_na))
 # Install naniar package
 # This package is specifically designed for handling and visualizing missing data
 
-install.packages("naniar", repos = "https://cloud.r-project.org")
+install.packages("naniar")
 
 ```
 
@@ -213,6 +218,7 @@ missing_plot <- gg_miss_var(iris_na)
 print(missing_plot)
 
 ```
+
 ### 6.3. Impute missing values
 
 In data analysis, “impute” means to fill in missing values in a dataset with estimated or plausible values, instead of leaving them as missing.
@@ -220,10 +226,10 @@ In data analysis, “impute” means to fill in missing values in a dataset with
 ```{r}
 
 # Impute missing values with mean
+
 iris_na$Sepal.Length[is.na(iris_na$Sepal.Length)] <- mean(iris_na$Sepal.Length, na.rm = TRUE)
 
 ```
-
 
 # HANDS ON EXERCISE:
 
@@ -234,5 +240,5 @@ Use the same steps above in exploring other built-in data sets in R.
 # See all available built in data sets:
 data()
 
+data("WWWusage")
 ```
-
