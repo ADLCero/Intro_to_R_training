@@ -3,33 +3,50 @@ title: "Introduction to Tidyverse in R"
 author: "Amyel Dale Cero"
 date: "2025-10-20"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Tidyverse is a collection of R packages designed for data manipulation, visualization, and analysis.**
+**Tidyverse is a collection of R packages designed for data
+manipulation, visualization, and analysis.**
+
+It provides a cohesive suite of packages with a consistent, readable
+syntax that makes data manipulation, visualization, and analysis more
+intuitive and efficient.
+
+**Key benefits:**
+
+-   streamlined workflow using the pipe operator,
+-   special tools for data wrangling and reshaping, and
+-   the use of tibbles, a modern version of R's data tables.
+
+The tidyverse simplifies common data science tasks and is designed to be
+easier to learn and use for both beginners and experienced data
+scientists.
 
 **Key packages:**
 
-| Package  | Purpose                       |
-|----------|-------------------------------|
-| readr    | Reading data                  |
-| tibble   | Enhanced data frames          |
-| dplyr    | Data manipulation             |
-| tidyr    | Reshaping data                |
-| stringr  | String operations             |
-| forcats  | Factor manipulation           |
-| purrr    | Functional programming        |
-| lubridate| Date-time manipulation        |
-| ggplot2  | Data visualization            |
+| Package   | Purpose                |
+|-----------|------------------------|
+| readr     | Reading data           |
+| tibble    | Enhanced data frames   |
+| dplyr     | Data manipulation      |
+| tidyr     | Reshaping data         |
+| stringr   | String operations      |
+| forcats   | Factor manipulation    |
+| lubridate | Date-time manipulation |
+| ggplot2   | Data visualization     |
+| purrr     | Functional programming |
 
+Tidy data means each variable is a column, each observation is a row,
+and each type of observational unit forms a table.
 
-
-Tidy data means each variable is a column, each observation is a row, and each type of observational unit forms a table.
-
-Main reference: https://tidyverse.org/packages/
+Main reference: <https://tidyverse.org/packages/>
 
 # Installation
 
@@ -49,20 +66,25 @@ Main reference: https://tidyverse.org/packages/
 library(tidyverse)
 
 ```
-# 1. readr
 
-readr provides a fast and friendly way to read rectangular data (like csv, tsv, and fwf). It is designed to flexibly parse many types of data found in the wild, while still cleanly failing when data unexpectedly changes.
+# 1. `readr`
 
-readr supports the following file formats with these read_*() functions:
+readr provides a fast and friendly way to read rectangular data (like
+csv, tsv, and fwf). It is designed to flexibly parse many types of data
+found in the wild, while still cleanly failing when data unexpectedly
+changes.
 
-- `read_csv()`: comma-separated values (CSV)
-- `read_tsv()`: tab-separated values (TSV)
-- `read_csv2()`: semicolon-separated values with , as the decimal mark
-- `read_delim()`: delimited files (CSV and TSV are important special cases)
-- `read_fwf()`: fixed-width files
-- `read_table()`: whitespace-separated files
-- `read_log()`: web log files
+readr supports the following file formats with these read\_\*()
+functions:
 
+-   `read_csv()`: comma-separated values (CSV)
+-   `read_tsv()`: tab-separated values (TSV)
+-   `read_csv2()`: semicolon-separated values with , as the decimal mark
+-   `read_delim()`: delimited files (CSV and TSV are important special
+    cases)
+-   `read_fwf()`: fixed-width files
+-   `read_table()`: whitespace-separated files
+-   `read_log()`: web log files
 
 Example 1: Read in a .csv data from the its website
 
@@ -71,6 +93,7 @@ Example 1: Read in a .csv data from the its website
 data <- read_csv("https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv")
 
 ```
+
 Example 2: Read in a sample file bundled with the readr package
 
 ```{r}
@@ -78,7 +101,10 @@ Example 2: Read in a sample file bundled with the readr package
 chickens <- read_csv(readr_example("chickens.csv"))
 
 ```
-Note that readr prints the column types – the guessed column types, in this case. This is useful because it allows us to check that the columns have been read in as we expect. 
+
+Note that readr prints the column types – the guessed column types, in
+this case. This is useful because it allows us to check that the columns
+have been read in as we expect.
 
 ```{r}
 
@@ -86,7 +112,9 @@ Note that readr prints the column types – the guessed column types, in this ca
 spec(chickens)
 
 ```
-Now we can copy, paste, and tweak this, to create a more explicit readr call that expresses the desired column types. 
+
+Now we can copy, paste, and tweak this, to create a more explicit readr
+call that expresses the desired column types.
 
 ```{r}
 
@@ -112,18 +140,23 @@ vignette("readr")
 
 ```
 
-# 2. tibble
+# 2. `tibble`
 
-https://tibble.tidyverse.org/:
+<https://tibble.tidyverse.org/>:
 
-A tibble, or `tbl_df`, is a modern reimagining of the data.frame, keeping what time has proven to be effective, and throwing out what is not. 
+A tibble, or `tbl_df`, is a modern reimagining of the data.frame,
+keeping what time has proven to be effective, and throwing out what is
+not.
 
-Tibbles are data.frames that are lazy and surly: they do less (i.e. they don’t change variable names or types, and don’t do partial matching) and complain more (e.g. when a variable does not exist). 
+Tibbles are data.frames that are lazy and surly: they do less (i.e. they
+don’t change variable names or types, and don’t do partial matching) and
+complain more (e.g. when a variable does not exist).
 
-This forces you to confront problems earlier, typically leading to cleaner, more expressive code. T
+This forces you to confront problems earlier, typically leading to
+cleaner, more expressive code. T
 
-ibbles also have an enhanced print() method which makes them easier to use with large datasets containing complex objects.
-
+ibbles also have an enhanced print() method which makes them easier to
+use with large datasets containing complex objects.
 
 ```{r}
 
@@ -131,9 +164,10 @@ vignette("tibble")
 
 ```
 
-1. Creating a tibble
+1.  Creating a tibble
 
-`tibble()` creates a tidy table, which automatically handles column types and prints nicely
+`tibble()` creates a tidy table, which automatically handles column
+types and prints nicely
 
 ```{r}
 
@@ -149,7 +183,7 @@ my_tibble
 
 ```
 
-2. Converting a data.frame to tibble
+2.  Converting a data.frame to tibble
 
 ```{r}
 
@@ -160,11 +194,12 @@ mtcars_tbl
 
 ```
 
-as_tibble() converts data.frame to tibble for better readability and tidyverse compatibility.
+as_tibble() converts data.frame to tibble for better readability and
+tidyverse compatibility.
 
 Row names are not printed as a column automatically (unlike data.frame).
 
-3. Adding row names as a column.
+3.  Adding row names as a column.
 
 ```{r}
 
@@ -175,7 +210,7 @@ head(mtcars_tbl)
 
 ```
 
-4. Accessing columns and subsetting
+4.  Accessing columns and subsetting
 
 ```{r}
 
@@ -190,26 +225,29 @@ mtcars_tbl$mpg
 mtcars_tbl[1:5, c("Car", "mpg")]
 
 ```
-Note that using $ returns a vector while subsetting with [ keeps tibble structure.
 
-# 3. dplyr
+Note that using \$ returns a vector while subsetting with [ keeps tibble
+structure.
 
-`dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help us solve the most common data manipulation challenges:
+# 3. `dplyr`
 
-- `mutate()` adds new variables that are functions of existing variables
-- `select()` picks variables based on their names.
-- `filter()` picks cases based on their values.
-- `summarise()` reduces multiple values down to a single summary.
-- `arrange()` changes the ordering of the rows.
+`dplyr` is a grammar of data manipulation, providing a consistent set of
+verbs that help us solve the most common data manipulation challenges:
 
-These all combine naturally with group_by() which allows us to perform any operation “by group”. 
+-   `mutate()` adds new variables that are functions of existing
+    variables
+-   `select()` picks variables based on their names.
+-   `filter()` picks cases based on their values.
+-   `summarise()` reduces multiple values down to a single summary.
+-   `arrange()` changes the ordering of the rows.
+
+These all combine naturally with group_by() which allows us to perform
+any operation “by group”.
 
 Note that we can use `%>%` – the pipe operator - to chain functions.
 
-Recall:
-Keyboard shortcut:
-- Windows = Ctrl + Shift + M
-- Mac = Cmd + Shift + M
+Recall: Keyboard shortcut: - Windows = Ctrl + Shift + M - Mac = Cmd +
+Shift + M
 
 ```{r}
 
@@ -217,13 +255,16 @@ vignette("dplyr")
 
 ```
 
-The best place to start learning dplyr is through the data transformation chapter in the "R for Data Science" book: **https://r4ds.hadley.nz/data-transform**
+The best place to start learning dplyr is through the data
+transformation chapter in the "R for Data Science" book:
+[**https://r4ds.hadley.nz/data-transform**](https://r4ds.hadley.nz/data-transform){.uri}
 
 **Note: The next sections are lifted/modified based on this reference.**
 
-To explore basic dplyr vervs, we will use the `nycflights13::flights` dataset.
-This dataset contains all 336,776 flights that departed from New York City in 2013.
-The data comes from the US Bureau of Transportation Statistics and is documented in `?flights`
+To explore basic dplyr vervs, we will use the `nycflights13::flights`
+dataset. This dataset contains all 336,776 flights that departed from
+New York City in 2013. The data comes from the US Bureau of
+Transportation Statistics and is documented in `?flights`
 
 ```{r}
 
@@ -250,9 +291,12 @@ flights
 
 ```
 
-`flights` is a tibble, a special type of data frame used by the tidyverse
+`flights` is a tibble, a special type of data frame used by the
+tidyverse
 
-The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
+The most important difference between tibbles and data frames is the way
+tibbles print; they are designed for large datasets, so they only show
+the first few rows and only the columns that fit on one screen.
 
 ```{r}
 
@@ -261,20 +305,22 @@ glimpse(flights)
 
 ```
 
-The variable names are followed by abbreviations that tell us the type of each variable:
-`<int>` is short for integer
-`<dbl>` is short for double (aka real numbers)
-`<chr>` for character (aka strings), and <dttm> for date-time
+The variable names are followed by abbreviations that tell us the type
+of each variable: `<int>` is short for integer `<dbl>` is short for
+double (aka real numbers) `<chr>` for character (aka strings), and
+<dttm> for date-time
 
-These are important because the operations we can perform on a column depend heavily on its “type.”
+These are important because the operations we can perform on a column
+depend heavily on its “type.”
 
 ## 3.1. dyplyr basics
 
-1. The first argument is always a data frame.
+1.  The first argument is always a data frame.
 
-2. The subsequent arguments typically describe which columns to operate on using the variable names (without quotes).
+2.  The subsequent arguments typically describe which columns to operate
+    on using the variable names (without quotes).
 
-3. The output is always a new data frame.
+3.  The output is always a new data frame.
 
 ```{r}
 
@@ -287,11 +333,13 @@ flights |>                    # another form of %>% pipe operator
 
 ```
 
-**dplyr’s verbs are organized into four groups based on what they operate on: rows, columns, groups, or tables.**
+**dplyr’s verbs are organized into four groups based on what they
+operate on: rows, columns, groups, or tables.**
 
 ## 3.2. Row operations
 
-### a. filter()
+### a. `filter()`
+
 `filter()` allows us to keep rows based on the values of the columns
 
 ```{r}
@@ -328,9 +376,12 @@ flights %>%
 
 ```
 
-When we run `filter()` dplyr executes the filtering operation, creating a new data frame, and then prints it. 
+When we run `filter()` dplyr executes the filtering operation, creating
+a new data frame, and then prints it.
 
-It doesn’t modify the existing flights dataset because dplyr functions never modify their inputs. To save the result, we need to use the assignment operator, `<-`
+It doesn’t modify the existing flights dataset because dplyr functions
+never modify their inputs. To save the result, we need to use the
+assignment operator, `<-`
 
 ```{r}
 
@@ -340,10 +391,11 @@ jan1 <- flights %>%
 jan1
 ```
 
-### b. arrange()
+### b. `arrange()`
 
-arrange() changes the order of the rows based on the value of the columns. 
-It takes a data frame and a set of column names (or more complicated expressions) to order by. 
+arrange() changes the order of the rows based on the value of the
+columns. It takes a data frame and a set of column names (or more
+complicated expressions) to order by.
 
 ```{r}
 
@@ -352,7 +404,9 @@ flights %>%
   arrange(year, month, day, dep_time)
 
 ```
-We get the earliest years first, then within a year, the earliest months, etc.
+
+We get the earliest years first, then within a year, the earliest
+months, etc.
 
 ```{r}
 
@@ -362,13 +416,16 @@ flights %>%
 
 ```
 
-Note that the number of rows has not changed – we’re only arranging the data, we’re not filtering it.
+Note that the number of rows has not changed – we’re only arranging the
+data, we’re not filtering it.
 
-### c. distinct()
+### c. `distinct()`
 
-distinct() finds all the unique rows in a dataset, so technically, it primarily operates on the rows. 
+distinct() finds all the unique rows in a dataset, so technically, it
+primarily operates on the rows.
 
-Most of the time, however, we’ll want the distinct combination of some variables, so we can also optionally supply column name.
+Most of the time, however, we’ll want the distinct combination of some
+variables, so we can also optionally supply column name.
 
 ```{r}
 
@@ -386,7 +443,6 @@ flights %>%
   distinct(origin, dest)
 
 ```
-
 
 ```{r}
 
@@ -408,20 +464,25 @@ flights %>%
 
 ### EXERCISE
 
-1. In a single pipeline for each condition, find all flights that meet the condition:
+1.  In a single pipeline for each condition, find all flights that meet
+    the condition:
 
-a. Had an arrival delay of two or more hours
-b. Flew to Houston (IAH or HOU)
-c. Were operated by United, American, or Delta
-d. Departed in summer (July, August, and September)
-e. Arrived more than two hours late but didn’t leave late
-f. Were delayed by at least an hour, but made up over 30 minutes in flight
+<!-- -->
+
+a.  Had an arrival delay of two or more hours
+b.  Flew to Houston (IAH or HOU)
+c.  Were operated by United, American, or Delta
+d.  Departed in summer (July, August, and September)
+e.  Arrived more than two hours late but didn’t leave late
+f.  Were delayed by at least an hour, but made up over 30 minutes in
+    flight
 
 ## 3.3. Column operations
 
-### a. mutate()
+### a. `mutate()`
 
-The job of `mutate()` is to add new columns that are calculated from the existing columns.
+The job of `mutate()` is to add new columns that are calculated from the
+existing columns.
 
 ```{r}
 
@@ -435,7 +496,10 @@ flights %>%
   )
 ```
 
-By default, mutate() adds new columns on the right-hand side of our dataset, which makes it difficult to see what’s happening here. We can use the .before argument to instead add the variables to the left-hand side.
+By default, mutate() adds new columns on the right-hand side of our
+dataset, which makes it difficult to see what’s happening here. We can
+use the .before argument to instead add the variables to the left-hand
+side.
 
 ```{r}
 
@@ -448,9 +512,11 @@ flights %>%
 
 ```
 
-The `.` indicates that `.before` is an argument to the function, not the name of a third new variable we are creating. 
+The `.` indicates that `.before` is an argument to the function, not the
+name of a third new variable we are creating.
 
-We can also use `.after` to add after a variable, and in both `.before` and `.after` we can use the variable name instead of a position. 
+We can also use `.after` to add after a variable, and in both `.before`
+and `.after` we can use the variable name instead of a position.
 
 ```{r}
 
@@ -463,7 +529,10 @@ flights %>%
 
 ```
 
-Alternatively, we can control which variables are kept with the .keep argument. A particularly useful argument is "used" which specifies that we only keep the columns that were involved or created in the mutate() step.
+Alternatively, we can control which variables are kept with the .keep
+argument. A particularly useful argument is "used" which specifies that
+we only keep the columns that were involved or created in the mutate()
+step.
 
 ```{r}
 
@@ -477,9 +546,10 @@ flights %>%
 
 ```
 
-### b. select()
+### b. `select()`
 
-select() allows us to rapidly zoom in on a useful subset using operations based on the names of the variables
+select() allows us to rapidly zoom in on a useful subset using
+operations based on the names of the variables
 
 ```{r}
 
@@ -518,12 +588,12 @@ flights |>
 
 There are a number of helper functions we can use within select():
 
-- `starts_with("abc")`: matches names that begin with “abc”.
-- `ends_with("xyz")`: matches names that end with “xyz”.
-- `contains("ijk")`: matches names that contain “ijk”.
-- `num_range("x", 1:3)`: matches x1, x2 and x3.
+-   `starts_with("abc")`: matches names that begin with “abc”.
+-   `ends_with("xyz")`: matches names that end with “xyz”.
+-   `contains("ijk")`: matches names that contain “ijk”.
+-   `num_range("x", 1:3)`: matches x1, x2 and x3.
 
-See ?select for more details. 
+See ?select for more details.
 
 ```{r}
 
@@ -531,7 +601,9 @@ See ?select for more details.
 
 ```
 
-We can rename variables as we select() them by using =. The new name appears on the left-hand side of the =, and the old variable appears on the right-hand side
+We can rename variables as we select() them by using =. The new name
+appears on the left-hand side of the =, and the old variable appears on
+the right-hand side
 
 ```{r}
 
@@ -542,9 +614,10 @@ flights %>%
 
 ```
 
-### c. rename()
+### c. `rename()`
 
-If we want to keep all the existing variables and just want to rename a few, we can use rename() instead of select()
+If we want to keep all the existing variables and just want to rename a
+few, we can use rename() instead of select()
 
 ```{r}
 
@@ -553,9 +626,10 @@ flights |>
 
 ```
 
-### d. relocate()
+### d. `relocate()`
 
-Use `relocate()` to move variables around. By default, `relocate()` moves variables to the front.
+Use `relocate()` to move variables around. By default, `relocate()`
+moves variables to the front.
 
 ```{r}
 
@@ -565,7 +639,8 @@ flights %>%
 
 ```
 
-We can also specify where to put them using the .before and .after arguments
+We can also specify where to put them using the .before and .after
+arguments
 
 ```{r}
 
@@ -578,7 +653,8 @@ flights %>%
 
 ## 3.4. Using the pipe
 
-We've seen how the pipe operator works in many of the previous examples but its real power arises when we start to combine multiple verbs
+We've seen how the pipe operator works in many of the previous examples
+but its real power arises when we start to combine multiple verbs
 
 ```{r}
 # Find the fastest flights to Houston's IAH airport
@@ -591,22 +667,25 @@ flights %>%
 
 ```
 
-For simple cases, |> and %>% behave identically. 
+For simple cases, \|\> and %\>% behave identically.
 
-|> is the base pipe. Why use it? 
+\|\> is the base pipe. Why use it?
 
-1. Because it is part of base R, it is always available for us to use, even when we’re not using the tidyverse (%>% is from the magrittr package of tidyverse)
+1.  Because it is part of base R, it is always available for us to use,
+    even when we’re not using the tidyverse (%\>% is from the magrittr
+    package of tidyverse)
 
-2. |> is quite a bit simpler than %>%
-
+2.  \|\> is quite a bit simpler than %\>%
 
 ## 3.5. Groups
 
-dplyr gets even more powerful when you add in the ability to work with groups
+dplyr gets even more powerful when you add in the ability to work with
+groups
 
-### a.1. group_by()
+### a.1. `group_by()`
 
-Use `group_by()` to divide the dataset into groups meaningful for your analysis
+Use `group_by()` to divide the dataset into groups meaningful for your
+analysis
 
 ```{r}
 
@@ -615,9 +694,11 @@ flights |>
 
 ```
 
-`group_by()` doesn’t change the data but, if we look closely at the output, we’ll notice that the output indicates that it is “grouped by” month (Groups: month [12]). 
+`group_by()` doesn’t change the data but, if we look closely at the
+output, we’ll notice that the output indicates that it is “grouped by”
+month (Groups: month [12]).
 
-This means subsequent operations will now work “by month”. 
+This means subsequent operations will now work “by month”.
 
 ### a.2. grouping by multiple variables
 
@@ -636,22 +717,19 @@ daily_flights <- daily |>
 
 ```
 
-
 ```{r}
 daily_flights
 ```
 
 We can suppress the message by:
 
-daily_flights <- daily |> 
-  summarize(
-    n = n(), 
-    .groups = "drop_last"
-  )
-  
-### b. summarize()
+daily_flights \<- daily \|\> summarize( n = n(), .groups = "drop_last" )
 
-The most important grouped operation is a summary, which, if being used to calculate a single summary statistic, reduces the data frame to have a single row for each group. 
+### b. `summarize()`
+
+The most important grouped operation is a summary, which, if being used
+to calculate a single summary statistic, reduces the data frame to have
+a single row for each group.
 
 In dplyr, this operation is performed by summarize().
 
@@ -665,7 +743,8 @@ flights |>
 
 ```
 
-Results are NAs, R's symbol for missing value. This happened because some of the observed flights had missing data in the delay column. 
+Results are NAs, R's symbol for missing value. This happened because
+some of the observed flights had missing data in the delay column.
 
 ```{r}
 
@@ -691,15 +770,18 @@ flights |>
   )
 ```
 
-### c. slice_()
+### c. `slice_()`
 
-There are five handy functions that allow us to extract specific rows within each group:
+There are five handy functions that allow us to extract specific rows
+within each group:
 
-- `df |> slice_head(n = 1)` takes the first row from each group.
-- `df |> slice_tail(n = 1)` takes the last row in each group.
-- `df |> slice_min(x, n = 1)` takes the row with the smallest value of column x.
-- `df |> slice_max(x, n = 1)` takes the row with the largest value of column x.
-- `df |> slice_sample(n = 1)` takes one random row.
+-   `df |> slice_head(n = 1)` takes the first row from each group.
+-   `df |> slice_tail(n = 1)` takes the last row in each group.
+-   `df |> slice_min(x, n = 1)` takes the row with the smallest value of
+    column x.
+-   `df |> slice_max(x, n = 1)` takes the row with the largest value of
+    column x.
+-   `df |> slice_sample(n = 1)` takes one random row.
 
 ```{r}
 
@@ -712,14 +794,17 @@ flights |>
 
 ```
 
-Note that there are 105 destinations but we get 108 rows here. What’s up? 
-`slice_min()` and `slice_max()` keep tied values so `n = 1` means give us all rows with the highest value. 
+Note that there are 105 destinations but we get 108 rows here. What’s
+up? `slice_min()` and `slice_max()` keep tied values so `n = 1` means
+give us all rows with the highest value.
 
 If we want exactly one row per group you can set `with_ties = FALSE`.
 
-This is similar to computing the max delay with `summarize()`, but we get the whole corresponding row (or rows if there’s a tie) instead of the single summary statistic.
+This is similar to computing the max delay with `summarize()`, but we
+get the whole corresponding row (or rows if there’s a tie) instead of
+the single summary statistic.
 
-### d. ungroup()
+### d. `ungroup()`
 
 For removing grouping from a data frame without using `summarize()`
 
@@ -742,19 +827,24 @@ daily |>
   )
 ```
 
-Visit https://r4ds.hadley.nz/data-transform.html for more details and examples.
+Visit <https://r4ds.hadley.nz/data-transform.html> for more details and
+examples.
 
 # 4. tidyr
 
-The goal of tidyr is to help you create tidy data. Tidy data is data where:
+The goal of tidyr is to help you create tidy data. Tidy data is data
+where:
 
-1. Each variable is a column; each column is a variable.
-2. Each observation is a row; each row is an observation.
-3. Each value is a cell; each cell is a single value.
+1.  Each variable is a column; each column is a variable.
+2.  Each observation is a row; each row is an observation.
+3.  Each value is a cell; each cell is a single value.
 
-Tidy data describes a standard way of storing data that is used wherever possible throughout the tidyverse. If we ensure that your data is tidy, we’ll spend less time fighting with the tools and more time working on our analysis.
+Tidy data describes a standard way of storing data that is used wherever
+possible throughout the tidyverse. If we ensure that your data is tidy,
+we’ll spend less time fighting with the tools and more time working on
+our analysis.
 
-## 4.1. pivot_longer()
+## 4.1. `pivot_longer()`
 
 ```{r}
 
@@ -778,7 +868,7 @@ head(mtcars_long)
 
 ```
 
-## 4.2. pivot_wider()
+## 4.2. `pivot_wider()`
 
 ```{r}
 
@@ -791,7 +881,7 @@ head(mtcars_wide)
 
 ```
 
-## 4.3. separate()
+## 4.3. `separate()`
 
 ```{r}
 
@@ -811,7 +901,7 @@ df_sep <- df %>%
 df_sep
 ```
 
-## 4.4. unite()
+## 4.4. `unite()`
 
 ```{r}
 
@@ -825,7 +915,7 @@ df_unite
 
 ```
 
-## 4.3. drop_na() and replace_na()
+## 4.3. `drop_na()` and `replace_na()`
 
 ```{r}
 
@@ -855,13 +945,16 @@ head(airquality_filled)
 
 # 5. stringr
 
-Strings are not glamorous, high-profile components of R, but they do play a big role in many data cleaning and preparation tasks. 
+Strings are not glamorous, high-profile components of R, but they do
+play a big role in many data cleaning and preparation tasks.
 
-The stringr package provides a cohesive set of functions designed to make working with strings as easy as possible.
+The stringr package provides a cohesive set of functions designed to
+make working with strings as easy as possible.
 
-Learn more about strings: https://r4ds.hadley.nz/strings
+Learn more about strings: <https://r4ds.hadley.nz/strings>
 
-## 5.1. str_detect()
+## 5.1. `str_detect()`
+
 Used for detecting patterns
 
 ```{r}
@@ -883,7 +976,7 @@ cars %>%
 
 ```
 
-## 5.2 str_replace() and str_replace_all()
+## 5.2 `str_replace()` and `str_replace_all()`
 
 ```{r}
 
@@ -896,7 +989,8 @@ cars %>%
 
 ```
 
-## 5.3. str_extract()
+## 5.3. `str_extract()`
+
 Extract parts of strings
 
 ```{r}
@@ -908,7 +1002,8 @@ cars %>%
 
 ```
 
-## 5.4. str_length(), str_trim()
+## 5.4. `str_length()`, `str_trim()`
+
 String length and trimming
 
 ```{r}
@@ -921,7 +1016,9 @@ cars %>%
   )
 
 ```
-## 5.5. str_c()
+
+## 5.5. `str_c()`
+
 Concatenating strings
 
 ```{r}
@@ -931,7 +1028,9 @@ cars %>%
   mutate(CarLabel = str_c(Car, "-Car"))
 
 ```
-## 5.6. str_to_upper(), str_to_lower()
+
+## 5.6. `str_to_upper()`, `str_to_lower()`
+
 Converting case
 
 ```{r}
@@ -944,10 +1043,11 @@ cars %>%
 
 ```
 
-
 # 6. forcats
 
-forcats provides a suite of useful tools that solve common problems with factors. R uses factors to handle categorical variables, variables that have a fixed and known set of possible values.
+forcats provides a suite of useful tools that solve common problems with
+factors. R uses factors to handle categorical variables, variables that
+have a fixed and known set of possible values.
 
 ```{r}
 
@@ -960,7 +1060,8 @@ levels(mtcars_tbl$cyl_factor)   # show the categories
 
 ```
 
-## 6.1. fct_reorder()
+## 6.1. `fct_reorder()`
+
 Reordering factors
 
 ```{r}
@@ -976,8 +1077,8 @@ levels(mtcars_tbl$cyl_factor)
 
 ```
 
+## 6.2. `fct_lump()`
 
-## 6.2. fct_lump()
 Lump small categories
 
 ```{r}
@@ -991,7 +1092,8 @@ fct_lump(brand_factor, n = 2) # fct_lump() combines small or rare levels into "O
 
 ```
 
-## 6.3. fct_relevel()
+## 6.3. `fct_relevel()`
+
 Relevel factors
 
 ```{r}
@@ -1004,8 +1106,8 @@ levels(mtcars_tbl$cyl_factor)
 
 ```
 
+## 6.4. `fct_recode()`
 
-## 6.4. fct_recode()
 Recoding factors
 
 ```{r}
@@ -1021,14 +1123,14 @@ levels(mtcars_tbl$cyl_factor)
 
 ```
 
-
 # 7. lubridate
 
-lubridate provides a set of functions for working with date-times, extending and improving on R's existing support for them.
+lubridate provides a set of functions for working with date-times,
+extending and improving on R's existing support for them.
 
-More about dates and times in R: https://r4ds.hadley.nz/datetimes.html
+More about dates and times in R: <https://r4ds.hadley.nz/datetimes.html>
 
-1. Creating date objects
+1.  Creating date objects
 
 ```{r}
 
@@ -1045,7 +1147,7 @@ mdy("4/1/17")
 
 ```
 
-2. Extracting components of dates
+2.  Extracting components of dates
 
 ```{r}
 
@@ -1058,7 +1160,8 @@ day(dates)    # 20
 wday(dates, label = TRUE)  # Day of week (e.g., Mon)
 
 ```
-3. Creatomg a date column in tibbles/data frames
+
+3.  Creatomg a date column in tibbles/data frames
 
 ```{r}
 
@@ -1071,7 +1174,8 @@ airquality <- airquality %>%
 head(airquality)
 
 ```
-4. Adding or subtracting time
+
+4.  Adding or subtracting time
 
 ```{r}
 
@@ -1083,7 +1187,7 @@ today_date + years(2)    # 2 years later
 
 ```
 
-5. Rounding dates
+5.  Rounding dates
 
 ```{r}
 
@@ -1094,7 +1198,7 @@ ymd("2025-10-20") %>% ceiling_date(unit = "month")  # Last day of month
 
 ```
 
-6. Differences between dates
+6.  Differences between dates
 
 ```{r}
 
@@ -1106,7 +1210,7 @@ interval(date1, date2) / ddays(1)  # Number of days
 
 ```
 
-7. Helper functions for handling time zones
+7.  Helper functions for handling time zones
 
 ```{r}
 
@@ -1134,20 +1238,27 @@ force_tz(time, "America/Chicago")
 
 ```
 
-
 # 8. ggplot2
 
-ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+ggplot2 is a system for declaratively creating graphics, based on The
+Grammar of Graphics. You provide the data, tell ggplot2 how to map
+variables to aesthetics, what graphical primitives to use, and it takes
+care of the details.
 
 ## 8.1. Grammar of graphics
 
-https://r4ds.hadley.nz/data-visualize:
+<https://r4ds.hadley.nz/data-visualize>:
 
-ggplot2 implements the **grammar of graphics**, a coherent system for describing and building graphs. With ggplot2, you can do more and faster by learning one system and applying it in many places.
+ggplot2 implements the **grammar of graphics**, a coherent system for
+describing and building graphs. With ggplot2, you can do more and faster
+by learning one system and applying it in many places.
 
-The following examples are lifted/modified from https://r4ds.hadley.nz/data-visualize
+The following examples are lifted/modified from
+<https://r4ds.hadley.nz/data-visualize>
 
-In addition to tidyverse, we will also use the **palmerpenguins** package, which includes the penguins dataset containing body measurements for penguins on three islands in the Palmer Archipelago, 
+In addition to tidyverse, we will also use the **palmerpenguins**
+package, which includes the penguins dataset containing body
+measurements for penguins on three islands in the Palmer Archipelago,
 
 ```{r}
 
@@ -1168,7 +1279,6 @@ and the `ggthemes` package, which offers a colorblind safe color palette
 library(ggthemes)
 
 ```
-
 
 ```{r}
 
@@ -1193,9 +1303,12 @@ To learn more about penguins:
 
 ```
 
-The ultimate goal in this chapter is to recreate the  visualization in https://r4ds.hadley.nz/data-visualize displaying the relationship between:
+The ultimate goal in this chapter is to recreate the visualization in
+<https://r4ds.hadley.nz/data-visualize> displaying the relationship
+between:
 
-- flipper lengths and body masses + considering the species of the penguins
+-   flipper lengths and body masses + considering the species of the
+    penguins
 
 ```{r}
 
@@ -1204,9 +1317,12 @@ The ultimate goal in this chapter is to recreate the  visualization in https://r
 ggplot(data = penguins)
 
 ```
+
 It's empty because we have not told R how to visualize it.
 
-To tell ggplot() how the information from our data will be visually represented, we'll use the **mapping** argument to define the visual properties (**aesthetics**) of the plot.
+To tell ggplot() how the information from our data will be visually
+represented, we'll use the **mapping** argument to define the visual
+properties (**aesthetics**) of the plot.
 
 ```{r}
 
@@ -1220,16 +1336,21 @@ ggplot(
 )
 
 ```
-The empty canvas now has more structure: flipper lengths will be displayed on the x-axis while body mass will be displayed on the y-axis.
 
-But there's nothing else yet aside from those because we have not told ggplot how to represent the observations.
+The empty canvas now has more structure: flipper lengths will be
+displayed on the x-axis while body mass will be displayed on the y-axis.
 
-We can do that by defining the **geom**: the geometrical object that a plot uses to represent data. There are several types of functions that start with `geom_` in ggplot2:
+But there's nothing else yet aside from those because we have not told
+ggplot how to represent the observations.
 
-- `geom_bar()` = bar charts
-- `geom_line()` = line charts
-- `geom_boxplot() = boxplots
-- `geom_point()` = scatterplots
+We can do that by defining the **geom**: the geometrical object that a
+plot uses to represent data. There are several types of functions that
+start with `geom_` in ggplot2:
+
+-   `geom_bar()` = bar charts
+-   `geom_line()` = line charts
+-   \`geom_boxplot() = boxplots
+-   `geom_point()` = scatterplots
 
 ... and many more.
 
@@ -1246,13 +1367,18 @@ ggplot(
 
 ```
 
-What does the relationship between flipper length and body mass look like?
+What does the relationship between flipper length and body mass look
+like?
 
-The relationship appears to be positive: as flipper length increases, so does body mass.
+The relationship appears to be positive: as flipper length increases, so
+does body mass.
 
-It also appears to be fairly linear (points are clustered around a line instead of a curve), which looks moderately strong since there is not too much scatter around the line.
+It also appears to be fairly linear (points are clustered around a line
+instead of a curve), which looks moderately strong since there is not
+too much scatter around the line.
 
-It seems then that penguins with longer flippers are generally larger in terms of their body mass.
+It seems then that penguins with longer flippers are generally larger in
+terms of their body mass.
 
 What else can we do to this plot?
 
@@ -1272,7 +1398,9 @@ ggplot(
 
 ```
 
-When a categorical variable is mapped to an aesthetic, ggplot2 will automatically assign a unique value of aesthetic (ex. unique color) to each unique level of the variable -- a process also known as scaling.
+When a categorical variable is mapped to an aesthetic, ggplot2 will
+automatically assign a unique value of aesthetic (ex. unique color) to
+each unique level of the variable -- a process also known as scaling.
 
 ```{r}
 
@@ -1290,9 +1418,13 @@ ggplot(
   
   geom_smooth(method = "lm")   # the new geom layer
 ```
-This now almost looks like the target figure except that we have three separate lines for each penguin species instead of one.
 
-Note that each geom function in ggplot2 can also take a mapping argument, which allows for aesthetic mappings at the local level, rather than inheriting from the global level (i.e., main mapping argument).
+This now almost looks like the target figure except that we have three
+separate lines for each penguin species instead of one.
+
+Note that each geom function in ggplot2 can also take a mapping
+argument, which allows for aesthetic mappings at the local level, rather
+than inheriting from the global level (i.e., main mapping argument).
 
 ```{r}
 
@@ -1306,7 +1438,8 @@ ggplot(
   geom_smooth(method = "lm")
 ```
 
-Almost there! Note that we can also use shape aesthetics to categorize data.
+Almost there! Note that we can also use shape aesthetics to categorize
+data.
 
 ```{r}
 
@@ -1348,7 +1481,9 @@ ggplot(
   scale_color_colorblind()  # improving the palette to be colorblind safe
 
 ```
-Lastly, we can export this plot for use in other purposes. To do this, first, the ggplot must be saved to an object:
+
+Lastly, we can export this plot for use in other purposes. To do this,
+first, the ggplot must be saved to an object:
 
 ```{r}
 
@@ -1375,6 +1510,7 @@ plot <- ggplot(
 plot
 
 ```
+
 ```{r}
 
 # Save (export) the plot as a PNG file
@@ -1386,7 +1522,6 @@ ggsave(here("02_Output", "penguin_plot.png"),   # save in the Output folder
        dpi = 300    # resolution 
        )  
 ```
-
 
 ## 8.2. More examples
 
@@ -1587,7 +1722,6 @@ corr_df <- as.data.frame(as.table(corr))
 
 ```
 
-
 ```{r}
 
 # Plot heatmap
@@ -1654,31 +1788,40 @@ labs(title = "Mean MPG with Error Bars")
 
 # 9. purrr
 
+purrr enhances R’s functional programming (FP) toolkit by providing a
+complete and consistent set of tools for working with functions and
+vectors. Once you master the basic concepts, purrr allows you to replace
+many for loops with code that is easier to write and more expressive.
 
-purrr enhances R’s functional programming (FP) toolkit by providing a complete and consistent set of tools for working with functions and vectors. Once you master the basic concepts, purrr allows you to replace many for loops with code that is easier to write and more expressive. 
-
--- This is a little difficult to understand and is used for more advanced applications involving combinations of various R programming concepts (e.g. lists that we did not really explore and master to a great extent).
+-- This is a little difficult to understand and is used for more
+advanced applications involving combinations of various R programming
+concepts (e.g. lists that we did not really explore and master to a
+great extent).
 
 **Recommended purrr tutorials:**
 
-https://www.geeksforgeeks.org/r-language/purrr-package-in-r-programming/
+<https://www.geeksforgeeks.org/r-language/purrr-package-in-r-programming/>
 
-https://medium.com/number-around-us/mastering-purrr-from-basic-maps-to-functional-magic-in-r-e74ef3d0d349
+<https://medium.com/number-around-us/mastering-purrr-from-basic-maps-to-functional-magic-in-r-e74ef3d0d349>
 
-https://github.com/cwickham/purrr-tutorial
-
+<https://github.com/cwickham/purrr-tutorial>
 
 # GOOD PRACTICES:
 
-1. Loading all packages at the start of the script/R Markdown so that other users of our code can easily see what packages need to be installed.
+1.  Loading all packages at the start of the script/R Markdown so that
+    other users of our code can easily see what packages need to be
+    installed.
 
-2. Installing packages through the console or a separate R script.
+2.  Installing packages through the console or a separate R script.
 
-We do not really need to worry about installing packages if we enabled renv when we initialized the R Project. 
+We do not really need to worry about installing packages if we enabled
+renv when we initialized the R Project.
 
-3. Using variable/data frame/tibble names that are easy to understand and can give an idea on what the data it contains is about.
+3.  Using variable/data frame/tibble names that are easy to understand
+    and can give an idea on what the data it contains is about.
 
-4. Practice! There's a lot of tutorials available in the internet. Always go back to the basics to have a solid foundation of R syntax and programming concepts.
+4.  Practice! There's a lot of tutorials available in the internet.
+    Always go back to the basics to have a solid foundation of R syntax
+    and programming concepts.
 
-5. Be organized. Period. :)
-
+5.  Be organized. Period. :)
