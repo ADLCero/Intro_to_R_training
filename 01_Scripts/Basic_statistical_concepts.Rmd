@@ -187,14 +187,6 @@ boxplot(weight ~ group,         # make a boxplot of weight values for each group
 
 ```
 
-# EXERCISE
-
-Load the built-in dataset `mtcars`
-
-1.  Compute the mean, median, and standard deviation of `mpg`
-2.  Identify the range of the horsepower `hp`
-3.  Which variable seems most variable? Use `summary()` and `sd()`
-
 # 4. Sampling
 
 Sampling is the process of selecting a portion (sample) from a larger
