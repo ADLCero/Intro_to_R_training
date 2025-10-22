@@ -21,8 +21,6 @@ Write a code that will solve the following. Add comments (\#) to explain your co
 
 ```{r}
 
-num <- c(7, 11, 17, 27, 1)
-print(num)
 
 ```
 
@@ -30,8 +28,6 @@ print(num)
 
 ```{r}
 
-fruit <- c("mango", "banana", "star apple", "persimmon", "cantaloupe")
-print(fruit)
 
 ```
 
@@ -39,7 +35,6 @@ print(fruit)
 
 ```{r}
 
-num[3]
 
 ```
 
@@ -47,7 +42,6 @@ num[3]
 
 ```{r}
 
-fruit[1:3]
 
 ```
 
@@ -65,15 +59,6 @@ Write an `if-else` statement such that:
 
 ```{r}
 
-temp <- 20
-
-if(temp > 30){
-  print("It's hot!")
-} else if (temp >= 20 & temp <= 30){
-  print("It's warm.")
-} else {
-  print("It's cold.")
-}
 
 ```
 
@@ -83,28 +68,14 @@ Write a for loop that prints number from 1 to 5
 
 ```{r}
 
-for (i in 1:5){
-  
-  print(i)
-  
-}
+
 ```
 
 Write a while loop that keeps adding 1 to a variable x until it reaches 10
 
 ```{r}
 
-x <- 0
-i <- 1
 
-while (i < 11){
-  
-  x <- x + 1
-  print(x)
-  
-  i <- i + 1
-  
-}
 ```
 
 # 4. Functions
@@ -113,20 +84,13 @@ Create a function that computes for the number of days given the number of month
 
 ```{r}
 
-Number_days <- function(number_months){
-  
-  Total_days <- number_months * 30
-  
-  return(Total_days)
-  
-}
+
 ```
 
 Show that the function works properly.
 
 ```{r}
 
-Number_days(10)
 
 ```
 
@@ -140,13 +104,6 @@ Number_days(10)
 
 ```{r}
 
-inventory <- data.frame(
-  fund_source = c("Region I", "Region II", "Region XI", "DA-OSEC", "PHilMech"),
-  rated_power = c(70, 42, 50, 55, 70),
-  supplier = c("YANMAR", "ADAMCO", "FORD TRACT", "AGRIMACH", "INA")
-  )
-
-print(inventory)
 
 ```
 
@@ -154,19 +111,11 @@ print(inventory)
 
 ```{r}
 
-inventory$fund_source <- as.factor(inventory$fund_source)
-
 ```
 
 3.  Check if the column was converted properly.
 
 ```{r}
-
-# Approach 1:
-str(inventory)
-
-# Approach 2:
-class(inventory$fund_source)
 
 ```
 
@@ -174,15 +123,11 @@ class(inventory$fund_source)
 
 ```{r}
 
-mean(inventory$rated_power)
-
 ```
 
 5.  Add a new column: year funded = 2022, 2013, 2022, 2010, 2021
 
 ```{r}
-
-inventory$year_funded <- c(2022, 2013, 2022, 2010, 2021)
 
 ```
 
@@ -190,22 +135,11 @@ inventory$year_funded <- c(2022, 2013, 2022, 2010, 2021)
 
 ```{r}
 
-names(inventory)
-head(inventory)
-View(inventory)
-
 ```
 
 7.  Check the distribution of rated power using a histogram. Make sure to add an appropriate title and x-axis label.
 
 ```{r}
-
-hist(inventory$rated_power,
-     main = "Rated Power of Inventoried Machineries",
-     xlab = "rated power", 
-     col = "orange", 
-     border = "steelblue", 
-     lwd = 4)
 
 ```
 
@@ -220,7 +154,6 @@ Read in the .csv file into R and assign it to an R object called `weather`
 
 ```{r}
 
-weather <- read.csv(here("00_Data", "Syr_MetData.csv"))
 
 ```
 
@@ -228,15 +161,11 @@ Print the first few rows of the data
 
 ```{r}
 
-head(weather)
-
 ```
 
 Determine how many rows and columns there are in the data
 
 ```{r}
-
-dim(weather)
 
 ```
 
@@ -244,14 +173,13 @@ Check the structure of the data
 
 ```{r}
 
-str(weather)
 
 ```
+
 Check some basic statistics about the data
 
 ```{r}
 
-summary(weather)
 
 ```
 
@@ -261,7 +189,6 @@ Create a scatterplot matrix of the data set using only the numeric columns
 
 ```{r}
 
-plot(weather[ , 5:9])
 
 ```
 
@@ -275,22 +202,18 @@ Since this was not discussed yesterday, how can we know how `na.omit()` works wi
 ```{r}
 
 # Get the numeric columns only
-num_data <- weather[ , 5:9]
 
 
 # Remove NAs
-num_data_na <- na.omit(num_data)
+
 
 # Check if the NAs have been removed by comparing the number of rows w/ and w/o using na.omit
-dim(num_data)
-dim(num_data_na)
+
 
 # Compute for the correlation matrix of all pairs of numeric variables
-corr_matrix <- cor(num_data_na)
+
 
 # Create the heat map
-heatmap(corr_matrix, 
-        main = "Heatmap of Correlations in the Weather Dataset")
 
 ```
 
@@ -298,7 +221,6 @@ Write out the version of the data without NAs as "weather_na.csv" and save it th
 
 ```{r}
 
-write.csv(num_data_na, here("02_Output", "weather_na.csv"), row.names = FALSE)
 
 ```
 

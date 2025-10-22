@@ -66,7 +66,7 @@ inside this R Project.
 # Load the tidyverse package
 library(tidyverse)
 
-# We will also use here
+# We will also use the here package
 library(here)
 
 ```
@@ -97,6 +97,44 @@ functions:
 data <- read_csv("https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv")
 
 ```
+
+**What's the point of using `read_csv()` when I already learned how to
+use `read.csv()`?**
+
+| Feature | `read.csv()` | `read_csv()` |
+|----|----|----|
+| **Syntax style** | Base R syntax | Tidyverse syntax (modern, faster, and cleaner) |
+| **Returns** | A **data frame** | A **tibble** (a modern version of data frame) |
+| **Reads faster?** | Slower (especially on large files) | Much faster (C++ backend) |
+| **Strings are treated as...** | Converted to **factors** by default (`stringsAsFactors = TRUE` in older R versions) | Kept as **character** (never auto-converts to factor) |
+| **Column type guessing** | Basic, sometimes incorrect | More intelligent, infers numeric, date, etc. |
+
+**When we say read_csv() (from the readr package) is faster because it
+uses a C++ backend, it means:**
+
+The core code that actually reads and parses the CSV file is written in
+the C++ programming language, not pure R.
+
+**Why does that matter?**
+
+**R is an interpreted language:** it is easier to use but slower for
+heavy computations.
+
+**C++ is a compiled language:** it runs much faster because it executes
+machine code directly.
+
+**What is a "compiled language"?**
+
+It is where the code we write is translated into machine code first (the
+1s and 0s that your computer’s processor actually understands) before
+the program runs.
+
+*That's not what R does?*
+
+Nope. In R, each line is translated into machine instructions while
+running, thus, making the process slower (although not really noticeable
+when datasets are not VERY large and the computing power of the machine
+we use is sufficient.)
 
 **Example 2: Read in a sample file bundled with the readr package**
 
@@ -144,6 +182,38 @@ vignette("readr")
 
 ```
 
+### **EXERCISE:** Using `read_csv()`, re-import the "Syr_MetData.csv" data that we used in the previous exercise.
+
+Assign it to an R object named "weather_2"
+
+```{r}
+
+
+
+```
+
+Compare "weather" and "weather_2".
+
+```{r}
+
+head(weather)
+
+```
+
+```{r}
+
+head(weather_2)
+
+```
+
+In R:
+
+Integers (int) are stored exactly (no fractions, therefore, smaller
+memory footprint)
+
+Doubles (dbl) are stored as floating-point numbers (can represent
+decimals)
+
 # 2. `tibble`
 
 <https://tibble.tidyverse.org/>:
@@ -152,9 +222,9 @@ A tibble, or `tbl_df`, is a modern reimagining of the data.frame,
 keeping what time has proven to be effective, and throwing out what is
 not.
 
-Tibbles are data.frames that are lazy and surly: they do less (i.e. they
-don’t change variable names or types, and don’t do partial matching) and
-complain more (e.g. when a variable does not exist).
+**Tibbles are data.frames that are lazy and surly:** they do less (i.e.
+they don’t change variable names or types, and don’t do partial
+matching) and complain more (e.g. when a variable does not exist).
 
 This forces you to confront problems earlier, typically leading to
 cleaner, more expressive code.
@@ -170,12 +240,13 @@ vignette("tibble")
 
 1.  **Creating a tibble**
 
-`tibble()` creates a tidy table, which automatically handles column
+`tibble()` creates a **tidy** table, which automatically handles column
 types **and prints nicely.**
 
 ```{r}
 
 # Create a simple tibble
+
 my_tibble <- tibble(
   Name = c("Alice", "Bob", "Charlie"),
   Age = c(25, 30, 35),
@@ -191,16 +262,24 @@ my_tibble
 ```{r}
 
 # Use built-in mtcars dataset
+
 mtcars_tbl <- as_tibble(mtcars)
 
 mtcars_tbl
 
 ```
 
-as_tibble() converts data.frame to tibble **for better readability and
+`as_tibble()` converts data frame to tibble **for better readability and
 tidyverse compatibility**.
 
-Row names are not printed as a column automatically (unlike data.frame).
+Row names are not printed as a column automatically (unlike data frame).
+
+### EXERCISE: Try converting the `inventory` data frame from the previous into a tibble:
+
+```{r}
+
+
+```
 
 3.  **Adding row names as a column.**
 
@@ -209,7 +288,7 @@ Row names are not printed as a column automatically (unlike data.frame).
 # Note that we can use %>% , the pipe operator, to chain functions.
 
 mtcars_tbl <- mtcars_tbl %>%
-  rownames_to_column(var = "Car")
+  rownames_to_column(var = "Car")  # var = name of column to use for rownames
 
 head(mtcars_tbl)
 
@@ -231,8 +310,8 @@ mtcars_tbl[1:5, c("Car", "mpg")]
 
 ```
 
-Note that using \$ returns a vector while subsetting with [ keeps tibble
-structure.
+Note that using \$ returns a vector while subsetting with [ ] keeps
+tibble structure.
 
 # 3. `dplyr`
 
