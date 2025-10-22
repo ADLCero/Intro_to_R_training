@@ -462,21 +462,6 @@ flights %>%
 
 ```
 
-### EXERCISE
-
-1.  In a single pipeline for each condition, find all flights that meet
-    the condition:
-
-<!-- -->
-
-a.  Had an arrival delay of two or more hours
-b.  Flew to Houston (IAH or HOU)
-c.  Were operated by United, American, or Delta
-d.  Departed in summer (July, August, and September)
-e.  Arrived more than two hours late but didn’t leave late
-f.  Were delayed by at least an hour, but made up over 30 minutes in
-    flight
-
 ## 3.3. Column operations
 
 ### a. `mutate()`

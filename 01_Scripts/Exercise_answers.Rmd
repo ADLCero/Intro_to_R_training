@@ -1,0 +1,33 @@
+---
+title: "Exercise"
+author: "Amyel Dale Cero"
+date: "2025-10-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# EXERCISE 1
+
+Load the built-in dataset `mtcars`
+
+1.  Compute the mean, median, and standard deviation of `mpg`
+2.  Identify the range of the horsepower `hp`
+3.  Which variable seems most variable? Use `summary()` and `sd()`
+
+# EXERCISE 2
+
+1.  In a single pipeline for each condition, find all flights that meet
+    the condition:
+
+<!-- -->
+
+a.  Had an arrival delay of two or more hours
+b.  Flew to Houston (IAH or HOU)
+c.  Were operated by United, American, or Delta
+d.  Departed in summer (July, August, and September)
+e.  Arrived more than two hours late but didn’t leave late
+f.  Were delayed by at least an hour, but made up over 30 minutes in
+    flight
