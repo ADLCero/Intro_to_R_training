@@ -1359,6 +1359,14 @@ as.Date("22-10-2025", format = "%d-%m-%Y")
 R represents dates and times internally as **the number of seconds (or
 days) since "1970-01-01"**, known as the **Unix Epoch**.
 
+**What is Unix Epoch?** It's **the reference point in time known as
+midnight, Coordinated Universal Time (UTC), on Thursday, January 1,
+1970**. It represents the starting point for the Unix time system, which
+is used to measure time as the number of seconds that have elapsed since
+this specific date.
+
+Therefore, in R:
+
 -   Dates **after 1970** = stored as positive numbers
 -   Dates **before 1970** = stored as negative numbers
 
