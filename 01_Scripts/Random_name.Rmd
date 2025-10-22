@@ -1,0 +1,49 @@
+---
+title: "Name Picker"
+author: "Amyel Dale Cero"
+date: "2025-10-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+# Randomized name picker
+
+Names <- c("Abby",
+           "Al",
+           "April Rose",
+           "Babie Jane",
+           "Benjamin",
+           "Cherry Mae",
+           "Ed Jay",
+           "Eunice",
+           "Glenn",
+           "Grace",
+           "Jeff",
+           "Jerry",
+           "Joellyn",
+           "John Rey",
+           "Kris Thea",
+           "Kristel",
+           "Louie Angelo",
+           "Maureenice",
+           "Niño",
+           "Reimarc",
+           "Reymart",
+           "Rose Ann",
+           "Rovil",
+           "Tom",
+           "Vilvic",
+           "Wil")
+
+```
+
+```{r}
+Presenters <- sample(Names, size = 3)     
+print(Presenters)
+```
+
