@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # 1. If-else statements
 
 ## 1.1. Logic operators
+
 ### 1.1.1. Examples
 
 ```{r}
@@ -46,7 +47,7 @@ This will produce an error because the correct logical operator for is ==
 
 ```
 
-### 1.1.2. Examples of OR (|) and AND (&)
+### 1.1.2. Examples of OR (\|) and AND (&)
 
 Analyze why the following codes produce TRUE or FALSE:
 
@@ -78,11 +79,11 @@ Analyze why the following codes produce TRUE or FALSE:
 
 ```{r}
 
-Test_1 <- 93
+Test_1 <- 90
 
 if(Test_1 > 90){
   Grade <- "A"
-}
+  }
 
 print(Grade)
 ```
@@ -201,6 +202,7 @@ for (i in 0:20){
 }
 
 ```
+
 Example 2: Write a for loop that adds and prints numbers 0 to 100 by 5
 
 ```{r}
@@ -216,6 +218,7 @@ for (i in 0:20){
 }
 
 ```
+
 Example 3: Using character variables
 
 ```{r}
@@ -250,7 +253,7 @@ while (i < 51){
 
 ## 2.3. Using break
 
-Example 1: Make a loop that goes through a series of random numbera and stops when the number is > 150
+Example 1: Make a loop that goes through a series of random numbera and stops when the number is \> 150
 
 ```{r}
 
@@ -274,7 +277,7 @@ for (i in 1:Length){
 
 # 3. Functions
 
-Example 2: You find yourself frequently needing to convert between Fahrenheit and Celsius degree. Write a function that allows you to input Fahrenheit degrees and get out Celsius degrees. 
+Example 2: You find yourself frequently needing to convert between Fahrenheit and Celsius degree. Write a function that allows you to input Fahrenheit degrees and get out Celsius degrees.
 
 Keep in mind that Celsius degrees are 32 degrees less and 5/9 of Fahrenheit degrees.
 
@@ -312,7 +315,7 @@ Temp_C
 
 ```
 
-Example 3: Write a function that calculates someone’s age in year 2025 when given their birth year. Then, write a line of code that calls the function. 
+Example 3: Write a function that calculates someone’s age in year 2025 when given their birth year. Then, write a line of code that calls the function.
 
 ```{r}
 

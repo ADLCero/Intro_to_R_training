@@ -65,7 +65,6 @@ x <- c(5, 8, 10, 7, 5, 10)
 
 # Get the mean and median of x using mean() and median()
 
-
 ```
 
 ## 2.2. Measures of Dispersion (Variability)

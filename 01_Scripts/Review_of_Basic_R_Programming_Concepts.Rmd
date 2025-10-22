@@ -715,7 +715,7 @@ print(sd_weight)
 
 ```
 
-**We can also used the base R `plot()` function to see the matrix of
+**We can also use the base R `plot()` function to see the matrix of
 scatterplots, also called pairs plot.**
 
 ```{r}
@@ -777,7 +777,7 @@ folder.
 
 # Install here() package
 
-# install.packages("here")
+install.packages("here")
 
 ```
 
@@ -825,6 +825,8 @@ df <- read.csv(here("00_Data", "data.csv"))
 # "00_Data" is the name of my folder for "Data"
 # "data.csv" is the name of the file
 
+head(df)
+
 ```
 
 ### b. TXT files
@@ -841,14 +843,14 @@ We can use `read.table()` to import text files into R.
 # Read in the .txt file and assign it to a data frame
 
 df_text <- read.table(here("00_Data", "data_text.txt"), 
-                      sep = "\t", # tab-separated
+                      sep = "\t",      # tab-separated
                       header = TRUE)
 
 ```
 
 ### c. Excel files
 
-Download the .txt version of the same data set from here:
+Download the Excel version of the same data set from here:
 <https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/data_excel.xlsx>
 
 and save it in your Data folder.
@@ -859,7 +861,7 @@ like `readxl` or `openxlsx`.
 ```{r}
 
 # Install the readxl package
-# install.packages("readxl")
+install.packages("readxl")
 
 ```
 
@@ -867,7 +869,7 @@ Note: It's not really a good practice to install packages inside the R
 Markdown, we should install them instead in a separate .R file or in the
 console.
 
-This is because every time we knot, R executes all chunks from top to
+This is because every time we knit, R executes all chunks from top to
 bottom. It will re-install packages every time which can slow down the
 knitting, cause errors, and trigger CRAN mirror issues.
 
@@ -889,7 +891,7 @@ If the Excel file is in Google Drive or online:
 ```{r}
 
 # Install googlesheets4
-# install.packages("googlesheets4")
+install.packages("googlesheets4")
 
 ```
 
@@ -927,6 +929,6 @@ data <- data.frame(
 write.csv(data, here("02_Output",  # Note that this is the name of MY output folder
                                    # yours can be different
                      
-                     "output.csv"), row.names = FALSE)
-
+                     "output.csv"), 
+          row.names = FALSE)
 ```
