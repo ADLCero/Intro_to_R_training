@@ -1,0 +1,26 @@
+---
+title: "Sample Workflow"
+author: "Amyel Dale Cero"
+date: "2025-10-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# OBJECTIVES
+
+Think about:
+
+1.  What do you want to do with your data?
+
+2.  What outputs from your data set are you expecting to effectively communicate with your:
+
+-   supervisors
+-   colleagues
+-   stakeholders?
+
+# 1. File input
+
+# 2. 

@@ -66,6 +66,9 @@ inside this R Project.
 # Load the tidyverse package
 library(tidyverse)
 
+# We will also use here
+library(here)
+
 ```
 
 # 1. `readr`
@@ -156,8 +159,8 @@ complain more (e.g. when a variable does not exist).
 This forces you to confront problems earlier, typically leading to
 cleaner, more expressive code.
 
-Tibbles also have an enhanced print() method which makes them easier to
-use with large datasets containing complex objects.
+Tibbles also have an enhanced `print()` method which makes them easier
+to use with large datasets containing complex objects.
 
 ```{r}
 

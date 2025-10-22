@@ -46,4 +46,3 @@ Names <- c("Abby",
 Presenters <- sample(Names, size = 3)     
 print(Presenters)
 ```
-

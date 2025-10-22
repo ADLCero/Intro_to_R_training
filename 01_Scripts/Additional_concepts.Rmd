@@ -79,7 +79,7 @@ Analyze why the following codes produce TRUE or FALSE:
 
 ```{r}
 
-Test_1 <- 90
+Test_1 <- 93
 
 if(Test_1 > 90){
   Grade <- "A"
@@ -126,7 +126,7 @@ Using the example above from the basic if statement:
 
 ```{r}
 
-Test1 <- 93
+Test1 <- 80
 
 if(Test1 > 90){
   Grade <- 'A'
@@ -138,11 +138,13 @@ if(Test1 > 90){
   Grade <- 'D'
 }
 
+print(Grade)
+
 ```
 
 ```{r}
 
-print(Grade)
+
 
 ```
 
@@ -150,7 +152,7 @@ Using the example on what grade school students must wear depending on air tempe
 
 ```{r}
 
-T <- 50 # must initialize T variable
+T <- -50 # must initialize T variable
 
 if (T < 10) {
   print("No recess")
@@ -184,7 +186,7 @@ Example 2: Indicate position and then retrieve the value from that position.
 
 ```{r}
 
-switch(4,
+switch(1,
        7, 14, 21, 28)
 
 ```
@@ -214,7 +216,7 @@ for (i in 0:20){
   
   Sum <- Sum + (i * 5)
   print(Sum)
-  
+
 }
 
 ```
@@ -253,7 +255,7 @@ while (i < 51){
 
 ## 2.3. Using break
 
-Example 1: Make a loop that goes through a series of random numbera and stops when the number is \> 150
+Example 1: Make a loop that goes through a series of random numbers and stops when the number is \> 150
 
 ```{r}
 
@@ -309,8 +311,9 @@ FarenToCel(100)
 Where is the result? Since there is no print() inside the function, the result has to be assigned to a variable outside the function.
 
 ```{r}
+Temp_F <- 100
 
-Temp_C <- FarenToCel(100)
+Temp_C <- round(FarenToCel(Temp_F), 3)
 Temp_C
 
 ```
@@ -329,7 +332,7 @@ AgeCalc <- function(Input_Yr){
 
 ```{r}
 
-AgeCalc(1990)
+AgeCalc(1950)
 
 ```
 
