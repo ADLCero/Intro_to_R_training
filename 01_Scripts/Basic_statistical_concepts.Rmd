@@ -5,6 +5,9 @@ date: "2025-10-20"
 output:
   word_document: default
   html_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -13,46 +16,49 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Objectives:
 
-1. Explain the basic concepts of descriptive statistics and their importance in data analysis.
-2. Compute and interpret measures of central tendency, dispersion, and shape.
-3. Apply R functions to summarize, visualize, and describe datasets.
-4. Draw insights from statistical summaries to support decision-making.
+1.  Explain the basic concepts of descriptive statistics and their
+    importance in data analysis.
+2.  Compute and interpret measures of central tendency, dispersion, and
+    shape.
+3.  Apply R functions to summarize, visualize, and describe datasets.
+4.  Draw insights from statistical summaries to support decision-making.
 
 # 1. Key Concepts
 
-Statistics is the science of collecting, organizing, analyzing, and interpreting data to make informed decisions. It has two major branches:
+Statistics is the science of collecting, organizing, analyzing, and
+interpreting data to make informed decisions. It has two major branches:
 
-1. **Descriptive Statistics:** Summarizes and describes data.
-2. **Inferential Statistics:** Draws conclusions about populations using samples.
+1.  **Descriptive Statistics:** Summarizes and describes data.
+2.  **Inferential Statistics:** Draws conclusions about populations
+    using samples.
 
-| Term | Definition | Example |
-|------|-------------|----------|
-| **Population** | Entire group under study | All students in a university |
-| **Sample** | Subset of the population | 100 randomly selected students |
-| **Variable** | Characteristic measured | Age, height, weight |
-| **Data** | Collected observations | [18, 19, 20, 21] |
+| Term           | Definition               | Example                        |
+|----------------|--------------------------|--------------------------------|
+| **Population** | Entire group under study | All students in a university   |
+| **Sample**     | Subset of the population | 100 randomly selected students |
+| **Variable**   | Characteristic measured  | Age, height, weight            |
+| **Data**       | Collected observations   | [18, 19, 20, 21]               |
 
 Type of data and scales of measurement:
 
 | Scale | Description | Example |
-|-------|--------------|----------|
+|------------------|--------------------------------|-----------------------|
 | **Nominal** | Categories without order | Gender, Blood type |
 | **Ordinal** | Ordered categories | Satisfaction level (High, Medium, Low) |
 | **Interval** | Equal intervals, no true zero | Temperature (°C) |
 | **Ratio** | Equal intervals with true zero | Weight, Height |
 
-
 # 2. Decriptive Measures
 
 ## 2.1. Measures of Central Tendency
+
 Describes the "center" of the data
 
-| Measure | Function in R | Description |
-|----------|----------------|--------------|
-| **Mean** | `mean(x)` | Arithmetic average |
-| **Median** | `median(x)` | Middle value |
-| **Mode** | Custom function | Most frequent value |
-
+| Measure    | Function in R   | Description         |
+|------------|-----------------|---------------------|
+| **Mean**   | `mean(x)`       | Arithmetic average  |
+| **Median** | `median(x)`     | Middle value        |
+| **Mode**   | Custom function | Most frequent value |
 
 ```{r cars}
 
@@ -68,6 +74,7 @@ x <- c(5, 8, 10, 7, 5, 10)
 ```
 
 ## 2.2. Measures of Dispersion (Variability)
+
 Describe how spread out the data are
 
 ```{r}
@@ -92,20 +99,21 @@ Describe how spread out the data are
 
 ```{r}
 
-# Get the Interquartile Range (IQR), which indicates the spread of the middle 50%
-# of the data, using IQR()
+# Get the Interquartile Range (IQR), which indicates the spread of the middle 50% of the data, 
+# using IQR()
 
 ```
 
 ## 2.3. Measures of Shape
+
 Indicate how the data distribution looks
 
-1. Skewness = symmetry of distribution
-2. Kurtosis = peakedness or flatness
+1.  Skewness = symmetry of distribution
+2.  Kurtosis = peakedness or flatness
 
-To demonstrate these, we will use the e1071 package, which is a populat R library 
-that provides a collection of functions for statistical and machine learning methods
-
+To demonstrate these, we will use the e1071 package, which is a populat
+R library that provides a collection of functions for statistical and
+machine learning methods
 
 ```{r}
 
@@ -136,11 +144,8 @@ kurtosis(x)
 
 ```
 
-Rule:
-Skewness > 0 = right-skewed
-Skewness < 0 = left-skewed
-Kurtosis > 3 = leptokurtic (peaked)
-Kurtosis < 3 = platykurtic (flat)
+Rule: Skewness \> 0 = right-skewed Skewness \< 0 = left-skewed Kurtosis
+\> 3 = leptokurtic (peaked) Kurtosis \< 3 = platykurtic (flat)
 
 # 3. Data Summarization and Visualization
 
@@ -156,6 +161,7 @@ data("PlantGrowth")
 summary(PlantGrowth)
 
 ```
+
 ## 3.2. Basic visualization using base R plots
 
 ```{r}
@@ -181,34 +187,35 @@ boxplot(weight ~ group,         # make a boxplot of weight values for each group
 
 ```
 
-
 # EXERCISE
+
 Load the built-in dataset `mtcars`
 
-1. Compute the mean, median, and standard deviation of `mpg`
-2. Identify the range of the horsepower `hp`
-3. Which variable seems most variable? Use `summary()` and `sd()`
-
+1.  Compute the mean, median, and standard deviation of `mpg`
+2.  Identify the range of the horsepower `hp`
+3.  Which variable seems most variable? Use `summary()` and `sd()`
 
 # 4. Sampling
 
-Sampling is the process of selecting a portion (sample) from a larger group 
-(population) to make statistical inferences.
+Sampling is the process of selecting a portion (sample) from a larger
+group (population) to make statistical inferences.
 
 ## 4.1 Why Sampling?
 
-- Reduces cost and time.  
-- Allows for analysis when it’s impractical to measure the entire population.  
-- Helps ensure data representativeness if done properly.
+-   Reduces cost and time.\
+-   Allows for analysis when it’s impractical to measure the entire
+    population.\
+-   Helps ensure data representativeness if done properly.
 
 ## 4.2 Types of Sampling Techniques
 
 ### **A. Probability Sampling**
 
-Each member of the population has a known (non-zero) chance of being selected.
+Each member of the population has a known (non-zero) chance of being
+selected.
 
 | Method | Description | Example in R |
-|--------|--------------|--------------|
+|------------------|---------------------------|---------------------------|
 | **Simple Random Sampling** | Every individual has an equal chance of selection. | `sample(x, size = n)` |
 | **Systematic Sampling** | Select every *kth* element after a random start. | See example below |
 | **Stratified Sampling** | Divide population into strata (groups), sample within each. | Using `dplyr::group_by()` and `sample_n()` |
@@ -287,12 +294,12 @@ sample_cluster
 
 ### **B. Non-Probability Sampling**
 
-Selection depends on researcher judgment or convenience, not randomization
+Selection depends on researcher judgment or convenience, not
+randomization
 
-1. Convenience sampling = easily available participants
-2. Purposive sampling = based on specific characteristics
-3. Quota sampling = ensures certain groups are represented in set proportions
-4. Snowball sampling = existing participants recruit future participants
-
-
-
+1.  Convenience sampling = easily available participants
+2.  Purposive sampling = based on specific characteristics
+3.  Quota sampling = ensures certain groups are represented in set
+    proportions
+4.  Snowball sampling = existing participants recruit future
+    participants
