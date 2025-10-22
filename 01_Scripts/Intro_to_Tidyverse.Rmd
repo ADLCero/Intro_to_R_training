@@ -57,7 +57,7 @@ inside this R Project.
 ```{r, eval = FALSE}
 
 # Type this code in the console or "uncomment" (i.e., remove hashtag) the line
-install.packages("tidyverse")
+# install.packages("tidyverse")
 
 ```
 
