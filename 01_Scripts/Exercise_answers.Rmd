@@ -37,6 +37,12 @@ print(fruit)
 
 3.  Access the 3rd element of `num`
 
+What's the answer Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
+
 ```{r}
 
 num[3]
@@ -44,6 +50,12 @@ num[3]
 ```
 
 4.  Access the first three `fruit`
+
+What's the answer Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
 
 ```{r}
 
@@ -63,9 +75,15 @@ Write an `if-else` statement such that:
 
 -   otherwise, the code prints "It's cold."
 
+Please share your approach, Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
+
 ```{r}
 
-temp <- 20
+temp <- 35
 
 if(temp > 30){
   print("It's hot!")
@@ -81,6 +99,12 @@ if(temp > 30){
 
 Write a for loop that prints number from 1 to 5
 
+Please share your approach:
+
+```{r}
+sample(Names, size = 1)     
+```
+
 ```{r}
 
 for (i in 1:5){
@@ -91,6 +115,14 @@ for (i in 1:5){
 ```
 
 Write a while loop that keeps adding 1 to a variable x until it reaches 10
+
+Please share your approach:
+
+What's the answer Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
 
 ```{r}
 
@@ -110,6 +142,12 @@ while (i < 11){
 # 4. Functions
 
 Create a function that computes for the number of days given the number of months. Assume that 1 month = 30 days.
+
+Please share your approach, Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
 
 ```{r}
 
@@ -132,11 +170,17 @@ Number_days(10)
 
 # 5. Data frames in R
 
-1.  Create a data frame named `inventory` with the following columns and their elements (5 each):
+1.  **Create a data frame named `inventory` with the following columns and their elements (5 each):**
 
 -   fund source = Region I, Region II, Region XI, DA-OSEC, PHilMech
 -   rated power = 70, 42, 50, 55, 70
 -   supplier = YANMAR, ADAMCO, FORD TRACT, AGRIMACH, INA
+
+Please share your approach, Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
 
 ```{r}
 
@@ -150,7 +194,13 @@ print(inventory)
 
 ```
 
-2.  Convert the column of fund source from character to categorical.
+2.  **Convert the column of fund source from character to categorical.**
+
+Please share your approach, Sir/Ma'am:
+
+```{r}
+sample(Names, size = 1)     
+```
 
 ```{r}
 
@@ -158,7 +208,7 @@ inventory$fund_source <- as.factor(inventory$fund_source)
 
 ```
 
-3.  Check if the column was converted properly.
+3.  **Check if the column was converted properly.**
 
 ```{r}
 
@@ -170,7 +220,7 @@ class(inventory$fund_source)
 
 ```
 
-4.  Get the mean of the rated power
+4.  **Get the mean of the rated power**
 
 ```{r}
 
@@ -178,7 +228,7 @@ mean(inventory$rated_power)
 
 ```
 
-5.  Add a new column: year funded = 2022, 2013, 2022, 2010, 2021
+5.  **Add a new column: year funded = 2022, 2013, 2022, 2010, 2021**
 
 ```{r}
 
@@ -186,7 +236,7 @@ inventory$year_funded <- c(2022, 2013, 2022, 2010, 2021)
 
 ```
 
-6.  Check if the new column was added successfully
+6.  **Check if the new column was added successfully**
 
 ```{r}
 
@@ -196,7 +246,7 @@ View(inventory)
 
 ```
 
-7.  Check the distribution of rated power using a histogram. Make sure to add an appropriate title and x-axis label.
+7.  **Check the distribution of rated power using a histogram. Make sure to add an appropriate title and x-axis label.**
 
 ```{r}
 
@@ -211,16 +261,15 @@ hist(inventory$rated_power,
 
 # 6. File Input/Output and EDA concepts
 
-Download the following .csv file:
-https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/Syr_MetData.csv
+**Download the following .csv file:** <https://github.com/ADLCero/Intro_to_R_training/blob/main/00_Data/Syr_MetData.csv>
 
 Save it where it should be saved inside your R Project.
 
-Read in the .csv file into R and assign it to an R object called `weather`
+**Read in the .csv file into R and assign it to an R object called `weather`**
 
 ```{r}
 
-weather <- read.csv(here("00_Data", "Syr_MetData.csv"))
+weather <- read.csv(here("Data", "Syr_MetData.csv"))
 
 ```
 
@@ -247,6 +296,7 @@ Check the structure of the data
 str(weather)
 
 ```
+
 Check some basic statistics about the data
 
 ```{r}
@@ -267,8 +317,7 @@ plot(weather[ , 5:9])
 
 Create a heatmap using only the numeric columns of the data set.
 
-Hint: There should be no NAs in the dataset for this to work properly. 
-To remove NAs, we can use the function `na.omit()`.
+Hint: There should be no NAs in the dataset for this to work properly. To remove NAs, we can use the function `na.omit()`.
 
 Since this was not discussed yesterday, how can we know how `na.omit()` works without asking the resource person? :)
 
@@ -276,7 +325,6 @@ Since this was not discussed yesterday, how can we know how `na.omit()` works wi
 
 # Get the numeric columns only
 num_data <- weather[ , 5:9]
-
 
 # Remove NAs
 num_data_na <- na.omit(num_data)
@@ -304,5 +352,4 @@ write.csv(num_data_na, here("02_Output", "weather_na.csv"), row.names = FALSE)
 
 Check if it was indeed saved in the correct folder.
 
-Congratulations, you are done! 
-
+Congratulations, you are done!
