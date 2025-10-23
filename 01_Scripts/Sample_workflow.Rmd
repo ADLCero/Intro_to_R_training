@@ -31,7 +31,9 @@ To help us think about how to do things in R:
 
 Outline these main tasks here in the R Markdown as headers. Then insert a chunk of code beneath them, ready for us to explore how to transform the steps in R.
 
-**Reminder:**
+Use the `Intro_to_Tidyverse.Rmd` as a guide in thinking about what can be done to your data.
+
+**Reminders:**
 
 1.  **The internet is our friend.** Use Google/ChatGPT to troubleshoot and get some ideas. Do not feel guilty about using them. A lot of programmers who are much better at us on this do that. **BUT** make sure that you are getting the correct outputs and you understand what is going on.
 
