@@ -96,13 +96,14 @@ functions:
 
 data <- read_csv("https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv")
 
+head(data)
 ```
 
 **What's the point of using `read_csv()` when I already learned how to
 use `read.csv()`?**
 
 | Feature | `read.csv()` | `read_csv()` |
-|--------------------|--------------------------|--------------------------|
+|------------------------|------------------------|------------------------|
 | **Syntax style** | Base R syntax | Tidyverse syntax (modern, faster, and cleaner) |
 | **Returns** | A **data frame** | A **tibble** (a modern version of data frame) |
 | **Reads faster?** | Slower (especially on large files) | Much faster (C++ backend) |
@@ -162,6 +163,7 @@ call that expresses the desired column types.
 
 chickens <- read_csv(
   readr_example("chickens.csv"),
+  
   col_types = cols(
     chicken   = col_character(),
     sex       = col_factor(levels = c("rooster", "hen")), # set to be a factor with levels rooster and hen
@@ -188,7 +190,7 @@ Assign it to an R object named "weather_2"
 
 ```{r}
 
-
+weather_2 <- read_csv(here("00_Data", "Syr_MetData.csv"))
 
 ```
 
@@ -278,7 +280,9 @@ Row names are not printed as a column automatically (unlike data frame).
 
 ```{r}
 
+inventory_tbl <- as_tibble(inventory)
 
+head(inventory_tbl)
 ```
 
 3.  **Adding row names as a column.**
@@ -290,7 +294,7 @@ Row names are not printed as a column automatically (unlike data frame).
 mtcars_tbl <- mtcars_tbl %>%
   rownames_to_column(var = "Car")  # var = name of column to use for rownames
 
-head(mtcars_tbl)
+head(mtcars_tbl) 
 
 ```
 
@@ -325,13 +329,16 @@ verbs that help us solve the most common data manipulation challenges:
 -   `summarise()` reduces multiple values down to a single summary.
 -   `arrange()` changes the ordering of the rows.
 
-These all combine naturally with group_by() which allows us to perform
+These all combine naturally with `group_by()` which allows us to perform
 any operation “by group”.
 
 Note that we can use `%>%` – the pipe operator - to chain functions.
 
-Recall: Keyboard shortcut: - Windows = Ctrl + Shift + M - Mac = Cmd +
-Shift + M
+Recall: Keyboard shortcut: -
+
+Windows = Ctrl + Shift + M
+
+Mac = Cmd + Shift + M
 
 ```{r}
 
@@ -439,6 +446,7 @@ flights %>%
 ```{r}
 
 # Filter for flights that departed on January 1
+
 flights %>% 
   filter(month == 1 & day == 1)
 
@@ -481,12 +489,20 @@ jan1
 1.  data that were recorded in year 1997
 
 ```{r}
- 
+weather %>% 
+  filter(YEAR == 1997)
+
 ```
 
 2.  data that were recorded from year 1940 to 2000
 
 ```{r}
+
+weather %>% 
+  filter(YEAR >= 1940 & YEAR <= 2000)
+
+weather %>% 
+  filter(YEAR %in% c(1940:2000))
 
 ```
 
@@ -495,17 +511,21 @@ jan1
 
 ```{r}
 
+weather %>% 
+  filter(PRCP > 0 & TMAX > 30)
+
 ```
 
 ### b. `arrange()`
 
-arrange() changes the order of the rows based on the value of the
+`arrange()` changes the order of the rows based on the value of the
 columns. It takes a data frame and a set of column names (or more
 complicated expressions) to order by.
 
 ```{r}
 
 # Sort the departure time by year, month, day, and departure time
+
 flights %>% 
   arrange(year, month, day, dep_time)
 
@@ -531,12 +551,14 @@ data, we’re not filtering it.
 
 ```{r}
 
+weather |>
+  arrange(PRCP)
 
 ```
 
 ### c. `distinct()`
 
-distinct() finds all the unique rows in a dataset, so technically, it
+`distinct()` finds all the unique rows in a dataset, so technically, it
 primarily operates on the rows.
 
 Most of the time, however, we’ll want the distinct combination of some
@@ -545,6 +567,7 @@ variables, so we can also optionally supply column name.
 ```{r}
 
 # Remove duplicate rows, if any
+
 flights %>% 
   distinct()
 
@@ -577,9 +600,11 @@ flights %>%
 
 ```
 
-### EXERCISE: Find how many distinct years there are in the `weather` and how many occurrences there are of each year.
+### EXERCISE: Find how many distinct years there are in `weather` and how many occurrences there are of each year.
 
 ```{r}
+weather |>
+  count(YEAR)
   
 ```
 
@@ -656,12 +681,17 @@ flights %>%
 
 ```{r}
 
+weather |>
+  mutate(
+    PRCP_cm = PRCP * 2.54,
+    mean_T = (TMAX + TMIN)/2
+  )
   
 ```
 
 ### b. `select()`
 
-select() allows us to rapidly zoom in on a useful subset using
+`select()` allows us to rapidly zoom in on a useful subset using
 operations based on the names of the variables
 
 ```{r}
@@ -731,6 +761,10 @@ flights %>%
 
 ```{r}
 
+weather |>
+  select(STATION, YEAR, 
+         precipitation = PRCP,
+         max_temperature = TMAX)
 ```
 
 ### c. `rename()`
@@ -764,7 +798,8 @@ arguments
 ```{r}
 
 flights %>% 
-  relocate(year:dep_time, .after = time_hour)
+  relocate(year:dep_time, 
+           .after = time_hour)
 
 flights %>% 
   relocate(starts_with("arr"), .before = dep_time)
@@ -774,6 +809,9 @@ flights %>%
 ### EXERCISE: Move the columns of PRCP and TMAX in the `weather` after the STATION column.
 
 ```{r}
+weather |>
+  relocate(PRCP, TMAX,
+           .after = STATION)
 
 ```
 
@@ -817,6 +855,12 @@ For simple cases, \|\> and %\>% behave identically.
     expected.
 
 ```{r}
+
+weather %>% 
+  select(STATION, YEAR, PRCP, TMAX) %>% 
+  filter(YEAR >= 1990) %>% 
+  mutate(PRCP_cm = PRCP * 2.54) %>% 
+  arrange(desc(PRCP))
 
 ```
 
@@ -913,9 +957,15 @@ flights |>
   )
 ```
 
-### EXERCISE: Group the `weather` data per year and then get the total precipitation and mean maximum temperature. Then, create a column that converts the mean precipitation in inches to millimeters.
+### EXERCISE: Group the `weather` data per year and then get the total precipitation and mean maximum temperature. Then, create a column that converts the total precipitation in inches to millimeters.
 
 ```{r}
+
+weather |>
+  group_by(YEAR) |>
+  summarize(total_PRCP = sum(PRCP, na.rm = TRUE),
+            mean_TMAX = mean(TMAX, na.rm = TRUE)) |>
+  mutate(total_PRCP_mm = total_PRCP * 25.4)
 
 ```
 
@@ -957,6 +1007,10 @@ the single summary statistic.
 
 ```{r}
 
+weather |>
+  group_by(YEAR) |>
+  slice_max(PRCP, n = 1)|>
+  select(YEAR, PRCP)
   
 ```
 
@@ -1051,7 +1105,8 @@ df
 
 # Separate full name into first and last names
 df_sep <- df %>%
-  separate(Name, into = c("First", "Last"), # new columns
+  separate(Name, 
+           into = c("First", "Last"), # new columns
            sep = "_")                       # character to split
 
 df_sep
@@ -1104,7 +1159,10 @@ head(airquality_filled)
 
 ```{r}
 
+weather_clean <- weather |>
+  drop_na()
 
+dim(weather_clean)
 ```
 
 # 5. `stringr`
@@ -1132,6 +1190,7 @@ cars
 ```{r}
 
 # Detect cars containing "Mazda"
+
 cars %>%
   mutate(Mazda = str_detect(Car,      # string
                             "Mazda")) # what to detect
@@ -1145,6 +1204,7 @@ cars %>%
 ```{r}
 
 # Replace " " with "_" in car names
+
 cars %>%
   mutate(Car_Underscore = str_replace_all(Car, " ", "_"))
 
@@ -1157,6 +1217,8 @@ cars %>%
 
 ```{r}
 
+weather |>
+  mutate(NAME_underscore = str_replace_all(NAME, "SYRACUSE", "SYR"))
 
 ```
 
@@ -1167,6 +1229,7 @@ Extract parts of strings
 ```{r}
 
 # Extract first word (make) from car name
+
 cars %>%
   mutate(Make = str_extract(Car,           # str_extract extracts matching patterns
                             "^[^ ]+"))     # regex (regular expression) for first word (everything until first place)
@@ -1195,6 +1258,7 @@ Concatenating strings
 ```{r}
 
 # Combine make with "Car" suffix
+
 cars %>%
   mutate(CarLabel = str_c(Car, "-Car"))
 
@@ -1204,6 +1268,8 @@ cars %>%
 
 ```{r}
 
+weather |>
+  mutate(STATION_SYR = str_c(STATION, "-SYR"))
 
 ```
 
@@ -1225,6 +1291,10 @@ cars %>%
 
 ```{r}
 
+weather |>
+  mutate(
+    NAME_lc = str_to_lower(NAME)
+  )
 
 ```
 
@@ -1418,7 +1488,7 @@ More about dates and times in R: <https://r4ds.hadley.nz/datetimes.html>
 **Key advantages of `lubridate`:**
 
 | Feature | Benefit |
-|------------------------|--------------------------------------------------------|
+|------------------------------------|------------------------------------|
 | **Automatic parsing** | Functions like `ymd()`, `mdy()`, `dmy()` automatically recognize date formats — no need to specify `format = "%Y-%m-%d"`. |
 | **Readable syntax** | Function names directly reflect date order (e.g., `ymd("2025-10-22")` → Year-Month-Day). |
 | **Time zone handling** | Functions like `with_tz()` and `force_tz()` make time zone conversion straightforward. |
@@ -1435,7 +1505,7 @@ dates1 <- ymd(c("2025-10-20",
                 "2025-11-01", 
                 "2025-12-31"))  # ymd() parses strings in Year-Month-Day format
 dates1
-
+class(dates1)
 ```
 
 ```{r}
@@ -1501,7 +1571,7 @@ ymd("2025-10-20") %>% ceiling_date(unit = "month")  # Last day of month
 ```{r}
 
 # Difference in days
-date1 <- ymd("2025-10-20")
+date1 <- ymd("2025-10-23")
 date2 <- ymd("2025-12-31")
 interval(date1, date2) / ddays(1)  # Number of days
 
@@ -1540,6 +1610,8 @@ force_tz(time, "America/Chicago")
 
 ```{r}
 
+weather |>
+  mutate(DATE_R = mdy(DATE))
 
 ```
 
@@ -1555,10 +1627,12 @@ So “38” is interpreted as 2038, not 1938.
 weather_dates <- weather %>%
   mutate(
     date_R = mdy(DATE),
+    
     # Correct all dates > 2025 by subtracting 100 years
     date_R_fixed = if_else(year(date_R) > 2025, date_R - years(100), date_R)
   )
 
+weather_dates
 # Or fix dates using as.Date
 
 ```
@@ -1666,6 +1740,7 @@ properties (**aesthetics**) of the plot.
 
 ggplot(
   data = penguins,
+  
   mapping = aes(x = flipper_length_mm, 
                 y = body_mass_g)
 )
@@ -1696,8 +1771,8 @@ start with `geom_` in ggplot2:
 ggplot(
   data = penguins,
   mapping = aes(x = flipper_length_mm, 
-                y = body_mass_g)
-) +
+                y = body_mass_g)) +
+  
   geom_point()
 
 ```
@@ -1813,6 +1888,7 @@ ggplot(
     color = "Species",   # define the label for the legend
     shape = "Species"
   ) +
+  
   scale_color_colorblind()  # improving the palette to be colorblind safe
 
 ```

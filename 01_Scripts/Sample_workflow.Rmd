@@ -41,6 +41,8 @@ Use the `Intro_to_Tidyverse.Rmd` as a guide in thinking about what can be done t
 
 2.  **Document.** Explain what needs to be explained. Use comments. Write brief paragraphs.
 
+3.  **Always start with the simplest approach that works well.** Then build on that.
+
 # SAMPLE WORKFLOW:
 
 # 1. Libraries
@@ -112,7 +114,7 @@ names(ABEMIS_clean)
 
 ```{r}
 
-#class(ABEMIS_clean$Date_Turned-over)
+class(ABEMIS_clean$Date_Turned-over)
 
 ```
 
