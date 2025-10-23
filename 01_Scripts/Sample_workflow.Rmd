@@ -39,9 +39,11 @@ Outline these main tasks here in the R Markdown as headers. Then insert a chunk 
 
 2.  **Document.** Explain what needs to be explained. Use comments. Write brief paragraphs.
 
+# SAMPLE WORKFLOW:
+
 # 1. Libraries
 
-Always start with loading the packages that are needed for your analysis.
+Always start with loading the packages that are needed in your analysis.
 
 ```{r}
 
@@ -154,11 +156,13 @@ With tidyverse, R already read it in date format, which means I don't need to do
 
 # 6. What else...
 
+## Tables and Graphs?
+
 # Some suggestions:
 
-# Maps
+## Maps?
 
-I noticed that you have latitude and longitude...
+I noticed that you have latitude and longitude in your data set...
 
 ```{r}
 
@@ -195,4 +199,6 @@ mapshot(PH_map, file = here("01_Scripts", "images", "PH_map.png"))
 
 The exported version is off and actually shows questionable latitude/longitude in our data set.
 
-# Exporting updated table
+## File Output?
+
+If you need to save a version of your data set that has already undergone changes and analysis.
